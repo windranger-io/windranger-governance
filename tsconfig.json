@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "es2020",                       
+    "module": "commonjs",                     
+    "lib": ["es2020"],                        
+    "declaration": true,                      
+    "declarationMap": true,                  
+    "sourceMap": true,                        
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "removeComments": false,                  
+    "strict": true,                          
+    "moduleResolution": "node",
+    "types": ["node", "mocha"],               
+    "allowSyntheticDefaultImports": true,     
+    "esModuleInterop": true,                  
+    "experimentalDecorators": true,          
+    "skipLibCheck": true,                    
+    "forceConsistentCasingInFileNames": true
+  },
+  "files": ["./hardhat.config.ts"],
+  "include": [
+    "./config/**/*.ts",
+    "./scripts/**/*.ts",
+    "./test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
