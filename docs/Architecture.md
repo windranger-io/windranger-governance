@@ -20,6 +20,7 @@ ProtocolRegistry(protocolContracts, protocolToken, params…)
 10. proposalMaxOperations, maximum number of actions possible for this protocol proposal
 11. votingPeriod, voting period for proposals (can be a be list actions => voting period)
 12. votingDelay, voting delay for proposals in days (can be a list actions => voting delay)
+13. roles, list of roles, who need to vote for this proposal
 
 Protocol params can be changed by BitDAO governance, if proposal for that is accepted, which will execute action calling:
 
@@ -43,6 +44,15 @@ BitDAO token and each protocol tokens can be based on https://github.com/compoun
 Proposal struct will be almost the same as Compound one, but with addition of token param (either Bit or protocol token), with which voting happens https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/GovernorAlpha.sol#L35, will be the list for each protocol => proposals
 
 We can use Sybil https://github.com/Uniswap/sybil-interface for governance delegators => digital identity / KYC mapping
+
+### BitDAO roles
+
+BitDAO will have functionality of roles. All participants can be assigned roles and only roles can make decision for the protocol. Tokens can be delegated same way per each class for each participant, for example 1000 BIT, we delegate 500 BIT and 500 BIT to John and Alex developers, 700 BIT and 300 BIT for Michael and Kate treasury managers, etc. Each proposal will have roles list that need to vote for this proposal and reach threshold for each role independently.
+
+registerNewRole(role)
+registerNewMember(role, member)
+registerNewRole and registerNewMember will be done by accepting proposal through voting.
+
 
 ## BitDAO Treasury
 
