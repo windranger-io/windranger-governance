@@ -1,22 +1,23 @@
 {
-  "name": "bitdao-token-contract",
+  "name": "bitdao-governance",
   "version": "1.0.0",
-  "description": "The BitDAO contract as deployed on Mainnet",
+  "description": "BitDAO Governance framework contracts",
   "private": true,
   "directories": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bitdao-io/bitdao-token-contract.git"
+    "url": "git+https://github.com/bitdao-io/governance.git"
   },
   "keywords": [],
   "author": "",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "hardhat compile",
-    "clean": "hardhat clean",
-    "format": "prettier ./**/*.ts --write",
+    "build": "npx hardhat compile",
+    "clean": "npx hardhat clean",
+    "test": "npx hardhat test",
+    "format": "prettier ./**/*.ts --write && prettier --write 'contracts/**/*.sol'",
     "lint": "eslint . --ext .ts",
     "prepare": "husky install",
     "test": "mocha --exit --recursive --require ts-node/register 'test/**/*.test.ts'"
@@ -41,7 +42,7 @@
     "hardhat": "^2.6.2",
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
-    "prettier": "^2.3.2",
+    "prettier": "^2.4.1",
     "ts-node": "^10.2.1",
     "typechain": "^5.1.2",
     "typescript": "^4.4.2"
@@ -55,6 +56,7 @@
     "bunyan": "^1.8.15",
     "dotenv": "^10.0.0",
     "hardhat-gas-reporter": "^1.0.4",
+    "prettier-plugin-solidity": "^1.0.0-beta.18",
     "web3": "^1.5.2"
   },
   "lint-staged": {
