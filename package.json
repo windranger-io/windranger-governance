@@ -19,6 +19,7 @@
     "format": "prettier ./**/*.ts --write",
     "lint": "eslint . --ext .ts",
     "prepare": "husky install",
+    "size": "npx hardhat run scripts/contractBytecodeSize.js",
     "test": "mocha --exit --recursive --require ts-node/register 'test/**/*.test.ts'"
   },
   "devDependencies": {
