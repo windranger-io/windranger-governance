@@ -148,8 +148,9 @@ contract Governance is Context, ERC165, EIP712 {
         _;
     }
 
-    constructor(IERC20Votes token_) EIP712(name(), version()) {
+    constructor(IERC20Votes token_, TimelockController timelock_) EIP712(name(), version()) {
         token = token_;
+        _timelock = timelock_;
     }
 
     /**
