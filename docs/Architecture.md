@@ -53,6 +53,18 @@ registerNewRole(role)
 registerNewMember(role, member)
 registerNewRole and registerNewMember will be done by accepting proposal through voting.
 
+Actions that a role can take are restricted to dao and treasury functions as these actions are within the scope of this spec and can be verified. However, note that roles can take any action since any action can be set in a proposal. 
+
+Examples of initial roles and their actions: 
+
+| Role | Action |
+| ---- | ---- |
+| vc | execute proposal |
+| vc | change dao parameters, e.g., timelock |
+| labs | launch new dao |
+| labs | issue grant |
+| growth | issue incentive payment |
+| growth | add role |
 
 ## BitDAO Treasury
 
@@ -75,3 +87,34 @@ Will be owned by BitDAO protocol governance
 4. claimable(asset), can be viewed by protocol token holder, how much he can claim for the treasury based on profit sharing model for protocol token supply and token holder balances
 5. claim(asset), transfers claimable to token protocol holder
 
+## Future work
+
+- nfts
+- nft-role mapping
+- integration/wrapping of treasury with other defi protocols, e.g., fixed yield lending, insurance
+- take asset posn without a vote, nft
+- recovery strategies, e.g., main dao has 5 keys of 8 that way can revoke address treasury
+- active management
+- redemption can happen on executive side for bitdao treasury
+- incentives holding off on redemption
+- hub and spoke hedge fund model
+- time based incentives
+- allocation strategy
+- how do we want to balance the assets in the main treasury
+- balance across stables, eg equal weighted, responding to signals
+- front ends: intotheblock style analytics
+- slashing with bonding and unbonding periods
+- mandatory voting option
+- can get a reward even if proposal result is no
+- punish vs reward
+- potential for included / extending roles with pluggable
+- vc, labs, growth roles
+
+- tables of individual, roles, groups/guilds
+
+- partial delegation
+
+- snapshot 1-n delegation
+- mix in with rbac approach
+- who has authority on spinning a new dao or access a treasury (see above table)
+- what is the view
