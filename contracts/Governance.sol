@@ -38,6 +38,7 @@ contract Governance is Context, ERC165, EIP712 {
     bytes32 public constant TREASURY_ROLE = keccak256('Treasury');
 
     uint256 public constant DEFAULT_PROPOSAL_THRESHOLD = 1e9;
+    uint256 public constant DEFAULT_ACTION_THRESHOLD = 1e9;
 
     enum VoteType {
         Against,
@@ -142,7 +143,10 @@ contract Governance is Context, ERC165, EIP712 {
     }
 
     modifier roleExists(bytes32 role) {
-        require(_roles[role] > 0, 'Governance::roleExists: role does not exist');
+        require(
+            _roles[role] > 0,
+            'Governance::roleExists: role does not exist'
+        );
         _;
     }
 
@@ -154,7 +158,9 @@ contract Governance is Context, ERC165, EIP712 {
         _;
     }
 
-    constructor(IERC20Votes token_, TimelockController timelock_) EIP712(name(), version()) {
+    constructor(IERC20Votes token_, TimelockController timelock_)
+        EIP712(name(), version())
+    {
         token = token_;
         _timelock = timelock_;
         _roles[TREASURY_ROLE] = 1;
@@ -270,15 +276,15 @@ contract Governance is Context, ERC165, EIP712 {
         }
         require(
             targets.length == values.length,
-            'Governance::propose: invalid proposal length'
+            'Governance::propose: invalid values length'
         );
         require(
             targets.length == calldatas.length,
-            'Governance::propose: invalid proposal length'
+            'Governance::propose: invalid calldatas length'
         );
         require(
             targets.length == actions.length,
-            'Governance::propose: invalid proposal length'
+            'Governance::propose: invalid actions length'
         );
         require(targets.length > 0, 'Governance::propose: empty proposal');
 
@@ -819,10 +825,12 @@ contract Governance is Context, ERC165, EIP712 {
         Proposal storage proposal = _proposals[proposalId];
         bool reached = true;
         for (uint256 i = 0; i < proposal.actions.length; ++i) {
-            if (
-                actionsQuorums[proposal.targets[i]][proposal.actions[i]] >
-                proposal.forVotes[i]
-            ) {
+            uint256 quorum = actionsQuorums[proposal.targets[i]][
+                proposal.actions[i]
+            ] == 0
+                ? DEFAULT_ACTION_THRESHOLD
+                : 0;
+            if (quorum > proposal.forVotes[i]) {
                 reached = false;
             }
         }
