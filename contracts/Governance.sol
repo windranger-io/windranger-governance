@@ -33,6 +33,12 @@ contract Governance is Context, ERC165, EIP712 {
             'Undelegation(address delegatee,uint256 nonce,uint256 expiry)'
         );
 
+    bytes32 public constant DEVELOPER_ROLE = keccak256('Developer');
+    bytes32 public constant LEGAL_ROLE = keccak256('Legal');
+    bytes32 public constant TREASURY_ROLE = keccak256('Treasury');
+
+    uint256 public constant DEFAULT_PROPOSAL_THRESHOLD = 1e9;
+
     enum VoteType {
         Against,
         For,
@@ -88,7 +94,7 @@ contract Governance is Context, ERC165, EIP712 {
 
     bytes32[] public rolesList;
     mapping(uint256 => bytes32) private _timelockIds;
-    mapping(bytes32 => bool) private _roles;
+    mapping(bytes32 => uint256) private _roles;
     mapping(bytes32 => mapping(address => bool)) public votersRoles;
     mapping(address => mapping(bytes32 => mapping(address => uint256)))
         public delegations;
@@ -136,7 +142,7 @@ contract Governance is Context, ERC165, EIP712 {
     }
 
     modifier roleExists(bytes32 role) {
-        require(_roles[role], 'Governance::roleExists: role does not exist');
+        require(_roles[role] > 0, 'Governance::roleExists: role does not exist');
         _;
     }
 
@@ -151,6 +157,18 @@ contract Governance is Context, ERC165, EIP712 {
     constructor(IERC20Votes token_, TimelockController timelock_) EIP712(name(), version()) {
         token = token_;
         _timelock = timelock_;
+        _roles[TREASURY_ROLE] = 1;
+        _roles[DEVELOPER_ROLE] = 2;
+        _roles[LEGAL_ROLE] = 3;
+        rolesList.push(TREASURY_ROLE);
+        rolesList.push(DEVELOPER_ROLE);
+        rolesList.push(LEGAL_ROLE);
+        votersRoles[DEVELOPER_ROLE][_msgSender()] = true;
+        votersRoles[TREASURY_ROLE][_msgSender()] = true;
+        votersRoles[LEGAL_ROLE][_msgSender()] = true;
+        proposalThresholds[DEVELOPER_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
+        proposalThresholds[LEGAL_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
+        proposalThresholds[TREASURY_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
     }
 
     /**
@@ -301,8 +319,8 @@ contract Governance is Context, ERC165, EIP712 {
     }
 
     function registerNewRole(bytes32 role) external onlyGovernance {
-        _roles[role] = true;
         rolesList.push(role);
+        _roles[role] = rolesList.length;
     }
 
     function registerNewAction(
