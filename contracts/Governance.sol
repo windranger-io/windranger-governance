@@ -8,6 +8,7 @@ import '@openzeppelin/contracts/utils/introspection/ERC165.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
 import '@openzeppelin/contracts/utils/Address.sol';
 import '@openzeppelin/contracts/utils/Context.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/Timers.sol';
 import '@openzeppelin/contracts/utils/math/SafeCast.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
@@ -19,7 +20,7 @@ interface IERC20Votes is IERC20 {
 }
 
 // Governance contract.
-contract Governance is Context, ERC165, EIP712 {
+contract Governance is Context, Ownable, ERC165, EIP712 {
     using SafeCast for uint256;
     using Counters for Counters.Counter;
     using Timers for Timers.BlockNumber;
@@ -33,12 +34,12 @@ contract Governance is Context, ERC165, EIP712 {
             'Undelegation(address delegatee,uint256 nonce,uint256 expiry)'
         );
 
-    bytes32 public constant DEVELOPER_ROLE = keccak256('Developer');
-    bytes32 public constant LEGAL_ROLE = keccak256('Legal');
-    bytes32 public constant TREASURY_ROLE = keccak256('Treasury');
+    bytes32 public constant DEVELOPER_ROLE = keccak256('DEVELOPER_ROLE');
+    bytes32 public constant LEGAL_ROLE = keccak256('LEGAL_ROLE');
+    bytes32 public constant TREASURY_ROLE = keccak256('TREASURY_ROLE');
 
-    uint256 public constant DEFAULT_PROPOSAL_THRESHOLD = 1e9;
-    uint256 public constant DEFAULT_ACTION_THRESHOLD = 1e9;
+    uint256 public constant DEFAULT_PROPOSAL_THRESHOLD = 1e18;
+    uint256 public constant DEFAULT_ACTION_THRESHOLD = 1e18;
 
     enum VoteType {
         Against,
@@ -68,7 +69,6 @@ contract Governance is Context, ERC165, EIP712 {
         uint256[] againstVotes;
         uint256[] slashingVotes;
         bytes32[] roles;
-        bytes32[] actions;
         bytes32 descriptionHash;
         Timers.BlockNumber voteStart;
         Timers.BlockNumber voteEnd;
@@ -101,8 +101,8 @@ contract Governance is Context, ERC165, EIP712 {
         public delegations;
     mapping(address => mapping(bytes32 => uint256)) public delegatees;
     mapping(address => mapping(bytes32 => uint256)) public delegated;
-    mapping(address => mapping(bytes32 => bytes32)) public actionsRoles;
-    mapping(address => mapping(bytes32 => uint256)) public actionsQuorums;
+    mapping(address => mapping(string => bytes32)) public actionsRoles;
+    mapping(address => mapping(string => uint256)) public actionsQuorums;
     mapping(bytes32 => uint256) public proposalThresholds;
     mapping(bytes32 => address) public rolesChildrenDAO;
 
@@ -117,7 +117,6 @@ contract Governance is Context, ERC165, EIP712 {
         bytes32[] roles,
         bytes[] calldatas,
         string[] signatures,
-        bytes32[] actions,
         uint256 startBlock,
         uint256 endBlock,
         string description
@@ -134,7 +133,7 @@ contract Governance is Context, ERC165, EIP712 {
     );
 
     /**
-     * @dev Restrict access to governor executing address. Some module might override the _executor function to make
+     * @dev Restrict access to governance executing address. Some module might override the _executor function to make
      * sure this modifier is consistant with the execution model.
      */
     modifier onlyGovernance() {
@@ -182,7 +181,7 @@ contract Governance is Context, ERC165, EIP712 {
      * through another contract such as a timelock.
      */
     function _executor() internal view virtual returns (address) {
-        return address(this);
+        return address(_timelock);
     }
 
     /**
@@ -212,7 +211,7 @@ contract Governance is Context, ERC165, EIP712 {
     }
 
     function votingPeriod() public pure virtual returns (uint256) {
-        return 17280; // ~3 days in blocks
+        return 1; // ~3 days in blocks
     }
 
     /**
@@ -265,13 +264,12 @@ contract Governance is Context, ERC165, EIP712 {
         bytes32[] memory roles,
         string[] memory signatures,
         bytes[] memory calldatas,
-        bytes32[] memory actions,
         string memory description
     ) public virtual returns (uint256) {
         for (uint256 i = 0; i < roles.length; ++i) {
             require(
                 votersRoles[roles[i]][_msgSender()],
-                'Governance::propose: Proposer must have proposal roles'
+                'Governance::propose: proposer must have proposal roles'
             );
         }
         require(
@@ -283,8 +281,8 @@ contract Governance is Context, ERC165, EIP712 {
             'Governance::propose: invalid calldatas length'
         );
         require(
-            targets.length == actions.length,
-            'Governance::propose: invalid actions length'
+            targets.length == signatures.length,
+            'Governance::propose: invalid signatures length'
         );
         require(targets.length > 0, 'Governance::propose: empty proposal');
 
@@ -292,9 +290,27 @@ contract Governance is Context, ERC165, EIP712 {
         uint256 proposalId = hashProposal(
             targets,
             values,
-            _encodeCalldata(signatures, calldatas),
+            calldatas,
             descriptionHash
         );
+        for (uint256 i = 0; i < signatures.length; ++i) {
+            uint256 sigID = uint256(keccak256(abi.encodePacked(signatures[i])));
+            for (uint256 j = 0; j < 28; ++j) {
+                sigID /= 256;
+            }
+            uint256 methodID = 0;
+            require(
+                calldatas[i].length >= 4,
+                'Governance::propose: calldatas length must be at least 4'
+            );
+            for (uint256 j = 0; j < 4; ++j) {
+                methodID = 256 * methodID + uint8(calldatas[i][j]);
+            }
+            require(
+                sigID == methodID,
+                'Governance::propose: signature does not matches calldata sig'
+            );
+        }
 
         Proposal storage proposal = _proposals[proposalId];
         require(
@@ -312,11 +328,14 @@ contract Governance is Context, ERC165, EIP712 {
         proposal.roles = roles;
         proposal.calldatas = calldatas;
         proposal.signatures = signatures;
-        proposal.actions = actions;
         proposal.descriptionHash = descriptionHash;
 
         uint64 snapshot = block.number.toUint64() + votingDelay().toUint64();
         uint64 deadline = snapshot + votingPeriod().toUint64();
+
+        proposal.againstVotes = new uint96[](roles.length);
+        proposal.forVotes = new uint96[](roles.length);
+        proposal.slashingVotes = new uint96[](roles.length);
 
         proposal.voteStart.setDeadline(snapshot);
         proposal.voteEnd.setDeadline(deadline);
@@ -331,12 +350,12 @@ contract Governance is Context, ERC165, EIP712 {
 
     function registerNewAction(
         address target,
-        bytes32 action,
+        string calldata signature,
         bytes32 role,
         uint256 quorum
     ) external roleExists(role) onlyGovernance {
-        actionsRoles[target][action] = role;
-        actionsQuorums[target][action] = quorum;
+        actionsRoles[target][signature] = role;
+        actionsQuorums[target][signature] = quorum;
     }
 
     function addNewRoleMember(bytes32 role, address member)
@@ -355,7 +374,58 @@ contract Governance is Context, ERC165, EIP712 {
         proposalThresholds[role] = threshold;
     }
 
-    function setVotes() external virtual {
+    function setVotingPowerSingleAdmin(address voter, uint256 votingPower)
+        external
+        virtual
+        onlyOwner
+    {
+        for (uint256 i = 0; i < rolesList.length; ++i) {
+            require(
+                delegatees[voter][rolesList[i]] == 0,
+                'Governance::setVotingPowerSingleAdmin: already set voting power'
+            );
+            delegatees[voter][rolesList[i]] = votingPower;
+        }
+    }
+
+    function setVotingPowerMultiAdmin(
+        address[] calldata voters,
+        uint256[] calldata votingPowers
+    ) external virtual onlyOwner {
+        require(
+            voters.length == votingPowers.length,
+            'Governance::setVotingPowerMultiAdmin: not equal lengths'
+        );
+        for (uint256 i = 0; i < voters.length; ++i) {
+            for (uint256 j = 0; j < rolesList.length; ++j) {
+                require(
+                    delegatees[voters[i]][rolesList[j]] == 0,
+                    'Governance::setVotingPowerMultiAdmin: already set voting power'
+                );
+                delegatees[voters[i]][rolesList[j]] = votingPowers[i];
+            }
+        }
+    }
+
+    function setVoterRolesAdmin(address voter, bytes32[] calldata voterRoles)
+        external
+        virtual
+        onlyOwner
+    {
+        for (uint256 i = 0; i < voterRoles.length; ++i) {
+            require(
+                _roles[voterRoles[i]] > 0,
+                'Governance::setRoleMemberAdmin: role exists'
+            );
+            require(
+                !votersRoles[voterRoles[i]][voter],
+                'Governance::setVoterRolesAdmin: already set voter roles'
+            );
+            votersRoles[voterRoles[i]][voter] = true;
+        }
+    }
+
+    function setVotingPower() external virtual {
         for (uint256 i = 0; i < rolesList.length; ++i) {
             delegatees[_msgSender()][rolesList[i]] = token.getCurrentVotes(
                 _msgSender()
@@ -483,19 +553,6 @@ contract Governance is Context, ERC165, EIP712 {
     }
 
     /**
-     * @dev See {IGovernorCompatibilityBravo-queue}.
-     */
-    function queue(uint256 proposalId) public virtual {
-        Proposal storage proposal = _proposals[proposalId];
-        queue(
-            proposal.targets,
-            proposal.values,
-            _encodeCalldata(proposal.signatures, proposal.calldatas),
-            proposal.descriptionHash
-        );
-    }
-
-    /**
      * @dev Function to queue a proposal to the timelock.
      */
     function queue(
@@ -608,7 +665,7 @@ contract Governance is Context, ERC165, EIP712 {
         _cancel(
             proposal.targets,
             proposal.values,
-            _encodeCalldata(proposal.signatures, proposal.calldatas),
+            proposal.calldatas,
             proposal.descriptionHash
         );
     }
@@ -649,24 +706,6 @@ contract Governance is Context, ERC165, EIP712 {
         }
 
         return proposalId;
-    }
-
-    /**
-     * @dev Encodes calldatas with optional function signature.
-     */
-    function _encodeCalldata(
-        string[] memory signatures,
-        bytes[] memory calldatas
-    ) private pure returns (bytes[] memory) {
-        bytes[] memory fullcalldatas = new bytes[](calldatas.length);
-
-        for (uint256 i = 0; i < signatures.length; ++i) {
-            fullcalldatas[i] = bytes(signatures[i]).length == 0
-                ? calldatas[i]
-                : abi.encodeWithSignature(signatures[i], calldatas[i]);
-        }
-
-        return fullcalldatas;
     }
 
     /**
@@ -778,8 +817,7 @@ contract Governance is Context, ERC165, EIP712 {
             uint256[] memory values,
             bytes32[] memory roles,
             string[] memory signatures,
-            bytes[] memory calldatas,
-            bytes32[] memory actions
+            bytes[] memory calldatas
         )
     {
         Proposal storage proposal = _proposals[proposalId];
@@ -788,8 +826,7 @@ contract Governance is Context, ERC165, EIP712 {
             proposal.values,
             proposal.roles,
             proposal.signatures,
-            proposal.calldatas,
-            proposal.actions
+            proposal.calldatas
         );
     }
 
@@ -824,9 +861,9 @@ contract Governance is Context, ERC165, EIP712 {
     {
         Proposal storage proposal = _proposals[proposalId];
         bool reached = true;
-        for (uint256 i = 0; i < proposal.actions.length; ++i) {
+        for (uint256 i = 0; i < proposal.signatures.length; ++i) {
             uint256 quorum = actionsQuorums[proposal.targets[i]][
-                proposal.actions[i]
+                proposal.signatures[i]
             ] == 0
                 ? DEFAULT_ACTION_THRESHOLD
                 : 0;
