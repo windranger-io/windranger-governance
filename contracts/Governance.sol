@@ -16,7 +16,9 @@ import '@openzeppelin/contracts/governance/TimelockController.sol';
 
 // BitDAO token contract interface.
 interface IERC20Votes is IERC20 {
-    function getCurrentVotes(address account) external returns (uint256);
+    function getVotes(address account) external returns (uint256);
+
+    function getVotes(address account, bytes32 role) external returns (uint256);
 }
 
 // Governance contract.
@@ -34,6 +36,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
             'Undelegation(address delegatee,uint256 nonce,uint256 expiry)'
         );
 
+    bytes32 public constant EMPTY_ROLE = keccak256('EMPTY_ROLE');
     bytes32 public constant DEVELOPER_ROLE = keccak256('DEVELOPER_ROLE');
     bytes32 public constant LEGAL_ROLE = keccak256('LEGAL_ROLE');
     bytes32 public constant TREASURY_ROLE = keccak256('TREASURY_ROLE');
@@ -137,7 +140,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
      * sure this modifier is consistant with the execution model.
      */
     modifier onlyGovernance() {
-        require(_msgSender() == _executor(), 'Governor: onlyGovernance');
+        require(_msgSender() == _executor(), 'Governance: onlyGovernance');
         _;
     }
 
@@ -184,12 +187,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         return address(_timelock);
     }
 
-    /**
-     * @dev Function to receive ETH that will be handled by the governor (disabled if executor is a third party contract)
-     */
-    receive() external payable virtual {
-        require(_executor() == address(this));
-    }
+    receive() external payable virtual {}
 
     function version() public pure virtual returns (string memory) {
         return '0.0.1';
@@ -267,6 +265,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         string memory description
     ) public virtual returns (uint256) {
         for (uint256 i = 0; i < roles.length; ++i) {
+            require(roles[i] > 0, 'Governance::propose: role does not exist');
             require(
                 votersRoles[roles[i]][_msgSender()],
                 'Governance::propose: proposer must have proposal roles'
@@ -322,6 +321,12 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
             'Governance::propose: proposal already exists'
         );
 
+        // If we want general proposal where everybody can vote.
+        if (roles.length == 0) {
+            roles = new bytes32[](1);
+            roles[0] = EMPTY_ROLE;
+        }
+
         proposal.proposer = _msgSender();
         proposal.targets = targets;
         proposal.values = values;
@@ -343,12 +348,19 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         return proposalId;
     }
 
-    function registerNewRole(bytes32 role) external onlyGovernance {
+    function registerRole(bytes32 role) external onlyGovernance {
         rolesList.push(role);
         _roles[role] = rolesList.length;
     }
 
-    function registerNewAction(
+    function unregisterRole(bytes32 role) external onlyGovernance {
+        rolesList[_roles[role]] = rolesList[rolesList.length - 1];
+        _roles[rolesList[rolesList.length - 1]] = _roles[role];
+        delete rolesList[rolesList.length - 1];
+        _roles[role] = 0;
+    }
+
+    function registerAction(
         address target,
         string calldata signature,
         bytes32 role,
@@ -358,12 +370,29 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         actionsQuorums[target][signature] = quorum;
     }
 
-    function addNewRoleMember(bytes32 role, address member)
+    function unregisterAction(
+        address target,
+        string calldata signature,
+        bytes32 role
+    ) external roleExists(role) onlyGovernance {
+        delete actionsRoles[target][signature];
+        actionsQuorums[target][signature] = 0;
+    }
+
+    function addRoleMember(bytes32 role, address member)
         external
         roleExists(role)
         onlyGovernance
     {
         votersRoles[role][member] = true;
+    }
+
+    function removeRoleMember(bytes32 role, address member)
+        external
+        roleExists(role)
+        onlyGovernance
+    {
+        votersRoles[role][member] = false;
     }
 
     function setProposalThreshold(bytes32 role, uint256 threshold)
@@ -427,7 +456,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
 
     function setVotingPower() external virtual {
         for (uint256 i = 0; i < rolesList.length; ++i) {
-            delegatees[_msgSender()][rolesList[i]] = token.getCurrentVotes(
+            delegatees[_msgSender()][rolesList[i]] = token.getVotes(
                 _msgSender()
             );
         }
@@ -970,7 +999,11 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         receipt.votes = new uint96[](proposal.roles.length);
 
         for (uint256 i = 0; i < proposal.roles.length; ++i) {
-            if (votersRoles[proposal.roles[i]][account]) {
+            if (
+                (proposal.roles.length == 1 &&
+                    proposal.roles[0] == EMPTY_ROLE) ||
+                votersRoles[proposal.roles[i]][account]
+            ) {
                 uint256 weight = getVotes(account, proposal.roles[i]);
                 receipt.votes[i] = SafeCast.toUint96(weight);
                 if (support == uint8(VoteType.Against)) {

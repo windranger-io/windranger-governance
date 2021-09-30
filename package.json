@@ -16,7 +16,10 @@
   "scripts": {
     "build": "hardhat compile",
     "clean": "hardhat clean",
-    "format": "prettier ./**/*.ts --write",
+    "compile": "npx hardhat compile",
+    "clean": "npx hardhat clean",
+    "test": "npx hardhat test",
+    "format": "prettier ./**/*.ts --write && prettier --write 'contracts/**/*.sol'",
     "lint": "eslint . --ext .ts",
     "prepare": "husky install",
     "size": "npx hardhat run scripts/contractBytecodeSize.js",
