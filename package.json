@@ -14,7 +14,7 @@
   "author": "",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "npx hardhat compile",
+    "compile": "npx hardhat compile",
     "clean": "npx hardhat clean",
     "test": "npx hardhat test",
     "format": "prettier ./**/*.ts --write && prettier --write 'contracts/**/*.sol'",
