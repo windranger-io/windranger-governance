@@ -35,6 +35,7 @@ describe('Governance', function () {
     this.TimelockController = await ethers.getContractFactory(
       'TimelockController'
     )
+    this.Treasury = await ethers.getContractFactory('Treasury')
     this.ERC20 = await ethers.getContractFactory('MockERC20')
     this.timelock = await this.TimelockController.deploy(
       1,
@@ -49,6 +50,12 @@ describe('Governance', function () {
       this.timelock.address
     )
     await this.governance.deployed()
+    this.treasury = await this.Treasury.deploy(
+      this.governance.address,
+      this.timelock.address
+    )
+    await this.treasury.deployed()
+    await this.governance.setTreasury(this.treasury.address)
     this.votingPower = BN.from(VOTING_POWER)
     await this.governance.setVoterRolesAdmin(this.delegatee1.address, [
       DEVELOPER_ROLE
@@ -90,12 +97,12 @@ describe('Governance', function () {
   })
 
   it('Run DEVELOPER proposal', async function () {
-    const proposalSignature = 'addNewRoleMember(bytes32,address)'
+    const proposalSignature = 'addRoleMember(bytes32,address)'
     const description = 'Give voter DEVELOPER role'
     const web3 = new Web3()
     const proposalCalldata = await web3.eth.abi.encodeFunctionCall(
       {
-        name: 'addNewRoleMember',
+        name: 'addRoleMember',
         type: 'function',
         inputs: [
           {
@@ -147,12 +154,12 @@ describe('Governance', function () {
   })
 
   it('Run LEGAL proposal', async function () {
-    const proposalSignature = 'addNewRoleMember(bytes32,address)'
+    const proposalSignature = 'addRoleMember(bytes32,address)'
     const description = 'Give voter LEGAL role'
     const web3 = new Web3()
     const proposalCalldata = await web3.eth.abi.encodeFunctionCall(
       {
-        name: 'addNewRoleMember',
+        name: 'addRoleMember',
         type: 'function',
         inputs: [
           {
@@ -204,12 +211,12 @@ describe('Governance', function () {
   })
 
   it('Run TREASURY proposal', async function () {
-    const proposalSignature = 'addNewRoleMember(bytes32,address)'
+    const proposalSignature = 'addRoleMember(bytes32,address)'
     const description = 'Give voter TREASURY role'
     const web3 = new Web3()
     const proposalCalldata = await web3.eth.abi.encodeFunctionCall(
       {
-        name: 'addNewRoleMember',
+        name: 'addRoleMember',
         type: 'function',
         inputs: [
           {
@@ -260,6 +267,72 @@ describe('Governance', function () {
     expect(state).to.equal(7)
   })
 
+  it('Run TREASURY proposal to transfer funds', async function () {
+    await this.bit.approve(this.treasury.address, SUPPLY)
+    await this.treasury.receive(this.admin.address, this.bit.address, SUPPLY)
+
+    const proposalSignature = 'transfer(address,address,uint256)'
+    const description = 'Transfer some bit'
+    const web3 = new Web3()
+    const proposalCalldata = await web3.eth.abi.encodeFunctionCall(
+      {
+        name: 'transfer',
+        type: 'function',
+        inputs: [
+          {
+            type: 'address',
+            name: 'to'
+          },
+          {
+            type: 'address',
+            name: 'asset'
+          },
+          {
+            type: 'uint256',
+            name: 'amount'
+          }
+        ]
+      },
+      [this.voter.address, this.bit.address, SUPPLY]
+    )
+    await this.governance
+      .connect(this.delegatee3)
+      .propose(
+        [this.treasury.address],
+        ['0'],
+        [TREASURY_ROLE],
+        [proposalSignature],
+        [proposalCalldata],
+        description
+      )
+    const descriptionHash = ethers.utils.keccak256(
+      ethers.utils.toUtf8Bytes(description)
+    )
+    const proposalId = await this.governance.hashProposal(
+      [this.treasury.address],
+      ['0'],
+      [proposalCalldata],
+      descriptionHash
+    )
+
+    await this.governance.connect(this.delegatee3).castVote(proposalId, 1)
+    await this.governance.queue(
+      [this.treasury.address],
+      ['0'],
+      [proposalCalldata],
+      descriptionHash
+    )
+    await this.governance.execute(
+      [this.treasury.address],
+      ['0'],
+      [proposalCalldata],
+      descriptionHash
+    )
+    const state = await this.governance.state(proposalId)
+    expect(state).to.equal(7)
+    expect(await this.bit.balanceOf(this.voter.address)).to.equal(SUPPLY)
+  })
+
   it('Run multi proposal', async function () {
     this.votingPower = this.votingPower.mul(BN.from(2))
     await this.governance
@@ -272,9 +345,9 @@ describe('Governance', function () {
       .connect(this.delegatee3)
       .delegate(TREASURY_ROLE, this.votingPower, this.voter.address)
     const proposalSignatures = [
-      'addNewRoleMember(bytes32,address)',
-      'addNewRoleMember(bytes32,address)',
-      'addNewRoleMember(bytes32,address)'
+      'addRoleMember(bytes32,address)',
+      'addRoleMember(bytes32,address)',
+      'addRoleMember(bytes32,address)'
     ]
     const description = 'Run multi proposal'
     const web3 = new Web3()
@@ -288,7 +361,7 @@ describe('Governance', function () {
     proposalCalldatas.push(
       await web3.eth.abi.encodeFunctionCall(
         {
-          name: 'addNewRoleMember',
+          name: 'addRoleMember',
           type: 'function',
           inputs: [
             {
@@ -307,7 +380,7 @@ describe('Governance', function () {
     proposalCalldatas.push(
       await web3.eth.abi.encodeFunctionCall(
         {
-          name: 'addNewRoleMember',
+          name: 'addRoleMember',
           type: 'function',
           inputs: [
             {
@@ -326,7 +399,7 @@ describe('Governance', function () {
     proposalCalldatas.push(
       await web3.eth.abi.encodeFunctionCall(
         {
-          name: 'addNewRoleMember',
+          name: 'addRoleMember',
           type: 'function',
           inputs: [
             {
