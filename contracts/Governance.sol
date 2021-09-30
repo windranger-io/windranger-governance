@@ -95,6 +95,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
 
     IERC20Votes public token;
     TimelockController private _timelock;
+    address public treasury;
 
     bytes32[] public rolesList;
     mapping(uint256 => bytes32) private _timelockIds;
@@ -212,6 +213,10 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         return 1; // ~3 days in blocks
     }
 
+    function setTreasury(address treasury_) external onlyOwner {
+        treasury = treasury_;
+    }
+
     /**
      * @dev Public endpoint to update the underlying timelock instance. Restricted to the timelock itself, so updates
      * must be proposed, scheduled and executed using the {Governor} workflow.
@@ -284,6 +289,21 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
             'Governance::propose: invalid signatures length'
         );
         require(targets.length > 0, 'Governance::propose: empty proposal');
+
+        for (uint256 i = 0; i < targets.length; ++i) {
+            if (targets[i] != address(this) && targets[i] != treasury) {
+                bool registeredAction = false;
+                for (uint256 j = 0; j < roles.length; ++j) {
+                    if (actionsRoles[targets[i]][signatures[i]] == roles[i]) {
+                        registeredAction = true;
+                    }
+                }
+                require(
+                    registeredAction,
+                    'Governance::propose: action is not registered'
+                );
+            }
+        }
 
         bytes32 descriptionHash = keccak256(bytes(description));
         uint256 proposalId = hashProposal(

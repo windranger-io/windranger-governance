@@ -18,8 +18,9 @@ interface IERC20Allowance is IERC20 {
 }
 
 // Treasury contract.
-contract Treasry is Context, Ownable {
+contract Treasury is Context, Ownable {
     address public governance;
+    address public executor;
 
     mapping(address => uint256) public balances;
     bytes32 public name = 'TREASURY';
@@ -30,12 +31,18 @@ contract Treasry is Context, Ownable {
     event DecreasedAllowance(address spender, address asset, uint256 amount);
 
     modifier onlyGovernance() {
-        require(_msgSender() == governance, 'Governor: onlyGovernance');
+        require(_msgSender() == governance, 'Treasury: onlyGovernance');
         _;
     }
 
-    constructor(address governance_) {
+    modifier onlyExecutor() {
+        require(_msgSender() == executor, 'Treasury: onlyExecutor');
+        _;
+    }
+
+    constructor(address governance_, address executor_) {
         governance = governance_;
+        executor = executor_;
     }
 
     function setGovernance(address governance_) external onlyGovernance {
@@ -46,7 +53,7 @@ contract Treasry is Context, Ownable {
         address spender,
         address asset,
         uint256 amount
-    ) external onlyGovernance {
+    ) external onlyExecutor {
         IERC20Allowance(asset).increaseAllowance(spender, amount);
         emit IncreasedAllowance(spender, asset, amount);
     }
@@ -55,7 +62,7 @@ contract Treasry is Context, Ownable {
         address spender,
         address asset,
         uint256 amount
-    ) external onlyGovernance {
+    ) external onlyExecutor {
         IERC20Allowance(asset).decreaseAllowance(spender, amount);
         emit DecreasedAllowance(spender, asset, amount);
     }
@@ -64,7 +71,7 @@ contract Treasry is Context, Ownable {
         address to,
         address asset,
         uint256 amount
-    ) external onlyGovernance {
+    ) external onlyExecutor {
         balances[asset] -= amount;
         if (asset == address(0)) {
             payable(to).call{value: amount};
