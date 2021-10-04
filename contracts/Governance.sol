@@ -210,10 +210,10 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     function votingPeriod() public pure virtual returns (uint256) {
-        return 1; // ~3 days in blocks
+        return 5; // ~3 days in blocks
     }
 
-    function setTreasury(address treasury_) external onlyOwner {
+    function setTreasury(address treasury_) external virtual onlyOwner {
         treasury = treasury_;
     }
 
@@ -368,12 +368,12 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         return proposalId;
     }
 
-    function registerRole(bytes32 role) external onlyGovernance {
+    function registerRole(bytes32 role) external virtual onlyGovernance {
         rolesList.push(role);
         _roles[role] = rolesList.length;
     }
 
-    function unregisterRole(bytes32 role) external onlyGovernance {
+    function unregisterRole(bytes32 role) external virtual onlyGovernance {
         rolesList[_roles[role]] = rolesList[rolesList.length - 1];
         _roles[rolesList[rolesList.length - 1]] = _roles[role];
         delete rolesList[rolesList.length - 1];
@@ -385,7 +385,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         string calldata signature,
         bytes32 role,
         uint256 quorum
-    ) external roleExists(role) onlyGovernance {
+    ) external virtual roleExists(role) onlyGovernance {
         actionsRoles[target][signature] = role;
         actionsQuorums[target][signature] = quorum;
     }
@@ -394,13 +394,14 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         address target,
         string calldata signature,
         bytes32 role
-    ) external roleExists(role) onlyGovernance {
+    ) external virtual roleExists(role) onlyGovernance {
         delete actionsRoles[target][signature];
         actionsQuorums[target][signature] = 0;
     }
 
     function addRoleMember(bytes32 role, address member)
         external
+        virtual
         roleExists(role)
         onlyGovernance
     {
@@ -598,6 +599,13 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         virtual
         returns (uint256)
     {
+        if (role == EMPTY_ROLE) {
+            uint256 totalVotes = 0;
+            for (uint256 i = 0; i < rolesList.length; ++i) {
+                totalVotes += delegatees[account][rolesList[i]];
+            }
+            return totalVotes;
+        }
         return delegatees[account][role];
     }
 

@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 
 import '@openzeppelin/contracts/utils/Address.sol';
 import '@openzeppelin/contracts/utils/Context.sol';
-import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
 interface IERC20Allowance is IERC20 {
@@ -18,7 +17,7 @@ interface IERC20Allowance is IERC20 {
 }
 
 // Treasury contract.
-contract Treasury is Context, Ownable {
+contract Treasury is Context {
     address public governance;
     address public executor;
 
@@ -45,15 +44,19 @@ contract Treasury is Context, Ownable {
         executor = executor_;
     }
 
-    function setGovernance(address governance_) external onlyGovernance {
+    function setGovernance(address governance_) external virtual onlyExecutor {
         governance = governance_;
+    }
+
+    function setExecutor(address executor_) external virtual onlyExecutor {
+        executor = executor_;
     }
 
     function increaseAllowance(
         address spender,
         address asset,
         uint256 amount
-    ) external onlyExecutor {
+    ) external virtual onlyExecutor {
         IERC20Allowance(asset).increaseAllowance(spender, amount);
         emit IncreasedAllowance(spender, asset, amount);
     }
@@ -62,7 +65,7 @@ contract Treasury is Context, Ownable {
         address spender,
         address asset,
         uint256 amount
-    ) external onlyExecutor {
+    ) external virtual onlyExecutor {
         IERC20Allowance(asset).decreaseAllowance(spender, amount);
         emit DecreasedAllowance(spender, asset, amount);
     }
@@ -71,7 +74,7 @@ contract Treasury is Context, Ownable {
         address to,
         address asset,
         uint256 amount
-    ) external onlyExecutor {
+    ) external virtual onlyExecutor {
         balances[asset] -= amount;
         if (asset == address(0)) {
             payable(to).call{value: amount};
@@ -85,7 +88,7 @@ contract Treasury is Context, Ownable {
         address from,
         address asset,
         uint256 amount
-    ) external payable {
+    ) external payable virtual {
         balances[asset] += amount;
         if (asset == address(0)) {
             require(
