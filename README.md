@@ -1,19 +1,7 @@
 # governance
 BitDAO Governance contracts framework
 
-## Build
-
-`npm install`
-
-`npm run build`
-
-## Test
-
-### Configure node
-
-`npm config set include=dev`
-
-`npm install`
+## Yarn approach
 
 ### Set environment variables
 
@@ -25,7 +13,47 @@ BitDAO Governance contracts framework
 
 `export ETHERSCAN_API_KEY=ABC` (not essential)
 
-### Run Ganache
+### Build
+
+`yarn`
+
+`yarn build`
+
+### Test 
+
+
+#### Run Ganache
+
+Do the following in a different terminal window:
+
+`yarn add ganache-cli`
+
+`./node_modules/ganache-cli/cli.js`
+
+
+#### Run Tests
+
+`yarn test`
+
+
+## NodeJS approach
+
+### Build
+
+`npm install`
+
+`npm run build`
+
+### Test
+
+#### Configure node
+
+`npm config set include=dev`
+
+`npm install`
+
+
+#### Run Ganache
 
 Do the following in a different terminal window:
 
@@ -33,6 +61,6 @@ Do the following in a different terminal window:
 
 `./node_modules/ganache-cli/cli.js`
 
-### Run Tests
+#### Run Tests
 
 `npm run test`
