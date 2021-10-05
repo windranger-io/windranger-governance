@@ -87,6 +87,13 @@ Will be owned by BitDAO protocol governance
 4. claimable(asset), can be viewed by protocol token holder, how much he can claim for the treasury based on profit sharing model for protocol token supply and token holder balances
 5. claim(asset), transfers claimable to token protocol holder
 
+## Snapshot votes strategies
+
+1. Allows admin (ByBit) to set initial voting power for voters.
+2. Allows each voter to set current voting power single time during checkpoint based on current votes from ERC20 comp like token.
+3. Allows lock tokens into Governance contract and be able to vote and participate in governance only in case of locked tokens.
+4. ByBit has veto (cancel proposal) right, but can't participate in voting.
+
 ## Future work
 
 - nfts
