@@ -13,16 +13,23 @@ import '@openzeppelin/contracts/utils/Timers.sol';
 import '@openzeppelin/contracts/utils/math/SafeCast.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/governance/TimelockController.sol';
+import './interfaces/OpenVoting.sol';
+import './interfaces/RoleVoting.sol';
 
-// BitDAO token contract interface.
-interface IERC20Votes is IERC20 {
-    function getVotes(address account) external returns (uint256);
-
-    function getVotes(address account, bytes32 role) external returns (uint256);
+// On-Chain snapshot voting
+interface SnapshotVoting is IERC20 {
+    function getCurrentVotes(address account) external view returns (uint256);
 }
 
 // Governance contract.
-contract Governance is Context, Ownable, ERC165, EIP712 {
+contract Governance is
+    Context,
+    Ownable,
+    ERC165,
+    EIP712,
+    OpenVoting,
+    RoleVoting
+{
     using SafeCast for uint256;
     using Counters for Counters.Counter;
     using Timers for Timers.BlockNumber;
@@ -93,7 +100,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         uint96[] votes;
     }
 
-    IERC20Votes public token;
+    SnapshotVoting public token;
     TimelockController private _timelock;
     address public treasury;
 
@@ -161,7 +168,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         _;
     }
 
-    constructor(IERC20Votes token_, TimelockController timelock_)
+    constructor(SnapshotVoting token_, TimelockController timelock_)
         EIP712(name(), version())
     {
         token = token_;
@@ -477,7 +484,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
 
     function setVotingPower() external virtual {
         for (uint256 i = 0; i < rolesList.length; ++i) {
-            delegatees[_msgSender()][rolesList[i]] = token.getVotes(
+            delegatees[_msgSender()][rolesList[i]] = token.getCurrentVotes(
                 _msgSender()
             );
         }
@@ -593,10 +600,14 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         delegatees[_msgSender()][role] += votes;
     }
 
+    function getVotes(address voter) public view override returns (uint256) {
+        return token.balanceOf(voter);
+    }
+
     function getVotes(address account, bytes32 role)
         public
         view
-        virtual
+        override
         returns (uint256)
     {
         if (role == EMPTY_ROLE) {
