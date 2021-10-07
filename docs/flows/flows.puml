@@ -1,0 +1,89 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+box "(community)" #LightYellow
+actor Alice as alice
+end box
+
+box "(offchain)" #Coral
+actor Forum as forum
+end box
+
+box "(community)" #LightGray
+actor Community as community
+actor Guarantor as guarantor
+end box
+
+box "(multisig)" #LightBlue
+actor BitDAOAdmin as bitdaoadmin
+end box
+
+box "(token)" #OliveDrab
+actor TokenHolders as tokenholders
+endbox
+
+box "(offchain)" #Coral
+database Snapshot as snapshot
+end box
+
+box "(onchain)" #Lavender
+collections BondContract as bondcontract
+collections GrantsTreasury as grantstreasury
+collections BitDAOTreasury as bitdaotreasury
+end box
+
+autonumber "Current:[00]"
+
+== Current ==
+
+alice -> forum: create forum proposal
+
+community -> forum: show proposals
+community <-- forum: proposals
+community -> forum: put positive/negative feedback
+
+alice <- forum: get positive/negative feedback
+
+alice -> snapshot: if (positive) submit proposal
+
+bitdaoadmin -> snapshot: show proposals
+bitdaoadmin <-- snapshot: proposals
+bitdaoadmin -> snapshot: vote on open proposals
+bitdaoadmin <- snapshot: vote
+bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaotreasury -> grantstreasury: transfer funds
+
+alice <-- grantstreasury: execute proposal
+
+newpage
+
+autonumber "Bond:[00]"
+
+== Bond ==
+
+alice -> forum: create forum proposal
+alice <- guarantor: positive/negative feedback
+alice -> bondcontract: if (positive) create bond
+
+guarantor -> bondcontract: contribute
+
+alice -> snapshot: submit proposal
+
+bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaotreasury -> grantstreasury: transfer funds
+
+alice <-- grantstreasury: execute proposal
+
+alice -> snapshot: submit release request
+guarantor -> snapshot: show proposals
+guarantor <-- snapshot: proposals
+guarantor -> snapshot: vote
+
+bitdaoadmin -> snapshot: show vote result
+bitdaoadmin <-- snapshot: pass/fail
+
+bitdaoadmin -> bondcontract: if (pass) release, else slash
+
+
+
+
+@enduml
