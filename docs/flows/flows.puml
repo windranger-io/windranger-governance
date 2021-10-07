@@ -13,7 +13,7 @@ actor Community as community
 actor Guarantor as guarantor
 end box
 
-box "(multisig)" #LightBlue
+box "(multisig)" #Peru
 actor BitDAOAdmin as bitdaoadmin
 end box
 
@@ -29,6 +29,7 @@ box "(onchain)" #Lavender
 collections BondContract as bondcontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
+collections BitDAOGovernanceV2 as bitdaogovernance
 end box
 
 autonumber "Current:[00]"
@@ -41,7 +42,7 @@ community -> forum: show proposals
 community <-- forum: proposals
 community -> forum: put positive/negative feedback
 
-alice <- forum: get positive/negative feedback
+alice <-- forum: get positive/negative feedback
 
 alice -> snapshot: if (positive) submit proposal
 
@@ -51,6 +52,10 @@ bitdaoadmin -> snapshot: vote on open proposals
 bitdaoadmin <- snapshot: vote
 bitdaoadmin -> bitdaotreasury: if (pass) allow funds
 bitdaotreasury -> grantstreasury: transfer funds
+
+alt#Gold #DarkSeaGreen trace
+  alice <-- grantstreasury: TxHash
+end
 
 alice <-- grantstreasury: execute proposal
 
@@ -81,7 +86,40 @@ guarantor -> snapshot: vote
 bitdaoadmin -> snapshot: show vote result
 bitdaoadmin <-- snapshot: pass/fail
 
-bitdaoadmin -> bondcontract: if (pass) release, else slash
+alt#Gold #LightBlue pass
+    bitdaoadmin -> bondcontract: release bond
+else #Pink fail
+    bitdaoadmin -> bondcontract: slash bond
+end
+
+  alt#Gold #DarkSeaGreen trace
+    bitdaoadmin <-- bondcontract: TxHash
+  end
+
+newpage
+
+autonumber "Roles:[00]"
+
+== Roles ==
+
+alice -> forum: submit create role proposal
+community -> forum: list role proposals
+community <-- forum: role proposals
+community -> forum: positive/negative feedback
+alice <-- forum: get positive/negative feedback
+
+alice -> snapshot: if (positive) create admin role
+
+bitdaoadmin -> snapshot: list role proposals
+bitdaoadmin <-- snapshot: role proposals
+bitdaoadmin -> snapshot: show results
+bitdaoadmin <-- snapshot: results
+
+bitdaoadmin -> bitdaogovernance: if (pass) create role
+
+alt#Gold #DarkSeaGreen trace
+  bitdaoadmin <-- bitdaogovernance: TxHash
+end
 
 
 
