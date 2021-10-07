@@ -30,6 +30,7 @@ collections BondContract as bondcontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
 collections BitDAOGovernanceV2 as bitdaogovernance
+collections LDAO
 end box
 
 autonumber "Current:[00]"
@@ -43,6 +44,8 @@ community <-- forum: proposals
 community -> forum: put positive/negative feedback
 
 alice <-- forum: get positive/negative feedback
+
+community -> community: delegate votes
 
 alice -> snapshot: if (positive) submit proposal
 
@@ -71,12 +74,16 @@ alice -> bondcontract: if (positive) create bond
 
 guarantor -> bondcontract: contribute
 
+community -> community: delegate votes
+
 alice -> snapshot: submit proposal
 
 bitdaoadmin -> bitdaotreasury: if (pass) allow funds
 bitdaotreasury -> grantstreasury: transfer funds
 
 alice <-- grantstreasury: execute proposal
+
+community -> community: delegate votes
 
 alice -> snapshot: submit release request
 guarantor -> snapshot: show proposals
@@ -107,6 +114,8 @@ community -> forum: list role proposals
 community <-- forum: role proposals
 community -> forum: positive/negative feedback
 alice <-- forum: get positive/negative feedback
+
+community -> community: delegate votes
 
 alice -> snapshot: if (positive) create admin role
 
