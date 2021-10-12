@@ -87,7 +87,8 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         uint96[] votes;
     }
 
-    address public votesOracle;
+    IOpenVoting public openVotingOracle;
+    IRoleVoting public roleVotingOracle;
     ISnapshotVoting public token;
     TimelockController private _timelock;
     address public treasury;
@@ -158,7 +159,8 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         address votesOracle_
     ) EIP712(name(), version()) {
         token = token_;
-        votesOracle = votesOracle_;
+        openVotingOracle = IOpenVoting(votesOracle_);
+        roleVotingOracle = IRoleVoting(votesOracle_);
         _timelock = timelock_;
         _roles[TREASURY_ROLE] = 1;
         _roles[DEVELOPER_ROLE] = 2;
@@ -212,7 +214,8 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     function setVotesOracle(address votesOracle_) external virtual onlyOwner {
-        votesOracle = votesOracle_;
+        openVotingOracle = IOpenVoting(votesOracle_);
+        roleVotingOracle = IRoleVoting(votesOracle_);
     }
 
     /**
@@ -445,7 +448,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     function getVotes(address account) public view virtual returns (uint256) {
-        return IOpenVoting(votesOracle).getVotes(account);
+        return openVotingOracle.getVotes(account);
     }
 
     function getVotes(address account, bytes32 role)
@@ -457,7 +460,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         if (role == EMPTY_ROLE) {
             return getVotes(account);
         }
-        return IRoleVoting(votesOracle).getVotes(account, role);
+        return roleVotingOracle.getVotes(account, role);
     }
 
     /**

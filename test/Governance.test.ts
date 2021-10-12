@@ -49,14 +49,14 @@ describe('Governance', function () {
       [this.admin.address]
     )
     await this.timelock.deployed()
-    this.mockVotesOracle = await this.MockVotesOracle.deploy()
-    await this.mockVotesOracle.deployed()
+    this.votesOracle = await this.MockVotesOracle.deploy()
+    await this.votesOracle.deployed()
     this.bit = await this.ERC20.deploy('BIT', 'BIT', SUPPLY)
     await this.bit.deployed()
     this.governance = await this.Governance.deploy(
       this.bit.address,
       this.timelock.address,
-      this.mockVotesOracle.address
+      this.votesOracle.address
     )
     await this.governance.deployed()
     this.treasury = await this.Treasury.deploy(
@@ -75,37 +75,37 @@ describe('Governance', function () {
     await this.governance.setVoterRolesAdmin(this.delegatee3.address, [
       TREASURY_ROLE
     ])
-    await this.mockVotesOracle.setOpenVotingPower(
+    await this.votesOracle.setOpenVotingPower(
       this.voter.address,
       this.votingPower
     )
-    await this.mockVotesOracle.setOpenVotingPower(
+    await this.votesOracle.setOpenVotingPower(
       this.delegatee1.address,
       this.votingPower
     )
-    await this.mockVotesOracle.setOpenVotingPower(
+    await this.votesOracle.setOpenVotingPower(
       this.delegatee2.address,
       this.votingPower
     )
-    await this.mockVotesOracle.setOpenVotingPower(
+    await this.votesOracle.setOpenVotingPower(
       this.delegatee3.address,
       this.votingPower
     )
-    await this.mockVotesOracle.setOpenVotingPower(
+    await this.votesOracle.setOpenVotingPower(
       this.newDelegatee.address,
       this.votingPower
     )
-    await this.mockVotesOracle.setRolesVotingPower(
+    await this.votesOracle.setRolesVotingPower(
       this.delegatee1.address,
       [DEVELOPER_ROLE],
       [this.votingPower.mul(2)]
     )
-    await this.mockVotesOracle.setRolesVotingPower(
+    await this.votesOracle.setRolesVotingPower(
       this.delegatee2.address,
       [LEGAL_ROLE],
       [this.votingPower.mul(2)]
     )
-    await this.mockVotesOracle.setRolesVotingPower(
+    await this.votesOracle.setRolesVotingPower(
       this.delegatee3.address,
       [TREASURY_ROLE],
       [this.votingPower.mul(2)]
