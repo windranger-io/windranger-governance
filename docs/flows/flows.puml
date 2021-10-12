@@ -1,0 +1,136 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+box "(community)" #LightYellow
+actor Alice as alice
+end box
+
+box "(offchain)" #Coral
+actor Forum as forum
+end box
+
+box "(community)" #LightGray
+actor Community as community
+actor Guarantor as guarantor
+end box
+
+box "(multisig)" #Peru
+actor BitDAOAdmin as bitdaoadmin
+end box
+
+box "(token)" #OliveDrab
+actor TokenHolders as tokenholders
+endbox
+
+box "(offchain)" #Coral
+database Snapshot as snapshot
+end box
+
+box "(onchain)" #Lavender
+collections BondContract as bondcontract
+collections GrantsTreasury as grantstreasury
+collections BitDAOTreasury as bitdaotreasury
+collections BitDAOGovernanceV2 as bitdaogovernance
+collections LDAO
+end box
+
+autonumber "Current:[00]"
+
+== Current ==
+
+alice -> forum: create forum proposal
+
+community -> forum: show proposals
+community <-- forum: proposals
+community -> forum: put positive/negative feedback
+
+alice <-- forum: get positive/negative feedback
+
+community -> community: delegate votes
+
+alice -> snapshot: if (positive) submit proposal
+
+bitdaoadmin -> snapshot: show proposals
+bitdaoadmin <-- snapshot: proposals
+bitdaoadmin -> snapshot: vote on open proposals
+bitdaoadmin <- snapshot: vote
+bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaotreasury -> grantstreasury: transfer funds
+
+alt#Gold #DarkSeaGreen trace
+  alice <-- grantstreasury: TxHash
+end
+
+alice <-- grantstreasury: execute proposal
+
+newpage
+
+autonumber "Bond:[00]"
+
+== Bond ==
+
+alice -> forum: create forum proposal
+alice <- guarantor: positive/negative feedback
+alice -> bondcontract: if (positive) create bond
+
+guarantor -> bondcontract: contribute
+
+community -> community: delegate votes
+
+alice -> snapshot: submit proposal
+
+bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaotreasury -> grantstreasury: transfer funds
+
+alice <-- grantstreasury: execute proposal
+
+community -> community: delegate votes
+
+alice -> snapshot: submit release request
+guarantor -> snapshot: show proposals
+guarantor <-- snapshot: proposals
+guarantor -> snapshot: vote
+
+bitdaoadmin -> snapshot: show vote result
+bitdaoadmin <-- snapshot: pass/fail
+
+alt#Gold #LightBlue pass
+    bitdaoadmin -> bondcontract: release bond
+else #Pink fail
+    bitdaoadmin -> bondcontract: slash bond
+end
+
+  alt#Gold #DarkSeaGreen trace
+    bitdaoadmin <-- bondcontract: TxHash
+  end
+
+newpage
+
+autonumber "Roles:[00]"
+
+== Roles ==
+
+alice -> forum: submit create role proposal
+community -> forum: list role proposals
+community <-- forum: role proposals
+community -> forum: positive/negative feedback
+alice <-- forum: get positive/negative feedback
+
+community -> community: delegate votes
+
+alice -> snapshot: if (positive) create admin role
+
+bitdaoadmin -> snapshot: list role proposals
+bitdaoadmin <-- snapshot: role proposals
+bitdaoadmin -> snapshot: show results
+bitdaoadmin <-- snapshot: results
+
+bitdaoadmin -> bitdaogovernance: if (pass) create role
+
+alt#Gold #DarkSeaGreen trace
+  bitdaoadmin <-- bitdaogovernance: TxHash
+end
+
+
+
+
+@enduml

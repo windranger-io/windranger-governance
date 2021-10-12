@@ -29,11 +29,15 @@ The process is as follows:
     - a pointer to the forum announcement
     - a pointer to the bond record
 
-5. If Alice's project delivers requirements and meets metrics, a second BitDAO Snapshot proposal can
+5. If the proposal passes, the BitDAO funds the grants treasury. If the proposal doesn't pass, the
+   BitDAO multi-sig releases the bond for redemption by the contributors, and the process halts.
+
+6. Alice executes the proposal
+
+7. If Alice's project delivers requirements and meets metrics, a second BitDAO Snapshot proposal can
    be submitted to permit redemption of bond certificates.
 
-6. If the proposal passes, the multi-sig address sets the bond's redeemable flag, so that
-   contributions can be redeemed, sometimes with a reward.
-
-7. If the proposal doesn't pass, the bond is sent to the BitDAO treasury.
+8. If the proposal passes, the multi-sig address sets the bond's redeemable flag, so that
+   contributions can be redeemed, sometimes with a reward. If the proposal doesn't pass, the bond is
+   slashed by sending the bond contributions to the BitDAO treasury.
 
