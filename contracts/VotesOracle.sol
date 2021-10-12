@@ -5,8 +5,8 @@ pragma solidity ^0.8.0;
 import '@openzeppelin/contracts/utils/Context.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 
-// MockVotesOracle contract.
-contract MockVotesOracle is Context, Ownable {
+// VotesOracle contract.
+contract VotesOracle is Context, Ownable {
     mapping(address => uint256) private _openVotingPower;
     mapping(address => mapping(bytes32 => uint256)) private _rolesVotingPower;
 

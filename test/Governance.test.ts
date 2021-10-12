@@ -36,7 +36,7 @@ describe('Governance', function () {
     this.delegatee2 = this.signers[3]
     this.delegatee3 = this.signers[4]
     this.newDelegatee = this.signers[5]
-    this.MockVotesOracle = await ethers.getContractFactory('MockVotesOracle')
+    this.VotesOracle = await ethers.getContractFactory('VotesOracle')
     this.Governance = await ethers.getContractFactory('Governance')
     this.TimelockController = await ethers.getContractFactory(
       'TimelockController'
@@ -49,7 +49,7 @@ describe('Governance', function () {
       [this.admin.address]
     )
     await this.timelock.deployed()
-    this.votesOracle = await this.MockVotesOracle.deploy()
+    this.votesOracle = await this.VotesOracle.deploy()
     await this.votesOracle.deployed()
     this.bit = await this.ERC20.deploy('BIT', 'BIT', SUPPLY)
     await this.bit.deployed()
