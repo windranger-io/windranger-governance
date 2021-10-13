@@ -17,31 +17,18 @@ import './interfaces/OpenVoting.sol';
 import './interfaces/RoleVoting.sol';
 
 // On-Chain snapshot voting
-interface SnapshotVoting is IERC20 {
+interface ISnapshotVoting is IERC20 {
     function getCurrentVotes(address account) external view returns (uint256);
 }
 
 // Governance contract.
-contract Governance is
-    Context,
-    Ownable,
-    ERC165,
-    EIP712,
-    OpenVoting,
-    RoleVoting
-{
+contract Governance is Context, Ownable, ERC165, EIP712 {
     using SafeCast for uint256;
     using Counters for Counters.Counter;
     using Timers for Timers.BlockNumber;
 
     bytes32 public constant BALLOT_TYPEHASH =
         keccak256('Ballot(uint256 proposalId,uint8 support)');
-    bytes32 private constant _DELEGATION_TYPEHASH =
-        keccak256('Delegation(address delegatee,uint256 nonce,uint256 expiry)');
-    bytes32 private constant _UNDELEGATION_TYPEHASH =
-        keccak256(
-            'Undelegation(address delegatee,uint256 nonce,uint256 expiry)'
-        );
 
     bytes32 public constant EMPTY_ROLE = keccak256('EMPTY_ROLE');
     bytes32 public constant DEVELOPER_ROLE = keccak256('DEVELOPER_ROLE');
@@ -100,7 +87,9 @@ contract Governance is
         uint96[] votes;
     }
 
-    SnapshotVoting public token;
+    IOpenVoting public openVotingOracle;
+    IRoleVoting public roleVotingOracle;
+    ISnapshotVoting public token;
     TimelockController private _timelock;
     address public treasury;
 
@@ -108,10 +97,6 @@ contract Governance is
     mapping(uint256 => bytes32) private _timelockIds;
     mapping(bytes32 => uint256) private _roles;
     mapping(bytes32 => mapping(address => bool)) public votersRoles;
-    mapping(address => mapping(bytes32 => mapping(address => uint256)))
-        public delegations;
-    mapping(address => mapping(bytes32 => uint256)) public delegatees;
-    mapping(address => mapping(bytes32 => uint256)) public delegated;
     mapping(address => mapping(string => bytes32)) public actionsRoles;
     mapping(address => mapping(string => uint256)) public actionsQuorums;
     mapping(bytes32 => uint256) public proposalThresholds;
@@ -160,18 +145,22 @@ contract Governance is
         _;
     }
 
-    modifier hasRole(bytes32 role, address delegatee) {
+    modifier hasRole(bytes32 role, address account) {
         require(
-            votersRoles[role][delegatee],
-            'Governance::hasRole: delegatee does not have the role'
+            votersRoles[role][account],
+            'Governance::hasRole: account does not have the role'
         );
         _;
     }
 
-    constructor(SnapshotVoting token_, TimelockController timelock_)
-        EIP712(name(), version())
-    {
+    constructor(
+        ISnapshotVoting token_,
+        TimelockController timelock_,
+        address votesOracle_
+    ) EIP712(name(), version()) {
         token = token_;
+        openVotingOracle = IOpenVoting(votesOracle_);
+        roleVotingOracle = IRoleVoting(votesOracle_);
         _timelock = timelock_;
         _roles[TREASURY_ROLE] = 1;
         _roles[DEVELOPER_ROLE] = 2;
@@ -222,6 +211,11 @@ contract Governance is
 
     function setTreasury(address treasury_) external virtual onlyOwner {
         treasury = treasury_;
+    }
+
+    function setVotesOracle(address votesOracle_) external virtual onlyOwner {
+        openVotingOracle = IOpenVoting(votesOracle_);
+        roleVotingOracle = IRoleVoting(votesOracle_);
     }
 
     /**
@@ -431,39 +425,6 @@ contract Governance is
         proposalThresholds[role] = threshold;
     }
 
-    function setVotingPowerSingleAdmin(address voter, uint256 votingPower)
-        external
-        virtual
-        onlyOwner
-    {
-        for (uint256 i = 0; i < rolesList.length; ++i) {
-            require(
-                delegatees[voter][rolesList[i]] == 0,
-                'Governance::setVotingPowerSingleAdmin: already set voting power'
-            );
-            delegatees[voter][rolesList[i]] = votingPower;
-        }
-    }
-
-    function setVotingPowerMultiAdmin(
-        address[] calldata voters,
-        uint256[] calldata votingPowers
-    ) external virtual onlyOwner {
-        require(
-            voters.length == votingPowers.length,
-            'Governance::setVotingPowerMultiAdmin: not equal lengths'
-        );
-        for (uint256 i = 0; i < voters.length; ++i) {
-            for (uint256 j = 0; j < rolesList.length; ++j) {
-                require(
-                    delegatees[voters[i]][rolesList[j]] == 0,
-                    'Governance::setVotingPowerMultiAdmin: already set voting power'
-                );
-                delegatees[voters[i]][rolesList[j]] = votingPowers[i];
-            }
-        }
-    }
-
     function setVoterRolesAdmin(address voter, bytes32[] calldata voterRoles)
         external
         virtual
@@ -482,142 +443,24 @@ contract Governance is
         }
     }
 
-    function setVotingPower() external virtual {
-        for (uint256 i = 0; i < rolesList.length; ++i) {
-            delegatees[_msgSender()][rolesList[i]] = token.getCurrentVotes(
-                _msgSender()
-            );
-        }
+    function getTokenVotingPower() external virtual returns (uint256) {
+        return token.getCurrentVotes(_msgSender());
     }
 
-    function delegate(
-        bytes32 role,
-        uint256 votes,
-        address delegatee
-    ) external virtual roleExists(role) hasRole(role, delegatee) {
-        _delegate(role, votes, delegatee);
-    }
-
-    function delegateBySig(
-        bytes32 role,
-        uint256 votes,
-        address delegatee,
-        uint256 nonce,
-        uint256 expiry,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external virtual roleExists(role) hasRole(role, delegatee) {
-        require(
-            block.timestamp <= expiry,
-            'Governance::delegateBySig: signature expired'
-        );
-        address signer = ECDSA.recover(
-            _hashTypedDataV4(
-                keccak256(
-                    abi.encode(
-                        _DELEGATION_TYPEHASH,
-                        role,
-                        delegatee,
-                        nonce,
-                        expiry
-                    )
-                )
-            ),
-            v,
-            r,
-            s
-        );
-        require(
-            nonce == _nonces[signer]++,
-            'Governance::delegateBySig: invalid nonce'
-        );
-        _delegate(role, votes, delegatee);
-    }
-
-    function undelegate(
-        bytes32 role,
-        uint256 votes,
-        address delegatee
-    ) external virtual roleExists(role) hasRole(role, delegatee) {
-        _undelegate(role, votes, delegatee);
-    }
-
-    function undelegateBySig(
-        bytes32 role,
-        uint256 votes,
-        address delegatee,
-        uint256 nonce,
-        uint256 expiry,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external virtual roleExists(role) hasRole(role, delegatee) {
-        require(
-            block.timestamp <= expiry,
-            'Governance::undelegateBySig: signature expired'
-        );
-        address signer = ECDSA.recover(
-            _hashTypedDataV4(
-                keccak256(
-                    abi.encode(
-                        _UNDELEGATION_TYPEHASH,
-                        role,
-                        delegatee,
-                        nonce,
-                        expiry
-                    )
-                )
-            ),
-            v,
-            r,
-            s
-        );
-        require(
-            nonce == _nonces[signer]++,
-            'Governance::undelegateBySig: invalid nonce'
-        );
-        _undelegate(role, votes, delegatee);
-    }
-
-    function _delegate(
-        bytes32 role,
-        uint256 votes,
-        address delegatee
-    ) internal virtual {
-        delegatees[_msgSender()][role] -= votes;
-        delegations[_msgSender()][role][delegatee] += votes;
-        delegatees[delegatee][role] += votes;
-    }
-
-    function _undelegate(
-        bytes32 role,
-        uint256 votes,
-        address delegatee
-    ) internal virtual {
-        delegatees[delegatee][role] -= votes;
-        delegations[_msgSender()][role][delegatee] -= votes;
-        delegatees[_msgSender()][role] += votes;
-    }
-
-    function getVotes(address voter) public view override returns (uint256) {
-        return token.balanceOf(voter);
+    function getVotes(address account) public view virtual returns (uint256) {
+        return openVotingOracle.getVotes(account);
     }
 
     function getVotes(address account, bytes32 role)
         public
         view
-        override
+        virtual
         returns (uint256)
     {
         if (role == EMPTY_ROLE) {
-            uint256 totalVotes = 0;
-            for (uint256 i = 0; i < rolesList.length; ++i) {
-                totalVotes += delegatees[account][rolesList[i]];
-            }
-            return totalVotes;
+            return getVotes(account);
         }
-        return delegatees[account][role];
+        return roleVotingOracle.getVotes(account, role);
     }
 
     /**

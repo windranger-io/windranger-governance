@@ -36,6 +36,7 @@ describe('Governance', function () {
     this.delegatee2 = this.signers[3]
     this.delegatee3 = this.signers[4]
     this.newDelegatee = this.signers[5]
+    this.VotesOracle = await ethers.getContractFactory('VotesOracle')
     this.Governance = await ethers.getContractFactory('Governance')
     this.TimelockController = await ethers.getContractFactory(
       'TimelockController'
@@ -48,11 +49,14 @@ describe('Governance', function () {
       [this.admin.address]
     )
     await this.timelock.deployed()
+    this.votesOracle = await this.VotesOracle.deploy()
+    await this.votesOracle.deployed()
     this.bit = await this.ERC20.deploy('BIT', 'BIT', SUPPLY)
     await this.bit.deployed()
     this.governance = await this.Governance.deploy(
       this.bit.address,
-      this.timelock.address
+      this.timelock.address,
+      this.votesOracle.address
     )
     await this.governance.deployed()
     this.treasury = await this.Treasury.deploy(
@@ -71,31 +75,41 @@ describe('Governance', function () {
     await this.governance.setVoterRolesAdmin(this.delegatee3.address, [
       TREASURY_ROLE
     ])
-    await this.governance.setVotingPowerMultiAdmin(
-      [
-        this.admin.address,
-        this.voter.address,
-        this.delegatee1.address,
-        this.delegatee2.address,
-        this.delegatee3.address
-      ],
-      [
-        this.votingPower,
-        this.votingPower,
-        this.votingPower,
-        this.votingPower,
-        this.votingPower
-      ]
+    await this.votesOracle.setOpenVotingPower(
+      this.voter.address,
+      this.votingPower
     )
-    await this.governance
-      .connect(this.voter)
-      .delegate(DEVELOPER_ROLE, VOTING_POWER, this.delegatee1.address)
-    await this.governance
-      .connect(this.voter)
-      .delegate(LEGAL_ROLE, VOTING_POWER, this.delegatee2.address)
-    await this.governance
-      .connect(this.voter)
-      .delegate(TREASURY_ROLE, VOTING_POWER, this.delegatee3.address)
+    await this.votesOracle.setOpenVotingPower(
+      this.delegatee1.address,
+      this.votingPower
+    )
+    await this.votesOracle.setOpenVotingPower(
+      this.delegatee2.address,
+      this.votingPower
+    )
+    await this.votesOracle.setOpenVotingPower(
+      this.delegatee3.address,
+      this.votingPower
+    )
+    await this.votesOracle.setOpenVotingPower(
+      this.newDelegatee.address,
+      this.votingPower
+    )
+    await this.votesOracle.setRolesVotingPower(
+      this.delegatee1.address,
+      [DEVELOPER_ROLE],
+      [this.votingPower.mul(2)]
+    )
+    await this.votesOracle.setRolesVotingPower(
+      this.delegatee2.address,
+      [LEGAL_ROLE],
+      [this.votingPower.mul(2)]
+    )
+    await this.votesOracle.setRolesVotingPower(
+      this.delegatee3.address,
+      [TREASURY_ROLE],
+      [this.votingPower.mul(2)]
+    )
     await this.timelock.grantRole(PROPOSER_ROLE, this.governance.address)
     await this.timelock.grantRole(EXECUTOR_ROLE, this.governance.address)
   })
@@ -343,15 +357,6 @@ describe('Governance', function () {
 
   it('Run multi proposal', async function () {
     this.votingPower = this.votingPower.mul(BN.from(2))
-    await this.governance
-      .connect(this.delegatee1)
-      .delegate(DEVELOPER_ROLE, this.votingPower, this.voter.address)
-    await this.governance
-      .connect(this.delegatee2)
-      .delegate(LEGAL_ROLE, this.votingPower, this.voter.address)
-    await this.governance
-      .connect(this.delegatee3)
-      .delegate(TREASURY_ROLE, this.votingPower, this.voter.address)
     const proposalSignatures = [
       'addRoleMember(bytes32,address)',
       'addRoleMember(bytes32,address)',
@@ -442,7 +447,9 @@ describe('Governance', function () {
       proposalCalldatas,
       descriptionHash
     )
-    await this.governance.connect(this.voter).castVote(proposalId, 1)
+    await this.governance.connect(this.delegatee1).castVote(proposalId, 1)
+    await this.governance.connect(this.delegatee2).castVote(proposalId, 1)
+    await this.governance.connect(this.delegatee3).castVote(proposalId, 1)
     await advanceBlockTo((await provider.getBlockNumber()) + PROPOSAL_SPAN)
     await this.governance.queue(
       proposalTargets,

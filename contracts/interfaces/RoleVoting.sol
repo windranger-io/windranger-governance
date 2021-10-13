@@ -6,7 +6,7 @@ pragma solidity ^0.8.0;
  * @notice Retrieve the voting power for an account acting in a role, at this moment in time.
  * @dev Used by the off-chain Snpashot voting strategy bitdao-vote-by-role
  */
-interface RoleVoting {
+interface IRoleVoting {
     function getVotes(address account, bytes32 role)
         external
         view
