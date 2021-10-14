@@ -26,9 +26,13 @@ database Snapshot as snapshot
 end box
 
 box "(onchain)" #Lavender
+collections Executor as executor
 collections BondContract as bondcontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
+collections BitDAOGovernanceProxy as governanceproxy
+collections BitDAOTreasuryProxy as treasuryproxy
+collections ExecutorProxy as executorproxy
 collections BitDAOGovernanceV2 as bitdaogovernance
 collections LDAO
 end box
@@ -130,7 +134,27 @@ alt#Gold #DarkSeaGreen trace
   bitdaoadmin <-- bitdaogovernance: TxHash
 end
 
+newpage
 
+autonumber "Upgrades:[00]"
+
+== Upgrades ==
+
+alice -> forum: create forum upgrade proposal
+alice <- guarantor: positive/negative feedback
+
+community -> community: delegate role based votes
+
+alice -> bitdaogovernance: if (roles) submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: show roles voting result
+bitdaoadmin <-- bitdaogovernance: pass/fail
+
+executor <-- bitdaogovernance: execute proposal
+executor -> governanceproxy: set new bitdaogovernance implementation
+executor -> treasuryproxy: set new bitdaotreasury implementation
+executor -> executorproxy: set new executor implementation
 
 
 @enduml
