@@ -27,6 +27,7 @@ end box
 
 box "(onchain)" #Lavender
 collections BondContract as bondcontract
+collections InsuranceContract as insurancecontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
 collections BitDAOGovernanceV2 as bitdaogovernance
