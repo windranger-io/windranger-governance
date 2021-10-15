@@ -161,7 +161,7 @@ bitdaotreasury -> insurancecontract: transfer funds
 alice <-- insurancecontract: execute proposal
 
 
-bitdaoadmin -> insurancecontract: slash alice insurance
+bitdaoadmin -> insurancecontract: if (high debt) terminate alice insurance
 
 community -> community: delegate votes
 
@@ -173,7 +173,7 @@ guarantor -> snapshot: vote
 bitdaoadmin -> snapshot: show vote result
 bitdaoadmin <-- snapshot: pass/fail
 
-bitdaoadmin -> insurancecontract: if (pass) slash insurance
+bitdaoadmin -> insurancecontract: if (pass) terminate insurance
 bitdaoadmin <-- insurancecontract: execute proposal
 
 
