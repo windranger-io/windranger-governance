@@ -152,12 +152,12 @@ alice <-- rewardscontract: execute proposal
 
 
 bob -> forum: create forum proposal
-alice <- guarantor: positive/negative feedback
+bob <- guarantor: positive/negative feedback
 
 bob -> snapshot: submit release request
 community -> community: delegate votes
-guarantor -> snapshot: vote
-community -> rewardscontract: claim reward
+community -> snapshot: vote
+community -> rewardscontract: if (voted) claim reward
 
 
 @enduml
