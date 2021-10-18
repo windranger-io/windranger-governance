@@ -2,6 +2,7 @@
 'https://plantuml.com/sequence-diagram
 box "(community)" #LightYellow
 actor Alice as alice
+actor Bob as bob
 end box
 
 box "(offchain)" #Coral
@@ -26,10 +27,14 @@ database Snapshot as snapshot
 end box
 
 box "(onchain)" #Lavender
+collections Executor as executor
 collections BondContract as bondcontract
 collections InsuranceContract as insurancecontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
+collections BitDAOGovernanceProxy as governanceproxy
+collections BitDAOTreasuryProxy as treasuryproxy
+collections ExecutorProxy as executorproxy
 collections BitDAOGovernanceV2 as bitdaogovernance
 collections LDAO
 end box
@@ -175,6 +180,66 @@ bitdaoadmin <-- snapshot: pass/fail
 
 bitdaoadmin -> insurancecontract: if (pass) terminate insurance
 bitdaoadmin <-- insurancecontract: execute proposal
+
+new page
+
+autonumber "Upgrades:[00]"
+
+== Upgrades ==
+
+bitdaoadmin -> governanceproxy: deploy proxy and set initial implementation
+bitdaoadmin -> treasuryproxy: deploy proxy and set initial implementation
+bitdaoadmin -> executorproxy: deploy proxy and set initial implementation
+
+
+alice -> bitdaogovernance: deploy new bitdaogovernance implementation
+alice -> bitdaotreasury: deploy new bitdaotreasury implementation
+alice -> executor: deploy new executor implementation
+
+alice -> forum: create forum upgrade proposal
+alice <- community: positive/negative feedback
+
+community -> community: delegate role based votes
+
+alice -> bitdaogovernance: if (roles) submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: show roles voting result
+bitdaoadmin <-- bitdaogovernance: pass
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <-- bitdaogovernance: execute proposal
+executor -> governanceproxy: set new bitdaogovernance implementation
+executor -> treasuryproxy: set new bitdaotreasury implementation
+executor -> executorproxy: set new executor implementation
+
+newpage
+
+autonumber "Rewards:[00]"
+
+== Rewards ==
+
+alice -> forum: create forum proposal
+alice <- guarantor: positive/negative feedback
+alice -> rewardscontract: if (positive) create rewards program
+
+community -> community: delegate votes
+
+alice -> snapshot: submit proposal
+
+bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaotreasury -> rewardscontract: transfer funds for rewards
+
+alice <-- rewardscontract: execute proposal
+
+
+bob -> forum: create forum proposal
+bob <- guarantor: positive/negative feedback
+
+bob -> snapshot: submit release request
+community -> community: delegate votes
+community -> snapshot: vote
+community -> rewardscontract: if (voted) claim reward
 
 
 @enduml
