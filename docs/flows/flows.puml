@@ -2,6 +2,7 @@
 'https://plantuml.com/sequence-diagram
 box "(community)" #LightYellow
 actor Alice_novice as alice
+actor Bob as bob
 end box
 
 box "(offchain)" #Coral
@@ -151,7 +152,33 @@ alt#Gold #DarkSeaGreen trace
   bitdaoadmin <-- bitdaogovernance: TxHash
 end
 
+newpage
 
+autonumber "Rewards:[00]"
+
+== Rewards ==
+
+alice -> forum: create forum proposal
+alice <- guarantor: positive/negative feedback
+alice -> rewardscontract: if (positive) create rewards program
+
+community -> community: delegate votes
+
+alice -> snapshot: submit proposal
+
+bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaotreasury -> rewardscontract: transfer funds for rewards
+
+alice <-- rewardscontract: execute proposal
+
+
+bob -> forum: create forum proposal
+bob <- guarantor: positive/negative feedback
+
+bob -> snapshot: submit release request
+community -> community: delegate votes
+community -> snapshot: vote
+community -> rewardscontract: if (voted) claim reward
 
 
 @enduml
