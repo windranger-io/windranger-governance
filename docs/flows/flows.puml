@@ -27,9 +27,13 @@ database Snapshot as snapshot
 end box
 
 box "(onchain)" #Lavender
+collections Executor as executor
 collections BondContract as bondcontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
+collections BitDAOGovernanceProxy as governanceproxy
+collections BitDAOTreasuryProxy as treasuryproxy
+collections ExecutorProxy as executorproxy
 collections BitDAOGovernanceV2 as bitdaogovernance
 collections LDAO
 end box
@@ -130,6 +134,38 @@ bitdaoadmin -> bitdaogovernance: if (pass) create role
 alt#Gold #DarkSeaGreen trace
   bitdaoadmin <-- bitdaogovernance: TxHash
 end
+
+newpage
+
+autonumber "Upgrades:[00]"
+
+== Upgrades ==
+
+bitdaoadmin -> governanceproxy: deploy proxy and set initial implementation
+bitdaoadmin -> treasuryproxy: deploy proxy and set initial implementation
+bitdaoadmin -> executorproxy: deploy proxy and set initial implementation
+
+
+alice -> bitdaogovernance: deploy new bitdaogovernance implementation
+alice -> bitdaotreasury: deploy new bitdaotreasury implementation
+alice -> executor: deploy new executor implementation
+
+alice -> forum: create forum upgrade proposal
+alice <- community: positive/negative feedback
+
+community -> community: delegate role based votes
+
+alice -> bitdaogovernance: if (roles) submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: show roles voting result
+bitdaoadmin <-- bitdaogovernance: pass
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <-- bitdaogovernance: execute proposal
+executor -> governanceproxy: set new bitdaogovernance implementation
+executor -> treasuryproxy: set new bitdaotreasury implementation
+executor -> executorproxy: set new executor implementation
 
 newpage
 
