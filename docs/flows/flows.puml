@@ -181,7 +181,7 @@ bitdaoadmin <-- snapshot: pass/fail
 bitdaoadmin -> insurancecontract: if (pass) terminate insurance
 bitdaoadmin <-- insurancecontract: execute proposal
 
-new page
+newpage
 
 autonumber "Upgrades:[00]"
 
