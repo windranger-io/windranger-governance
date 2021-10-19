@@ -29,6 +29,7 @@ end box
 box "(onchain)" #Lavender
 collections Executor as executor
 collections BondContract as bondcontract
+collections InsuranceContract as insurancecontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
 collections BitDAOGovernanceProxy as governanceproxy
@@ -136,6 +137,51 @@ alt#Gold #DarkSeaGreen trace
 end
 
 newpage
+
+autonumber "Insurance:[00]"
+
+== Insurance ==
+
+alice -> insurancecontract: create insurance ticket
+
+
+alice -> insurancecontract: pay for insurance daily / monthly
+
+
+alice -> insurancecontract: compensate
+
+community -> community: delegate votes
+
+alice -> snapshot: submit proposal
+guarantor -> snapshot: show proposals
+guarantor <-- snapshot: proposals
+guarantor -> snapshot: vote
+
+bitdaoadmin -> snapshot: show vote result
+bitdaoadmin <-- snapshot: pass/fail
+
+bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaotreasury -> insurancecontract: transfer funds
+
+alice <-- insurancecontract: execute proposal
+
+
+bitdaoadmin -> insurancecontract: if (high debt) terminate alice insurance
+
+community -> community: delegate votes
+
+bitdaoadmin -> snapshot: submit proposal
+guarantor -> snapshot: show proposals
+guarantor <-- snapshot: proposals
+guarantor -> snapshot: vote
+
+bitdaoadmin -> snapshot: show vote result
+bitdaoadmin <-- snapshot: pass/fail
+
+bitdaoadmin -> insurancecontract: if (pass) terminate insurance
+bitdaoadmin <-- insurancecontract: execute proposal
+
+new page
 
 autonumber "Upgrades:[00]"
 
