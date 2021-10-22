@@ -5,19 +5,27 @@ pragma solidity ^0.8.0;
 import '@openzeppelin/contracts/utils/Address.sol';
 import '@openzeppelin/contracts/utils/Context.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import './interfaces/IGovernance.sol';
-import './interfaces/IVault.sol';
 
 // Rewards contract.
 contract Rewards is Context {
-    IERC20 public rewardToken;
-    IVault public vault;
-    IGovernance public governance;
-    address public executor;
-    uint256 public rewardPerVote;
-    uint256 public allocated;
+    using SafeERC20 for IERC20;
 
-    mapping(address => uint256) public locked;
+    // Reward token, in which rewards are given.
+    IERC20 public rewardToken;
+    // Governance contract.
+    IGovernance public governance;
+    // Treasury contract.
+    address public treasury;
+    // Executor contract or wallet.
+    address public executor;
+    // Reward per vote made during successful governance proposal.
+    uint256 public rewardPerVote;
+    // Total rewards allocated for stimulating voting.
+    uint256 public allocated;
+    // Returns true if claimed reward for an account by voting for a particular successful proposal.
+    mapping(address => mapping(uint256 => bool)) public claimed;
 
     event Deposited(address depositor, uint256 amount);
     event Withdrawn(address withdrawer, uint256 amount);
@@ -37,54 +45,56 @@ contract Rewards is Context {
         _;
     }
 
+    modifier onlyTreasury() {
+        require(_msgSender() == treasury, 'Rewards:: onlyTreasury');
+        _;
+    }
+
     constructor(
         IGovernance governance_,
         address executor_,
-        IVault vault_,
+        address treasury_,
         IERC20 rewardToken_,
         uint256 rewardPerVote_
     ) {
         governance = governance_;
         executor = executor_;
+        treasury = treasury_;
         rewardToken = rewardToken_;
-        vault = vault_;
         rewardPerVote = rewardPerVote_;
-    }
-
-    function setVault(IVault vault_) external onlyExecutor {
-        vault = vault_;
     }
 
     function setRewardPerVote(uint256 rewardPerVote_) external onlyExecutor {
         rewardPerVote = rewardPerVote_;
     }
 
-    function allocate(uint256 rewards) external onlyExecutor {
+    function setRewardToken(IERC20 rewardToken_) external onlyExecutor {
+        rewardToken = rewardToken_;
+    }
+
+    function setGovernance(IGovernance governance_) external onlyExecutor {
+        governance = governance_;
+    }
+
+    function setTreasury(address treasury_) external onlyExecutor {
+        treasury = treasury_;
+    }
+
+    function setExecutor(address executor_) external onlyExecutor {
+        executor = executor_;
+    }
+
+    function allocate(uint256 rewards) external virtual onlyTreasury {
         allocated += rewards;
-        require(
-            rewardToken.balanceOf(address(this)) >= allocated,
-            "Rewards::allocate: doesn't have enough reward token balance for the allocation"
-        );
+        rewardToken.safeTransferFrom(_msgSender(), address(this), rewards);
         emit Allocated(rewards);
     }
 
-    function deposit(uint256 amount) external {
-        locked[_msgSender()] += amount;
-        vault.deposit(amount);
-        emit Deposited(_msgSender(), amount);
-    }
-
-    function withdraw(uint256 amount) external {
+    function claimVotingReward(uint256 proposalId) external virtual {
         require(
-            locked[_msgSender()] >= amount,
-            'Rewards::withdraw: must have enough locked tokens to withdraw'
+            !claimed[_msgSender()][proposalId],
+            'Rewards::claimVotingReward: already claimed'
         );
-        locked[_msgSender()] -= amount;
-        vault.withdraw(amount);
-        emit Withdrawn(_msgSender(), amount);
-    }
-
-    function claimVotingReward(uint256 proposalId) external {
         (uint256 votes, uint8 support) = governance.getReceipt(
             proposalId,
             _msgSender()
@@ -94,8 +104,9 @@ contract Rewards is Context {
                 allocated >= votes * rewardPerVote,
                 'Rewards::claimVotingReward: must have enough allocation to give rewards'
             );
+            claimed[_msgSender()][proposalId] = true;
             allocated -= votes * rewardPerVote;
-            rewardToken.transfer(_msgSender(), votes * rewardPerVote);
+            rewardToken.safeTransfer(_msgSender(), votes * rewardPerVote);
         }
         emit Claim(_msgSender(), proposalId, votes * rewardPerVote);
     }
