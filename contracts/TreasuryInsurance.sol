@@ -96,7 +96,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
     /// @dev payInsurance pays for insurance with `id` for `period` of time
     /// @param id Which insurance to pay for
     /// @param period Period in seconds to pay for
-    function payInsurance(uint256 id, uint256 period) public virtual {
+    function payInsurance(uint256 id, uint256 period) external virtual {
         paidTime[id] += period;
         IERC20(insuranceAssets[id]).safeTransferFrom(
             _msgSender(),
@@ -127,11 +127,12 @@ contract TreasuryInsurance is Treasury, ERC721 {
             compensation <= compensationLimits[id],
             'Insurance::request: requested compensation is more than the limit'
         );
+        require(
+            paidTime[id] >= block.timestamp,
+            "Insurance::request: requester didn't pay for insurance"
+        );
         requestedCompensations[id] = compensation;
         requestedCases[id] = reason;
-        if (block.timestamp > paidTime[id]) {
-            payInsurance(id, block.timestamp - paidTime[id]);
-        }
         emit Requested(id, compensation);
     }
 
