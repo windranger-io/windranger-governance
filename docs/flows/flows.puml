@@ -29,8 +29,8 @@ end box
 box "(onchain)" #Lavender
 collections Executor as executor
 collections BondContract as bondcontract
-'collections RewardContract as rewardcontract
-'collections InsuranceContract as insurancecontract
+collections RewardContract as rewardcontract
+collections InsuranceContract as insurancecontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
 collections BitDAOGovernanceProxy as governanceproxy
@@ -160,6 +160,7 @@ newpage
 
 autonumber "Insurance:[00]"
 
+
 == Insurance ==
 
 alice -> insurancecontract: create insurance ticket
@@ -234,6 +235,7 @@ executor -> treasuryproxy: set new bitdaotreasury implementation
 executor -> executorproxy: set new executor implementation
 
 newpage
+
 
 autonumber "Rewards:[00]"
 
