@@ -13,8 +13,8 @@ import '@openzeppelin/contracts/utils/Timers.sol';
 import '@openzeppelin/contracts/utils/math/SafeCast.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/governance/TimelockController.sol';
-import './interfaces/OpenVoting.sol';
-import './interfaces/RoleVoting.sol';
+import './interfaces/IOpenVoting.sol';
+import './interfaces/IRoleVoting.sol';
 
 // On-Chain snapshot voting
 interface ISnapshotVoting is IERC20 {
@@ -656,6 +656,19 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         }
     }
 
+    function isProposalSuccessful(uint256 proposalId)
+        public
+        view
+        virtual
+        returns (bool)
+    {
+        ProposalState proposalState = state(proposalId);
+        return
+            proposalState == ProposalState.Executed ||
+            proposalState == ProposalState.Succeeded ||
+            proposalState == ProposalState.Queued;
+    }
+
     /**
      * @dev See {IGovernor-proposalSnapshot}.
      */
@@ -716,9 +729,6 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         executed = status == ProposalState.Executed;
     }
 
-    /**
-     * @dev See {IGovernorCompatibilityBravo-getActions}.
-     */
     function getActions(uint256 proposalId)
         public
         view
@@ -741,16 +751,19 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         );
     }
 
-    /**
-     * @dev See {IGovernorCompatibilityBravo-getReceipt}.
-     */
     function getReceipt(uint256 proposalId, address voter)
         public
         view
         virtual
-        returns (Receipt memory)
+        returns (uint256 votes, uint8 support)
     {
-        return _proposals[proposalId].receipts[voter];
+        Receipt storage receipt = _proposals[proposalId].receipts[voter];
+        support = receipt.support;
+        if (receipt.hasVoted) {
+            for (uint256 i = 0; i < receipt.votes.length; ++i) {
+                votes += receipt.votes[i];
+            }
+        }
     }
 
     // ==================================================== Voting ====================================================

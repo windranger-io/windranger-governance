@@ -5,6 +5,8 @@ pragma solidity ^0.8.0;
 import '@openzeppelin/contracts/utils/Address.sol';
 import '@openzeppelin/contracts/utils/Context.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import './interfaces/IRewards.sol';
 
 interface IERC20Allowance is IERC20 {
     function increaseAllowance(address spender, uint256 addedValue)
@@ -18,6 +20,8 @@ interface IERC20Allowance is IERC20 {
 
 // Treasury contract.
 contract Treasury is Context {
+    using SafeERC20 for IERC20;
+
     address public governance;
     address public executor;
 
@@ -79,9 +83,23 @@ contract Treasury is Context {
         if (asset == address(0)) {
             payable(to).call{value: amount};
         } else {
-            IERC20(asset).transfer(to, amount);
+            IERC20(asset).safeTransfer(to, amount);
         }
         emit Sent(to, asset, amount);
+    }
+
+    function allocateRewards(IRewards rewardsContract, uint256 rewards)
+        external
+        virtual
+        onlyExecutor
+    {
+        IERC20 rewardToken = rewardsContract.rewardToken();
+        require(
+            balances[address(rewardToken)] >= rewards,
+            'Treasry::allocateRewards: not enough reward token balance'
+        );
+        rewardToken.safeIncreaseAllowance(address(rewardsContract), rewards);
+        rewardsContract.allocate(rewards);
     }
 
     function receive(
@@ -96,7 +114,7 @@ contract Treasury is Context {
                 'Treasry::receive: amount is not equal to msg.value'
             );
         } else {
-            IERC20(asset).transferFrom(from, address(this), amount);
+            IERC20(asset).safeTransferFrom(from, address(this), amount);
         }
         emit Received(from, asset, amount);
     }
