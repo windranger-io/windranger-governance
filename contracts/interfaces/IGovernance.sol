@@ -14,4 +14,9 @@ interface IGovernance {
         external
         view
         returns (bool);
+
+    function proposalSnapshot(uint256 proposalId)
+        external
+        view
+        returns (uint256);
 }

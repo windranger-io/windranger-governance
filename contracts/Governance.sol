@@ -92,6 +92,8 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     ISnapshotVoting public token;
     TimelockController private _timelock;
     address public treasury;
+    uint256 private _votingDelay = 1; // 1 block
+    uint256 private _votingPeriod = 5; // 5 blocks
 
     bytes32[] public rolesList;
     mapping(uint256 => bytes32) private _timelockIds;
@@ -201,12 +203,12 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         return address(_timelock);
     }
 
-    function votingDelay() public pure virtual returns (uint256) {
-        return 1; // 1 block
+    function votingDelay() public view virtual returns (uint256) {
+        return _votingDelay;
     }
 
-    function votingPeriod() public pure virtual returns (uint256) {
-        return 5; // ~3 days in blocks
+    function votingPeriod() public view virtual returns (uint256) {
+        return _votingPeriod;
     }
 
     function setTreasury(address treasury_) external virtual onlyOwner {
@@ -216,6 +218,14 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     function setVotesOracle(address votesOracle_) external virtual onlyOwner {
         openVotingOracle = IOpenVoting(votesOracle_);
         roleVotingOracle = IRoleVoting(votesOracle_);
+    }
+
+    function setVotingDelay(uint256 votingDelay_) external virtual onlyOwner {
+        _votingDelay = votingDelay_;
+    }
+
+    function setVotingPeriod(uint256 votingPeriod_) external virtual onlyOwner {
+        _votingPeriod = votingPeriod_;
     }
 
     /**
