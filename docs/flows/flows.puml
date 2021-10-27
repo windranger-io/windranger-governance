@@ -114,8 +114,8 @@ alt#Gold #LightBlue pass
 else #Pink fail
     bitdaoadmin -> bondcontract: slash bond
     bondcontract -> bitdaotreasury: transfer slashed BIT tokens
-    guarantor -> bondcontract: submit and redeem bond tokens (relative to unslashed portion)
-    bondcontract <-- guarantor: transfer BIT tokens
+    guarantor -> bondcontract: submit and redeem bond tokens (relative to non-slashed portion)
+    guarantor <-- bondcontract: transfer BIT tokens
 end
 
   alt#Gold #DarkSeaGreen trace
