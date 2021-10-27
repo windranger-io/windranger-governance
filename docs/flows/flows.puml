@@ -29,7 +29,7 @@ end box
 box "(onchain)" #Lavender
 collections Executor as executor
 collections BondContract as bondcontract
-collections RewardContract as rewardcontract
+collections RewardsContract as rewardscontract
 collections InsuranceContract as insurancecontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
@@ -77,7 +77,7 @@ autonumber "Bond:[00]"
 
 alice -> forum: create forum proposal
 alice <- guarantor: positive/negative feedback
-alice -> bondcontract: if (positive) create bond (specify reward mechanism)
+alice -> bondcontract: if (positive) create bond
 
 guarantor -> bondcontract: contribute BIT tokens
 bondcontract <-- guarantor: ERC20 Fungible bond tokens (1:1 swap)
@@ -93,12 +93,6 @@ tokenholders <- snapshot: vote
 
 bitdaoadmin -> bitdaotreasury: if (pass) allow funds
 bitdaotreasury -> grantstreasury: transfer funds
-
-'bondcontract -> rewardcontract: deploy bonded funds to earn rewards
-'bondcontract <-- rewardcontract: issue rewards during lockup
-
-'bondcontract -> insurancecontract: deploy insurance on bonded funds
-'bondcontract <-- insurancecontract: provide receipt of insurance terms
 
 alice <-- grantstreasury: execute proposal
 
@@ -117,7 +111,6 @@ alt#Gold #LightBlue pass
 
     guarantor -> bondcontract: submit and redeem bond tokens
     bondcontract <-- guarantor: transfer BIT tokens
-    bondcontract <-- guarantor: transfer Reward tokens
 else #Pink fail
     bitdaoadmin -> bondcontract: slash bond
     bondcontract -> bitdaotreasury: transfer slashed BIT tokens
@@ -159,7 +152,6 @@ end
 newpage
 
 autonumber "Insurance:[00]"
-
 
 == Insurance ==
 
@@ -235,7 +227,6 @@ executor -> treasuryproxy: set new bitdaotreasury implementation
 executor -> executorproxy: set new executor implementation
 
 newpage
-
 
 autonumber "Rewards:[00]"
 
