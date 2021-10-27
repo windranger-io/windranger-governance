@@ -8,25 +8,12 @@ import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import './interfaces/IRewards.sol';
 
-interface IERC20Allowance is IERC20 {
-    function increaseAllowance(address spender, uint256 addedValue)
-        external
-        returns (bool);
-
-    function decreaseAllowance(address spender, uint256 subtractedValue)
-        external
-        returns (bool);
-}
-
-// Treasury contract.
+/// @title Treasury contract.
 contract Treasury is Context {
     using SafeERC20 for IERC20;
 
     address public governance;
     address public executor;
-
-    mapping(address => uint256) public balances;
-    bytes32 public name = 'TREASURY';
 
     event Received(address from, address asset, uint256 amount);
     event Sent(address to, address asset, uint256 amount);
@@ -61,7 +48,7 @@ contract Treasury is Context {
         address asset,
         uint256 amount
     ) external virtual onlyExecutor {
-        IERC20Allowance(asset).increaseAllowance(spender, amount);
+        IERC20(asset).safeIncreaseAllowance(spender, amount);
         emit IncreasedAllowance(spender, asset, amount);
     }
 
@@ -70,7 +57,7 @@ contract Treasury is Context {
         address asset,
         uint256 amount
     ) external virtual onlyExecutor {
-        IERC20Allowance(asset).decreaseAllowance(spender, amount);
+        IERC20(asset).safeDecreaseAllowance(spender, amount);
         emit DecreasedAllowance(spender, asset, amount);
     }
 
@@ -79,7 +66,6 @@ contract Treasury is Context {
         address asset,
         uint256 amount
     ) external virtual onlyExecutor {
-        balances[asset] -= amount;
         if (asset == address(0)) {
             payable(to).call{value: amount};
         } else {
@@ -95,7 +81,7 @@ contract Treasury is Context {
     {
         IERC20 rewardToken = rewardsContract.rewardToken();
         require(
-            balances[address(rewardToken)] >= rewards,
+            rewardToken.balanceOf(address(this)) >= rewards,
             'Treasry::allocateRewards: not enough reward token balance'
         );
         rewardToken.safeIncreaseAllowance(address(rewardsContract), rewards);
@@ -107,7 +93,6 @@ contract Treasury is Context {
         address asset,
         uint256 amount
     ) external payable virtual {
-        balances[asset] += amount;
         if (asset == address(0)) {
             require(
                 amount == msg.value,
