@@ -1,7 +1,7 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 box "(community)" #LightYellow
-actor Alice as alice
+actor Alice_novice as alice
 actor Bob as bob
 end box
 
@@ -10,16 +10,16 @@ actor Forum as forum
 end box
 
 box "(community)" #LightGray
-actor Community as community
-actor Guarantor as guarantor
+actor Communities_novice as community
+actor Guarantors_expert as guarantor
 end box
 
 box "(multisig)" #Peru
-actor BitDAOAdmin as bitdaoadmin
+actor BitDAOAdmins_expert as bitdaoadmin
 end box
 
 box "(token)" #OliveDrab
-actor TokenHolders as tokenholders
+actor TokenHolders_novice as tokenholders
 endbox
 
 box "(offchain)" #Coral
@@ -29,6 +29,7 @@ end box
 box "(onchain)" #Lavender
 collections Executor as executor
 collections BondContract as bondcontract
+collections RewardsContract as rewardscontract
 collections InsuranceContract as insurancecontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
@@ -55,10 +56,10 @@ community -> community: delegate votes
 
 alice -> snapshot: if (positive) submit proposal
 
-bitdaoadmin -> snapshot: show proposals
-bitdaoadmin <-- snapshot: proposals
-bitdaoadmin -> snapshot: vote on open proposals
-bitdaoadmin <- snapshot: vote
+tokenholders -> snapshot: show proposals
+tokenholders <-- snapshot: proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- snapshot: vote
 bitdaoadmin -> bitdaotreasury: if (pass) allow funds
 bitdaotreasury -> grantstreasury: transfer funds
 
@@ -78,11 +79,17 @@ alice -> forum: create forum proposal
 alice <- guarantor: positive/negative feedback
 alice -> bondcontract: if (positive) create bond
 
-guarantor -> bondcontract: contribute
+guarantor -> bondcontract: contribute BIT tokens
+bondcontract <-- guarantor: ERC20 Fungible bond tokens (1:1 swap)
 
 community -> community: delegate votes
 
-alice -> snapshot: submit proposal
+alice -> snapshot: if (positive) submit proposal
+
+tokenholders -> snapshot: show proposals
+tokenholders <-- snapshot: proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- snapshot: vote
 
 bitdaoadmin -> bitdaotreasury: if (pass) allow funds
 bitdaotreasury -> grantstreasury: transfer funds
@@ -94,15 +101,21 @@ community -> community: delegate votes
 alice -> snapshot: submit release request
 guarantor -> snapshot: show proposals
 guarantor <-- snapshot: proposals
-guarantor -> snapshot: vote
+guarantor -> snapshot: vote to release or proportional slash
 
 bitdaoadmin -> snapshot: show vote result
 bitdaoadmin <-- snapshot: pass/fail
 
 alt#Gold #LightBlue pass
     bitdaoadmin -> bondcontract: release bond
+
+    guarantor -> bondcontract: submit and redeem bond tokens
+    bondcontract <-- guarantor: transfer BIT tokens
 else #Pink fail
     bitdaoadmin -> bondcontract: slash bond
+    bondcontract -> bitdaotreasury: transfer slashed BIT tokens
+    guarantor -> bondcontract: submit and redeem bond tokens (relative to non-slashed portion)
+    guarantor <-- bondcontract: transfer BIT tokens
 end
 
   alt#Gold #DarkSeaGreen trace
