@@ -9,8 +9,6 @@ import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import './Treasury.sol';
 
-import 'hardhat/console.sol';
-
 /// @title Treasury contract with insurance.
 contract TreasuryInsurance is Treasury, ERC721 {
     using SafeERC20 for IERC20;
