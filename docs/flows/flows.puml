@@ -1,4 +1,6 @@
 @startuml
+!pragma layout smetana
+
 'https://plantuml.com/sequence-diagram
 box "(community)" #LightYellow
 actor Alice_novice as alice
