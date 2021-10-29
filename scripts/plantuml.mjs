@@ -2,21 +2,36 @@ import plantuml from 'node-plantuml';
 import fs from 'fs';
 import {readFile, mkdir} from 'fs/promises';
 
-var docLoc = "./docs/flows/flows.puml";
-var outputLoc = "./build/";
+const outputLoc = "./build/";
 
-var docContent = await readFile(docLoc, "utf8");
-
-// console.log(docContent);
+const myArgs = process.argv.slice(2);
 
 try {
   await mkdir(outputLoc);
 } catch {
 //  nop if directory doesn't exist
-};
+}
 
-for (var i = 0; i <= (docContent.match(/newpage/g) || []).length; i++) {
-  var gen = plantuml.generate(docContent, { "pipeimageindex": i});
-  // console.log(gen);
-  gen.out.pipe(fs.createWriteStream(outputLoc + "flows-plantuml-image-"+i+".png"));
+for (const arg of myArgs) {
+  const path = arg.split("/");
+  const fileroot = path[path.length - 1].split(".")[0];
+
+  const docContent = await readFile(arg, "utf8");
+  const len = (docContent.match(/newpage/g) || []).length;
+
+  for (var i = 0; i <= len; i++) {
+    (function () {
+      const j = i;
+      const gen = plantuml.generate(docContent, {"pipeimageindex": j});
+      const outputFile = outputLoc + fileroot + "-plantuml-image-" + j + ".png";
+
+      console.log("starting:" + outputFile);
+
+      gen.out.pipe(fs.createWriteStream(
+          outputFile)).on('finish',
+          _ => {
+            console.log(arg + ": generated image " + j + " of " + len + " to " + outputFile);
+          })
+    })();
+  }
 }
