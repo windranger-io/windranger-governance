@@ -1,4 +1,5 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0
+
 pragma solidity ^0.8.0;
 
 /**
@@ -14,4 +15,9 @@ interface IGovernance {
         external
         view
         returns (bool);
+
+    function proposalSnapshot(uint256 proposalId)
+        external
+        view
+        returns (uint256);
 }

@@ -74,34 +74,18 @@ contract Treasury is Context {
         emit Sent(to, asset, amount);
     }
 
-    function allocateRewards(IRewards rewardsContract, uint256 rewards)
-        external
-        virtual
-        onlyExecutor
-    {
+    function allocateRewards(
+        IRewards rewardsContract,
+        uint256 rewards,
+        uint256 rewardsStart
+    ) external virtual onlyExecutor {
         IERC20 rewardToken = rewardsContract.rewardToken();
         require(
             rewardToken.balanceOf(address(this)) >= rewards,
             'Treasry::allocateRewards: not enough reward token balance'
         );
         rewardToken.safeIncreaseAllowance(address(rewardsContract), rewards);
-        rewardsContract.allocate(rewards);
-    }
-
-    function receive(
-        address from,
-        address asset,
-        uint256 amount
-    ) external payable virtual {
-        if (asset == address(0)) {
-            require(
-                amount == msg.value,
-                'Treasry::receive: amount is not equal to msg.value'
-            );
-        } else {
-            IERC20(asset).safeTransferFrom(from, address(this), amount);
-        }
-        emit Received(from, asset, amount);
+        rewardsContract.allocate(rewards, rewardsStart);
     }
 
     receive() external payable virtual {}

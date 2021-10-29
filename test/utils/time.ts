@@ -1,6 +1,6 @@
-import {BigNumber as BN, providers} from 'ethers'
+import {BigNumber as BN} from 'ethers'
+import {waffle} from 'hardhat'
 
-const {waffle} = require('hardhat')
 const provider = waffle.provider
 
 export async function advanceBlock() {

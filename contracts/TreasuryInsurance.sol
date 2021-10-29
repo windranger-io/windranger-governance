@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0
 
 pragma solidity ^0.8.0;
 
@@ -20,7 +20,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
     /// @notice Insurances costs per second.
     mapping(uint256 => uint256) public insuranceCosts;
     /// @notice Insurances assets, with which to pay for insurance and ask compensation.
-    mapping(uint256 => address) public insuranceAssets;
+    mapping(uint256 => IERC20) public insuranceAssets;
     /// @notice Insurance paid until this timestamp in seconds.
     mapping(uint256 => uint256) public paidTime;
     /// @notice Current requested compensation for insurance.
@@ -35,13 +35,13 @@ contract TreasuryInsurance is Treasury, ERC721 {
     event Insured(
         uint256 id,
         address insured,
-        address asset,
+        IERC20 asset,
         uint256 cost,
         uint256 compensationLimit
     );
     event Requested(uint256 id, uint256 compensation);
     event PaidInsurance(uint256 id, uint256 payment);
-    event Compensated(uint256 id, address insured, uint256 compensation);
+    event Compensated(uint256 id, uint256 compensation);
 
     constructor(address governance_, address executor_)
         Treasury(governance_, executor_)
@@ -77,18 +77,18 @@ contract TreasuryInsurance is Treasury, ERC721 {
     /// @return id of minted insurance NFT
     function insure(
         address to,
-        address asset,
+        IERC20 asset,
         uint256 cost,
         uint256 compensationLimit,
         string calldata condition
     ) external virtual onlyExecutor returns (uint256) {
+        minted += 1;
         compensationLimits[minted] = compensationLimit;
         insuranceConditions[minted] = condition;
         insuranceCosts[minted] = cost;
         insuranceAssets[minted] = asset;
         paidTime[minted] = block.timestamp;
         _safeMint(to, minted);
-        minted += 1;
         emit Insured(minted, to, asset, cost, compensationLimit);
         return minted;
     }
@@ -98,7 +98,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
     /// @param period Period in seconds to pay for
     function payInsurance(uint256 id, uint256 period) external virtual {
         paidTime[id] += period;
-        IERC20(insuranceAssets[id]).safeTransferFrom(
+        insuranceAssets[id].safeTransferFrom(
             _msgSender(),
             address(this),
             period * insuranceCosts[id]
@@ -144,12 +144,16 @@ contract TreasuryInsurance is Treasury, ERC721 {
             'Insurance::compensate: no compensation request'
         );
         uint256 compensation = requestedCompensations[id];
+        require(
+            insuranceAssets[id].balanceOf(address(this)) >= compensation,
+            'Insurance::compensate: not enough balance for compensation'
+        );
         compensationLimits[id] -= compensation;
         requestedCompensations[id] = 0;
+        IERC20(insuranceAssets[id]).safeTransfer(ownerOf(id), compensation);
         if (compensationLimits[id] == 0) {
             _burn(id);
         }
-        IERC20(insuranceAssets[id]).safeTransfer(ownerOf(id), compensation);
-        emit Compensated(id, ownerOf(id), compensation);
+        emit Compensated(id, compensation);
     }
 }

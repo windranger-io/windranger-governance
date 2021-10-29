@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0
 
 pragma solidity ^0.8.0;
 
@@ -22,6 +22,8 @@ contract Rewards is Context {
     address public executor;
     // Reward per vote made during successful governance proposal.
     uint256 public rewardPerVote;
+    // Block number of voting start for proposals, which qualify for the rewards program.
+    uint256 public rewardsStart;
     // Total rewards allocated for stimulating voting.
     uint256 public allocated;
     // Returns true if claimed reward for an account by voting for a particular successful proposal.
@@ -84,8 +86,17 @@ contract Rewards is Context {
         executor = executor_;
     }
 
-    function allocate(uint256 rewards) external virtual onlyTreasury {
+    function allocate(uint256 rewards, uint256 rewardsStart_)
+        external
+        virtual
+        onlyTreasury
+    {
+        require(
+            rewards > 0 && rewardsStart_ > rewardsStart,
+            'Rewards::allocate: allocate params are invalid'
+        );
         allocated += rewards;
+        rewardsStart = rewardsStart_;
         rewardToken.safeTransferFrom(_msgSender(), address(this), rewards);
         emit Allocated(rewards);
     }
@@ -94,6 +105,10 @@ contract Rewards is Context {
         require(
             !claimed[_msgSender()][proposalId],
             'Rewards::claimVotingReward: already claimed'
+        );
+        require(
+            rewardsStart <= governance.proposalSnapshot(proposalId),
+            'Rewards::claimVotingReward: proposal does not qualify for rewards'
         );
         (uint256 votes, uint8 support) = governance.getReceipt(
             proposalId,
