@@ -183,7 +183,7 @@ describe('Governance', function () {
   it('Run DEVELOPER proposal', async function () {
     const proposalSignatures: string[] = ['addRoleMember(bytes32,address)']
     const proposalValues: string[] = ['0']
-    const proposalRoles = [DEVELOPER_ROLE]
+    const proposalRoles: string[] = [DEVELOPER_ROLE]
     const proposalTargets: string[] = [this.governance.address]
     const description = 'Give voter DEVELOPER role'
     const web3 = new Web3()
@@ -220,7 +220,7 @@ describe('Governance', function () {
   it('Run LEGAL proposal', async function () {
     const proposalSignatures: string[] = ['addRoleMember(bytes32,address)']
     const proposalValues: string[] = ['0']
-    const proposalRoles = [LEGAL_ROLE]
+    const proposalRoles: string[] = [LEGAL_ROLE]
     const proposalTargets: string[] = [this.governance.address]
     const description = 'Give voter LEGAL role'
     const web3 = new Web3()
@@ -257,7 +257,7 @@ describe('Governance', function () {
   it('Run TREASURY proposal', async function () {
     const proposalSignatures: string[] = ['addRoleMember(bytes32,address)']
     const proposalValues: string[] = ['0']
-    const proposalRoles = [TREASURY_ROLE]
+    const proposalRoles: string[] = [TREASURY_ROLE]
     const proposalTargets: string[] = [this.governance.address]
     const description = 'Give voter TREASURY role'
     const web3 = new Web3()
@@ -296,7 +296,7 @@ describe('Governance', function () {
 
     const proposalSignatures: string[] = ['transfer(address,address,uint256)']
     const proposalValues: string[] = ['0']
-    const proposalRoles = [TREASURY_ROLE]
+    const proposalRoles: string[] = [TREASURY_ROLE]
     const proposalTargets: string[] = [this.treasury.address]
     const description = 'Transfer some bit'
     const web3 = new Web3()
@@ -341,7 +341,7 @@ describe('Governance', function () {
     const proposalSignatures: string[] = []
     const proposalTargets: string[] = []
     const proposalValues: string[] = []
-    const proposalRoles = [DEVELOPER_ROLE, LEGAL_ROLE, TREASURY_ROLE]
+    const proposalRoles: string[] = [DEVELOPER_ROLE, LEGAL_ROLE, TREASURY_ROLE]
     const description = 'Run multi proposal'
     const web3 = new Web3()
     const proposalCalldatas: string[] = []
@@ -420,7 +420,7 @@ describe('Governance', function () {
       'Run treasury proposal to allocate rewards for voting rewards program'
     const web3 = new Web3()
     const proposalValues: string[] = ['0']
-    const proposalRoles = [TREASURY_ROLE]
+    const proposalRoles: string[] = [TREASURY_ROLE]
     const proposalTargets: string[] = [this.treasury.address]
     const rewardsStart = await provider.getBlockNumber()
     const proposalCalldatas: string[] = [
@@ -482,7 +482,7 @@ describe('Governance', function () {
     let description = 'Run treasury proposal to insure the user'
     const web3 = new Web3()
     const proposalValues: string[] = ['0']
-    const proposalRoles = [TREASURY_ROLE]
+    const proposalRoles: string[] = [TREASURY_ROLE]
     const proposalTargets: string[] = [this.treasury.address]
     const proposalCalldatas: string[] = [
       web3.eth.abi.encodeFunctionCall(
