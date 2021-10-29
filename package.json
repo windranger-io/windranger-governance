@@ -22,7 +22,7 @@
     "lint": "eslint . --ext .ts",
     "prepare": "husky install",
     "size": "npx hardhat run scripts/contractBytecodeSize.js",
-    "test": "mocha --exit --recursive --require ts-node/register 'test/**/*.test.ts'"
+    "plant": "node ./scripts/plantuml.mjs ./docs/flows/flows.puml"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
@@ -58,6 +58,7 @@
     "bunyan": "^1.8.15",
     "dotenv": "^10.0.0",
     "hardhat-gas-reporter": "^1.0.4",
+    "node-plantuml": "github:shahankhatch/node-plantuml",
     "prettier-plugin-solidity": "^1.0.0-beta.18",
     "web3": "^1.5.2"
   },

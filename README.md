@@ -1,6 +1,16 @@
 # governance
 BitDAO Governance contracts framework
 
+## Bulding sequence diagrams
+
+`npm install`
+
+`npm run plant`
+
+Images are generated and placed into the `./build` folder. 
+Image files are numbered incrementally for each `newpage` in `./docs/flows/flows.puml`.
+
+
 ## Yarn approach
 
 ### Set environment variables
