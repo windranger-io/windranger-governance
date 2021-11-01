@@ -60,7 +60,7 @@ deactivate forum
 
 community -> community: delegate votes
 
-alice -> snapshot: if (positive feedback) submit proposal
+alice -> snapshot: submit proposal
 activate snapshot
 tokenholders -> snapshot: get proposals
 tokenholders <-- snapshot: list of proposals
@@ -74,7 +74,7 @@ bitdaoadmin -> snapshot: get Alice's proposal result
 bitdaoadmin <-- snapshot: Alice's proposal pass/fail result
 deactivate snapshot
 
-bitdaoadmin -> bitdaotreasury: if (proposal passed) transfer funds to grants treasury
+bitdaoadmin -> bitdaotreasury: transfer funds to grants treasury
 bitdaotreasury -> grantstreasury: funds transfer
 
 alt#Gold #DarkSeaGreen trace
@@ -101,8 +101,8 @@ guarantor -> forum: get proposals
 guarantor <-- forum: list of proposals
 guarantor -> forum: put positive/negative feedback
 
-alice -> bondcontract: if (positive) create bond
-guarantor -> bondcontract: if (positive) contribute BIT tokens
+alice -> bondcontract: create bond
+guarantor -> bondcontract: contribute BIT tokens
 guarantor <-- bondcontract: ERC20 Fungible bond tokens (1:1 swap)
 
 ' treasury
@@ -115,7 +115,7 @@ deactivate forum
 
 community --> community: delegate votes
 
-alice -> snapshot: if (positive feedback) submit proposal
+alice -> snapshot: submit proposal
 activate snapshot
 tokenholders -> snapshot: get proposals
 tokenholders <-- snapshot: list of proposals
@@ -123,7 +123,7 @@ tokenholders -> snapshot: vote on open proposals
 tokenholders <-- snapshot: vote confirmation
 deactivate snapshot
 
-bitdaoadmin -> bitdaotreasury: if (pass) allow funds transfer
+bitdaoadmin -> bitdaotreasury: allow funds transfer
 bitdaotreasury -> grantstreasury: transfer funds
 
 ' execution
@@ -166,7 +166,7 @@ deactivate forum
 
 community --> community: delegate votes
 
-alice -> snapshot: if (positive feedback) submit bond release request proposal
+alice -> snapshot: submit bond release request proposal
 activate snapshot
 guarantor -> snapshot: get proposals
 guarantor <-- snapshot: list of proposals
@@ -211,14 +211,14 @@ alice <-- forum: get positive/negative feedback
 
 community -> community: delegate votes
 
-alice -> snapshot: if (positive) create admin role
+alice -> snapshot: create admin role
 
 bitdaoadmin -> snapshot: list role proposals
 bitdaoadmin <-- snapshot: role proposals
 bitdaoadmin -> snapshot: get results
 bitdaoadmin <-- snapshot: list of results
 
-bitdaoadmin -> bitdaogovernance: if (pass) create role
+bitdaoadmin -> bitdaogovernance: create role
 
 alt#Gold #DarkSeaGreen trace
   bitdaoadmin <-- bitdaogovernance: TxHash
@@ -249,7 +249,7 @@ guarantor <-- snapshot: vote confirmation
 bitdaoadmin -> snapshot: get vote result
 bitdaoadmin <-- snapshot: pass/fail vote result
 
-bitdaoadmin -> bitdaotreasury: if (proposal passes) allow funds
+bitdaoadmin -> bitdaotreasury: allow funds transfer
 bitdaotreasury -> insurancecontract: transfer funds
 
 alice <-- insurancecontract: execute proposal
@@ -267,7 +267,7 @@ guarantor -> snapshot: vote on proposal
 bitdaoadmin -> snapshot: get vote result
 bitdaoadmin <-- snapshot: pass/fail vote result
 
-bitdaoadmin -> insurancecontract: if (proposal passes) terminate insurance
+bitdaoadmin -> insurancecontract: terminate insurance
 bitdaoadmin <-- insurancecontract: execute proposal
 
 newpage
@@ -290,7 +290,7 @@ alice <- community: positive/negative feedback
 
 community -> community: delegate role based votes
 
-alice -> bitdaogovernance: if (roles) submit upgrade proposal
+alice -> bitdaogovernance: submit upgrade proposal
 community -> bitdaogovernance: roles voting
 
 bitdaoadmin -> bitdaogovernance: get roles voting result
@@ -310,13 +310,13 @@ autonumber "Rewards:[00]"
 
 alice -> forum: create forum proposal
 alice <- guarantor: positive/negative feedback
-alice -> rewardscontract: if (positive) create rewards program
+alice -> rewardscontract: create rewards program
 
 community -> community: delegate votes
 
 alice -> snapshot: submit proposal
 
-bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaoadmin -> bitdaotreasury: allow funds
 bitdaotreasury -> rewardscontract: transfer funds for rewards
 
 alice <-- rewardscontract: execute proposal
@@ -328,7 +328,7 @@ bob <- guarantor: positive/negative feedback
 bob -> snapshot: submit release request
 community -> community: delegate votes
 community -> snapshot: vote
-community -> rewardscontract: if (voted) claim reward
+community -> rewardscontract: claim reward
 
 
 @enduml
