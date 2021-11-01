@@ -1,5 +1,6 @@
 @startuml
 !pragma layout smetana
+'skinparam defaultFontSize 29
 
 'https://plantuml.com/sequence-diagram
 box "(community)" #LightYellow
@@ -46,30 +47,41 @@ autonumber "Current:[00]"
 
 == Current ==
 
+alice -> grantstreasury: create grants treasury
+alice <-- grantstreasury: treasury address
+
 alice -> forum: create forum proposal
-
-community -> forum: show proposals
-community <-- forum: proposals
+activate forum
+community -> forum: get proposals
+community <-- forum: list of proposals
 community -> forum: put positive/negative feedback
-
 alice <-- forum: get positive/negative feedback
+deactivate forum
 
 community -> community: delegate votes
 
-alice -> snapshot: if (positive) submit proposal
-
-tokenholders -> snapshot: show proposals
-tokenholders <-- snapshot: proposals
+alice -> snapshot: submit proposal
+activate snapshot
+tokenholders -> snapshot: get proposals
+tokenholders <-- snapshot: list of proposals
 tokenholders -> snapshot: vote on open proposals
-tokenholders <- snapshot: vote
-bitdaoadmin -> bitdaotreasury: if (pass) allow funds
-bitdaotreasury -> grantstreasury: transfer funds
+tokenholders <-- snapshot: vote confirmation
+
+'alice -> snapshot: get Alice's proposal result
+'alice <-- snapshot: Alice's proposal pass/fail result
+
+bitdaoadmin -> snapshot: get Alice's proposal result
+bitdaoadmin <-- snapshot: Alice's proposal pass/fail result
+deactivate snapshot
+
+bitdaoadmin -> bitdaotreasury: transfer funds to grants treasury
+bitdaotreasury -> grantstreasury: funds transfer
 
 alt#Gold #DarkSeaGreen trace
-  alice <-- grantstreasury: TxHash
+  alice <-- grantstreasury: transfer confirmation
 end
 
-alice <-- grantstreasury: execute proposal
+alice --> alice: execute proposal
 
 newpage
 
@@ -77,52 +89,113 @@ autonumber "Bond:[00]"
 
 == Bond ==
 
+
+alice -> grantstreasury: create grants treasury
+alice <-- grantstreasury: treasury address
+
+' bond
+
 alice -> forum: create forum proposal
-alice <- guarantor: positive/negative feedback
-alice -> bondcontract: if (positive) create bond
+activate forum
+guarantor -> forum: get proposals
+guarantor <-- forum: list of proposals
+guarantor -> forum: put positive/negative feedback
 
+alice -> bondcontract: create bond
 guarantor -> bondcontract: contribute BIT tokens
-bondcontract <-- guarantor: ERC20 Fungible bond tokens (1:1 swap)
+guarantor <-- bondcontract: ERC20 Fungible bond tokens (1:1 swap)
 
-community -> community: delegate votes
+' treasury
 
-alice -> snapshot: if (positive) submit proposal
+community -> forum: get proposals
+community <-- forum: list of proposals
+community -> forum: put positive/negative feedback
+alice <-- forum: get positive/negative feedback
+deactivate forum
 
-tokenholders -> snapshot: show proposals
-tokenholders <-- snapshot: proposals
+community --> community: delegate votes
+
+alice -> snapshot: submit proposal
+activate snapshot
+tokenholders -> snapshot: get proposals
+tokenholders <-- snapshot: list of proposals
 tokenholders -> snapshot: vote on open proposals
-tokenholders <- snapshot: vote
+tokenholders <-- snapshot: vote confirmation
+deactivate snapshot
 
-bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaoadmin -> bitdaotreasury: allow funds transfer
 bitdaotreasury -> grantstreasury: transfer funds
 
-alice <-- grantstreasury: execute proposal
+' execution
 
-community -> community: delegate votes
+alice --> alice: execute proposal
 
-alice -> snapshot: submit release request
-guarantor -> snapshot: show proposals
-guarantor <-- snapshot: proposals
+
+' tranche request
+
+'alice -> forum: create tranche release request forum proposal
+'activate forum
+'guarantor -> forum: get proposals
+'guarantor <-- forum: list of proposals
+'guarantor -> forum: put positive/negative feedback
+'
+'community -> forum: get proposals
+'community <-- forum: list of proposals
+'community -> forum: put positive/negative feedback
+'
+'alice <-- forum: get positive/negative feedback
+'deactivate forum
+'
+'community --> community: delegate votes
+
+' bond release
+
+alice -> forum: create bond release request forum proposal
+activate forum
+
+guarantor -> forum: get proposals
+guarantor <-- forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+community -> forum: get proposals
+community <-- forum: list of proposals
+community -> forum: put positive/negative feedback
+
+alice <-- forum: get positive/negative feedback
+deactivate forum
+
+community --> community: delegate votes
+
+alice -> snapshot: submit bond release request proposal
+activate snapshot
+guarantor -> snapshot: get proposals
+guarantor <-- snapshot: list of proposals
 guarantor -> snapshot: vote to release or proportional slash
 
-bitdaoadmin -> snapshot: show vote result
-bitdaoadmin <-- snapshot: pass/fail
+tokenholders -> snapshot: get proposals
+tokenholders <-- snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <-- snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <-- snapshot: pass/fail proposal result
 
 alt#Gold #LightBlue pass
     bitdaoadmin -> bondcontract: release bond
-
+    bitdaoadmin <-- bondcontract: release confirmation
     guarantor -> bondcontract: submit and redeem bond tokens
-    bondcontract <-- guarantor: transfer BIT tokens
+    guarantor <-- bondcontract: transfer BIT tokens
 else #Pink fail
     bitdaoadmin -> bondcontract: slash bond
-    bondcontract -> bitdaotreasury: transfer slashed BIT tokens
+    bondcontract -> bitdaotreasury: transfer any slashed BIT tokens
     guarantor -> bondcontract: submit and redeem bond tokens (relative to non-slashed portion)
     guarantor <-- bondcontract: transfer BIT tokens
 end
 
-  alt#Gold #DarkSeaGreen trace
-    bitdaoadmin <-- bondcontract: TxHash
-  end
+alt#Gold #DarkSeaGreen trace
+  bitdaoadmin <-- bondcontract: TxHash
+end
 
 newpage
 
@@ -138,14 +211,14 @@ alice <-- forum: get positive/negative feedback
 
 community -> community: delegate votes
 
-alice -> snapshot: if (positive) create admin role
+alice -> snapshot: create admin role
 
 bitdaoadmin -> snapshot: list role proposals
 bitdaoadmin <-- snapshot: role proposals
-bitdaoadmin -> snapshot: show results
-bitdaoadmin <-- snapshot: results
+bitdaoadmin -> snapshot: get results
+bitdaoadmin <-- snapshot: list of results
 
-bitdaoadmin -> bitdaogovernance: if (pass) create role
+bitdaoadmin -> bitdaogovernance: create role
 
 alt#Gold #DarkSeaGreen trace
   bitdaoadmin <-- bitdaogovernance: TxHash
@@ -168,14 +241,15 @@ alice -> insurancecontract: compensate
 community -> community: delegate votes
 
 alice -> snapshot: submit proposal
-guarantor -> snapshot: show proposals
-guarantor <-- snapshot: proposals
-guarantor -> snapshot: vote
+guarantor -> snapshot: get proposals
+guarantor <-- snapshot: list of proposals
+guarantor -> snapshot: vote on proposal
+guarantor <-- snapshot: vote confirmation
 
-bitdaoadmin -> snapshot: show vote result
-bitdaoadmin <-- snapshot: pass/fail
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <-- snapshot: pass/fail vote result
 
-bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaoadmin -> bitdaotreasury: allow funds transfer
 bitdaotreasury -> insurancecontract: transfer funds
 
 alice <-- insurancecontract: execute proposal
@@ -186,14 +260,14 @@ bitdaoadmin -> insurancecontract: if (high debt) terminate alice insurance
 community -> community: delegate votes
 
 bitdaoadmin -> snapshot: submit proposal
-guarantor -> snapshot: show proposals
-guarantor <-- snapshot: proposals
-guarantor -> snapshot: vote
+guarantor -> snapshot: get all proposals
+guarantor <-- snapshot: list of proposals
+guarantor -> snapshot: vote on proposal
 
-bitdaoadmin -> snapshot: show vote result
-bitdaoadmin <-- snapshot: pass/fail
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <-- snapshot: pass/fail vote result
 
-bitdaoadmin -> insurancecontract: if (pass) terminate insurance
+bitdaoadmin -> insurancecontract: terminate insurance
 bitdaoadmin <-- insurancecontract: execute proposal
 
 newpage
@@ -216,11 +290,11 @@ alice <- community: positive/negative feedback
 
 community -> community: delegate role based votes
 
-alice -> bitdaogovernance: if (roles) submit upgrade proposal
+alice -> bitdaogovernance: submit upgrade proposal
 community -> bitdaogovernance: roles voting
 
-bitdaoadmin -> bitdaogovernance: show roles voting result
-bitdaoadmin <-- bitdaogovernance: pass
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <-- bitdaogovernance: pass/fail vote result
 
 bitdaoadmin -> bitdaogovernance: start execution
 executor <-- bitdaogovernance: execute proposal
@@ -236,13 +310,13 @@ autonumber "Rewards:[00]"
 
 alice -> forum: create forum proposal
 alice <- guarantor: positive/negative feedback
-alice -> rewardscontract: if (positive) create rewards program
+alice -> rewardscontract: create rewards program
 
 community -> community: delegate votes
 
 alice -> snapshot: submit proposal
 
-bitdaoadmin -> bitdaotreasury: if (pass) allow funds
+bitdaoadmin -> bitdaotreasury: allow funds
 bitdaotreasury -> rewardscontract: transfer funds for rewards
 
 alice <-- rewardscontract: execute proposal
@@ -254,7 +328,7 @@ bob <- guarantor: positive/negative feedback
 bob -> snapshot: submit release request
 community -> community: delegate votes
 community -> snapshot: vote
-community -> rewardscontract: if (voted) claim reward
+community -> rewardscontract: claim reward
 
 
 @enduml
