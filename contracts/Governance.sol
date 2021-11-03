@@ -432,17 +432,6 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         );
         require(targets.length > 0, 'Governance::propose: empty proposal');
 
-        bool proposerHasRole = (roles.length == 0);
-        for (uint256 i = 0; i < roles.length; ++i) {
-            if (votersRoles[roles[i]][_msgSender()]) {
-                proposerHasRole = true;
-            }
-        }
-        require(
-            proposerHasRole,
-            'Governance::propose: proposer must have one of the roles'
-        );
-
         for (uint256 i = 0; i < targets.length; ++i) {
             if (targets[i] != address(this)) {
                 bool registeredAction = (protocolsRoles[targets[i]] ==
