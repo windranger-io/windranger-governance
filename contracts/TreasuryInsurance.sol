@@ -8,6 +8,7 @@ import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import './Treasury.sol';
+import './interfaces/IGovernance.sol';
 
 /// @title Treasury contract with insurance.
 contract TreasuryInsurance is Treasury, ERC721 {
@@ -43,15 +44,15 @@ contract TreasuryInsurance is Treasury, ERC721 {
     event PaidInsurance(uint256 id, uint256 payment);
     event Compensated(uint256 id, uint256 compensation);
 
-    constructor(address governance_, address executor_)
-        Treasury(governance_, executor_)
+    constructor(IGovernance governance_)
+        Treasury(governance_)
         ERC721('BITDAO_TREASURY_INSURANCE', 'BITTI')
     {}
 
     /// @notice Sets new maxium debt threshold. Can only be called by an executor
     function setMaxDebtThreshold(uint256 maxDebtThreshold_)
         external
-        onlyExecutor
+        onlyGovernance
     {
         maxDebtThreshold = maxDebtThreshold_;
     }
@@ -81,7 +82,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
         uint256 cost,
         uint256 compensationLimit,
         string calldata condition
-    ) external virtual onlyExecutor returns (uint256) {
+    ) external virtual onlyGovernance returns (uint256) {
         minted += 1;
         compensationLimits[minted] = compensationLimit;
         insuranceConditions[minted] = condition;
@@ -138,7 +139,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
 
     /// @dev compensate Compensates for an item with `id`
     /// @param id Insurance id
-    function compensate(uint256 id) external virtual onlyExecutor {
+    function compensate(uint256 id) external virtual onlyGovernance {
         require(
             requestedCompensations[id] > 0,
             'Insurance::compensate: no compensation request'

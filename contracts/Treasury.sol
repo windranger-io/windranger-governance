@@ -6,14 +6,14 @@ import '@openzeppelin/contracts/utils/Address.sol';
 import '@openzeppelin/contracts/utils/Context.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import './interfaces/IGovernance.sol';
 import './interfaces/IRewards.sol';
 
 /// @title Treasury contract.
 contract Treasury is Context {
     using SafeERC20 for IERC20;
 
-    address public governance;
-    address public executor;
+    IGovernance public governance;
 
     event Received(address from, address asset, uint256 amount);
     event Sent(address to, address asset, uint256 amount);
@@ -21,33 +21,30 @@ contract Treasury is Context {
     event DecreasedAllowance(address spender, address asset, uint256 amount);
 
     modifier onlyGovernance() {
-        require(_msgSender() == governance, 'Treasury: onlyGovernance');
+        require(
+            _msgSender() == governance.executor(),
+            'Treasury: onlyGovernance'
+        );
         _;
     }
 
-    modifier onlyExecutor() {
-        require(_msgSender() == executor, 'Treasury: onlyExecutor');
-        _;
-    }
-
-    constructor(address governance_, address executor_) {
-        governance = governance_;
-        executor = executor_;
-    }
-
-    function setGovernance(address governance_) external virtual onlyExecutor {
+    constructor(IGovernance governance_) {
         governance = governance_;
     }
 
-    function setExecutor(address executor_) external virtual onlyExecutor {
-        executor = executor_;
+    function setGovernance(IGovernance governance_)
+        external
+        virtual
+        onlyGovernance
+    {
+        governance = governance_;
     }
 
     function increaseAllowance(
         address spender,
         address asset,
         uint256 amount
-    ) external virtual onlyExecutor {
+    ) external virtual onlyGovernance {
         IERC20(asset).safeIncreaseAllowance(spender, amount);
         emit IncreasedAllowance(spender, asset, amount);
     }
@@ -56,7 +53,7 @@ contract Treasury is Context {
         address spender,
         address asset,
         uint256 amount
-    ) external virtual onlyExecutor {
+    ) external virtual onlyGovernance {
         IERC20(asset).safeDecreaseAllowance(spender, amount);
         emit DecreasedAllowance(spender, asset, amount);
     }
@@ -65,7 +62,7 @@ contract Treasury is Context {
         address to,
         address asset,
         uint256 amount
-    ) external virtual onlyExecutor {
+    ) external virtual onlyGovernance {
         if (asset == address(0)) {
             payable(to).call{value: amount};
         } else {
@@ -78,7 +75,7 @@ contract Treasury is Context {
         IRewards rewardsContract,
         uint256 rewards,
         uint256 rewardsStart
-    ) external virtual onlyExecutor {
+    ) external virtual onlyGovernance {
         IERC20 rewardToken = rewardsContract.rewardToken();
         require(
             rewardToken.balanceOf(address(this)) >= rewards,

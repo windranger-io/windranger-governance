@@ -18,8 +18,6 @@ contract Rewards is Context {
     IGovernance public governance;
     // Treasury contract.
     address public treasury;
-    // Executor contract or wallet.
-    address public executor;
     // Reward per vote made during successful governance proposal.
     uint256 public rewardPerVote;
     // Block number of voting start for proposals, which qualify for the rewards program.
@@ -36,14 +34,9 @@ contract Rewards is Context {
 
     modifier onlyGovernance() {
         require(
-            _msgSender() == address(governance),
+            _msgSender() == governance.executor(),
             'Rewards:: onlyGovernance'
         );
-        _;
-    }
-
-    modifier onlyExecutor() {
-        require(_msgSender() == executor, 'Rewards:: onlyExecutor');
         _;
     }
 
@@ -54,36 +47,30 @@ contract Rewards is Context {
 
     constructor(
         IGovernance governance_,
-        address executor_,
         address treasury_,
         IERC20 rewardToken_,
         uint256 rewardPerVote_
     ) {
         governance = governance_;
-        executor = executor_;
         treasury = treasury_;
         rewardToken = rewardToken_;
         rewardPerVote = rewardPerVote_;
     }
 
-    function setRewardPerVote(uint256 rewardPerVote_) external onlyExecutor {
+    function setRewardPerVote(uint256 rewardPerVote_) external onlyGovernance {
         rewardPerVote = rewardPerVote_;
     }
 
-    function setRewardToken(IERC20 rewardToken_) external onlyExecutor {
+    function setRewardToken(IERC20 rewardToken_) external onlyGovernance {
         rewardToken = rewardToken_;
     }
 
-    function setGovernance(IGovernance governance_) external onlyExecutor {
+    function setGovernance(IGovernance governance_) external onlyGovernance {
         governance = governance_;
     }
 
-    function setTreasury(address treasury_) external onlyExecutor {
+    function setTreasury(address treasury_) external onlyGovernance {
         treasury = treasury_;
-    }
-
-    function setExecutor(address executor_) external onlyExecutor {
-        executor = executor_;
     }
 
     function allocate(uint256 rewards, uint256 rewardsStart_)

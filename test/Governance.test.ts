@@ -4,6 +4,14 @@ import {BigNumber as BN} from 'ethers'
 import {expect} from 'chai'
 import {SignerWithAddress} from '@nomiclabs/hardhat-ethers/signers'
 import {advanceBlockTo} from './utils/index'
+import {
+  Governance,
+  TimelockController,
+  TreasuryInsurance,
+  VotesOracle,
+  Rewards,
+  MockERC20
+} from '../typechain'
 
 const SUPPLY = '1000000000000000000000000000000'
 const TREASURY_FUNDS = '500000000000000000000000000000'
@@ -50,36 +58,40 @@ describe('Governance', function () {
     this.Treasury = await ethers.getContractFactory('TreasuryInsurance')
     this.Rewards = await ethers.getContractFactory('Rewards')
     this.ERC20 = await ethers.getContractFactory('MockERC20')
-    this.timelock = await this.TimelockController.deploy(
-      1,
-      [this.admin.address],
-      [this.admin.address]
+    this.timelock = <TimelockController>(
+      await this.TimelockController.deploy(
+        1,
+        [this.admin.address],
+        [this.admin.address]
+      )
     )
     await this.timelock.deployed()
-    this.votesOracle = await this.VotesOracle.deploy()
+    this.votesOracle = <VotesOracle>await this.VotesOracle.deploy()
     await this.votesOracle.deployed()
-    this.bit = await this.ERC20.deploy('BIT', 'BIT', SUPPLY)
+    this.bit = <MockERC20>await this.ERC20.deploy('BIT', 'BIT', SUPPLY)
     await this.bit.deployed()
-    this.governance = await this.Governance.deploy(
-      this.bit.address,
-      this.timelock.address,
-      this.votesOracle.address
+    this.governance = <Governance>(
+      await this.Governance.deploy(
+        this.bit.address,
+        this.timelock.address,
+        this.votesOracle.address
+      )
     )
     await this.governance.deployed()
-    this.treasury = await this.Treasury.deploy(
-      this.governance.address,
-      this.timelock.address
+    this.treasury = <TreasuryInsurance>(
+      await this.Treasury.deploy(this.governance.address)
     )
     await this.treasury.deployed()
-    this.rewards = await this.Rewards.deploy(
-      this.governance.address,
-      this.timelock.address,
-      this.treasury.address,
-      this.bit.address,
-      REWARD_PER_VOTE
+    this.rewards = <Rewards>(
+      await this.Rewards.deploy(
+        this.governance.address,
+        this.treasury.address,
+        this.bit.address,
+        REWARD_PER_VOTE
+      )
     )
     await this.rewards.deployed()
-    await this.governance.setTreasury(this.treasury.address)
+    await this.governance.setInitialTreasury(this.treasury.address)
     this.votingPower = BN.from(VOTING_POWER)
     await this.governance.setVoterRolesAdmin(this.delegatee1.address, [
       DEVELOPER_ROLE
@@ -181,7 +193,9 @@ describe('Governance', function () {
   })
 
   it('Run DEVELOPER proposal', async function () {
-    const proposalSignatures: string[] = ['addRoleMember(bytes32,address)']
+    const proposalSignatures: string[] = [
+      'addRoleMember(bytes32,address,address)'
+    ]
     const proposalValues: string[] = ['0']
     const proposalRoles: string[] = [DEVELOPER_ROLE]
     const proposalTargets: string[] = [this.governance.address]
@@ -200,10 +214,14 @@ describe('Governance', function () {
             {
               type: 'address',
               name: 'member'
+            },
+            {
+              type: 'address',
+              name: 'proposer'
             }
           ]
         },
-        [DEVELOPER_ROLE, this.voter.address]
+        [DEVELOPER_ROLE, this.voter.address, this.delegatee1.address]
       )
     ]
     await this.runProposal(
@@ -218,7 +236,9 @@ describe('Governance', function () {
   })
 
   it('Run LEGAL proposal', async function () {
-    const proposalSignatures: string[] = ['addRoleMember(bytes32,address)']
+    const proposalSignatures: string[] = [
+      'addRoleMember(bytes32,address,address)'
+    ]
     const proposalValues: string[] = ['0']
     const proposalRoles: string[] = [LEGAL_ROLE]
     const proposalTargets: string[] = [this.governance.address]
@@ -237,10 +257,14 @@ describe('Governance', function () {
             {
               type: 'address',
               name: 'member'
+            },
+            {
+              type: 'address',
+              name: 'proposer'
             }
           ]
         },
-        [LEGAL_ROLE, this.voter.address]
+        [LEGAL_ROLE, this.voter.address, this.delegatee2.address]
       )
     ]
     await this.runProposal(
@@ -255,7 +279,9 @@ describe('Governance', function () {
   })
 
   it('Run TREASURY proposal', async function () {
-    const proposalSignatures: string[] = ['addRoleMember(bytes32,address)']
+    const proposalSignatures: string[] = [
+      'addRoleMember(bytes32,address,address)'
+    ]
     const proposalValues: string[] = ['0']
     const proposalRoles: string[] = [TREASURY_ROLE]
     const proposalTargets: string[] = [this.governance.address]
@@ -274,10 +300,14 @@ describe('Governance', function () {
             {
               type: 'address',
               name: 'member'
+            },
+            {
+              type: 'address',
+              name: 'proposer'
             }
           ]
         },
-        [TREASURY_ROLE, this.voter.address]
+        [TREASURY_ROLE, this.voter.address, this.delegatee3.address]
       )
     ]
     await this.runProposal(
@@ -346,7 +376,7 @@ describe('Governance', function () {
     const web3 = new Web3()
     const proposalCalldatas: string[] = []
     for (let i = 0; i < 3; ++i) {
-      proposalSignatures.push('addRoleMember(bytes32,address)')
+      proposalSignatures.push('addRoleMember(bytes32,address,address)')
       proposalValues.push('0')
       proposalTargets.push(this.governance.address)
       proposalCalldatas.push(
@@ -362,10 +392,14 @@ describe('Governance', function () {
               {
                 type: 'address',
                 name: 'member'
+              },
+              {
+                type: 'address',
+                name: 'proposer'
               }
             ]
           },
-          [proposalRoles[i], this.newDelegatee.address]
+          [proposalRoles[i], this.newDelegatee.address, this.voter.address]
         )
       )
     }
