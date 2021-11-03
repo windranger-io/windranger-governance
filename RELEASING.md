@@ -1,19 +1,29 @@
-## Releasing Using a Long-Lived Version Branch Approach
+# Releasing
 
-### Release Procedure
+## Trunk-based approach
 
-1. Start on `main`
-2. Update CHANGELOG.md
-3. Create a new long-lived branch for each minor version. Create the `release/vn.n.x` branch,
-   e.g., `release/v2.0.x`. It is fine to create a long-lived branch from main if the last commit is
-   the release commit.
-4. Tag the release
+The [development process](https://github.com/windranger-io/solidity-project-template/blob/a5fdabf7a8560f3ba076cb58f66f80768fbeca45/docs/development_process.md#branch-per-a-feature)
+follows a trunk-based approach. The approach uses long-lived feature branches with ephemeral bug fix
+branches. A key approach is to use tags on a branch and then deleting the branch; tagging a branch
+allows the history to be maintained and accessible.
+
+## Versioning
+
+We follow [semantic versioning](https://semver.org/) guidelines. 
+
+## Release Procedure
+
+1. Checkout the branch or tag to update/release, assume `main`
+2. Apply any updates and update CHANGELOG.md with the version number to be released
+3. As part of updates, potentially create a bug fix branch
+4. After completing updates, tag the branch with the release version label
     - alpha: `vn.n.n-alpha`, e.g., `v2.0.0-alpha`
     - beta: `vn.n.n-beta`, e.g., `v2.0.0-beta`
     - release candidate (RC): `vn.n.n-rc0`, e.g., `v2.0.0-rc0`,`v2.0.0-rc1`
     - point release: `vn.n.n`, e.g., `v2.0.1`, `v2.0.2`
-5. On github, select the tag as the release
-6. Use the following template for the release notes:
+5. Delete the bug fix branch
+6. On github, select the tag as the release
+7. Use the following template for the release notes:
 
 ```markdown
 # windranger-governance v2.0.1 Release Notes
@@ -24,14 +34,7 @@ This release contains the initial specifications and corresponding smart contrac
 that will be proposed for BitDAO.
 ```
 
-### Point Release Procedure
-
-1. Start on the long-lived `release/vn.n.x` branch
-2. Cherry-pick commits from `main`
-3. Tag the release with the point version, e.g., `vn.n.n+1`
-4. Update the CHANGELOG.md
-
-### Tagging
+## Tagging
 
 The following steps are the default for tagging a specific branch commit (usually on a branch
 labeled `release/vn.n.n`):
@@ -58,4 +61,15 @@ To tag and build without a public release (e.g., as part of a timed security rel
 3. Push the local tags
 4. Create a release based off the newly pushed tag 
 
+## Quick overview of creating a branch from a tag
 
+To create a tag on a branch that is then deleted:
+1. `git tag 'v2.0.1'`
+2. `git branch -d my-bugfix` 
+3. `git push 'v2.0.1'` or (as above) `git push --tags`
+
+To create a branch from a tag (whose branch has been deleted):
+1. `git fetch`
+2. `git branch my-next-release 'v2.0.1'`
+3. `git checkout my-next-release`
+4. Apply updates, tag, then delete
