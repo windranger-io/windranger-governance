@@ -1,15 +1,27 @@
-# governance
-BitDAO Governance contracts framework
+# windranger-governance
 
-## Bulding sequence diagrams
+Governance contracts framework developed by Windranger to be proposed to BitDAO.
+
+## Docs
+
+[Architecture](docs/Architecture.md)
+
+[Proposals](docs/Proposals.md)
+
+[Use cases](docs/use_cases.md)
+
+[Flows](docs/flows/flows.puml)
+
+## Sequence diagrams
+
+Build images of the above flow diagrams:
 
 `npm install`
 
 `npm run plant`
 
-Images are generated and placed into the `./build` folder. 
-Image files are numbered incrementally for each `newpage` in `./docs/flows/flows.puml`.
-
+Images are generated and placed into the `./build` folder. Image files are numbered incrementally
+for each `newpage` in `./docs/flows/flows.puml`.
 
 ## Yarn approach
 
@@ -29,8 +41,7 @@ Image files are numbered incrementally for each `newpage` in `./docs/flows/flows
 
 `yarn build`
 
-### Test 
-
+### Test
 
 #### Run Ganache
 
@@ -40,11 +51,9 @@ Do the following in a different terminal window:
 
 `./node_modules/ganache-cli/cli.js`
 
-
 #### Run Tests
 
 `yarn test`
-
 
 ## NodeJS approach
 
@@ -62,7 +71,6 @@ Do the following in a different terminal window:
 
 `npm install`
 
-
 #### Run Ganache
 
 Do the following in a different terminal window:
@@ -74,3 +82,11 @@ Do the following in a different terminal window:
 #### Run Tests
 
 `npm run test`
+
+## Security
+
+Not yet defined
+
+## License
+
+[Apache 2.0](LICENSE)
