@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="997px" preserveAspectRatio="none" style="width:3335px;height:997px;background:#FFFFFF;" version="1.1" viewBox="0 0 3335 997" width="3335px" zoomAndPan="magnify"><defs><filter height="300%" id="f1mlfsjs1qkelm" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><rect fill="#FFFFE0" height="985.0508" style="stroke:#A80036;stroke-width:1.0;" width="270" x="16" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="86" x="108" y="18.5684">(community)</text><rect fill="#FF7F50" height="985.0508" style="stroke:#A80036;stroke-width:1.0;" width="71" x="483.5" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="65" x="486.5" y="18.5684">(offchain)</text><rect fill="#D3D3D3" height="985.0508" style="stroke:#A80036;stroke-width:1.0;" width="414.5" x="751" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="86" x="915.25" y="18.5684">(community)</text><rect fill="#CD853F" height="985.0508" style="stroke:#A80036;stroke-width:1.0;" width="166" x="1167.5" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="65" x="1218" y="18.5684">(multisig)</text><rect fill="#6B8E23" height="985.0508" style="stroke:#A80036;stroke-width:1.0;" width="161" x="1335.5" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="48" x="1392" y="18.5684">(token)</text><rect fill="#FF7F50" height="985.0508" style="stroke:#A80036;stroke-width:1.0;" width="78" x="1633" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="65" x="1639.5" y="18.5684">(offchain)</text><rect fill="#E6E6FA" height="985.0508" style="stroke:#A80036;stroke-width:1.0;" width="1614.5" x="1713" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="64" x="2488.25" y="18.5684">(onchain)</text><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="65" x2="65" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="266" x2="266" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="518.5" x2="518.5" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="829" x2="829" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1093.5" x2="1093.5" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1250.5" x2="1250.5" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1415.5" x2="1415.5" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1672" x2="1672" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1758" x2="1758" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1868" x2="1868" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2005" x2="2005" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2159" x2="2159" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2306" x2="2306" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2498.5" x2="2498.5" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2668.5" x2="2668.5" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2857.5" x2="2857.5" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="3013.5" x2="3013.5" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="3168.5" x2="3168.5" y1="108.7988" y2="904.5625"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="3293.5" x2="3293.5" y1="108.7988" y2="904.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84" x="20" y="105.8457">Alice_novice</text><ellipse cx="65" cy="35.3105" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M65,43.3105 L65,70.3105 M52,51.3105 L78,51.3105 M65,70.3105 L52,85.3105 M65,70.3105 L78,85.3105 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84" x="20" y="917.0977">Alice_novice</text><ellipse cx="65" cy="930.0508" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M65,938.0508 L65,965.0508 M52,946.0508 L78,946.0508 M65,965.0508 L52,980.0508 M65,965.0508 L78,980.0508 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="26" x="250" y="105.8457">Bob</text><ellipse cx="266" cy="35.3105" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M266,43.3105 L266,70.3105 M253,51.3105 L279,51.3105 M266,70.3105 L253,85.3105 M266,70.3105 L279,85.3105 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="26" x="250" y="917.0977">Bob</text><ellipse cx="266" cy="930.0508" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M266,938.0508 L266,965.0508 M253,946.0508 L279,946.0508 M266,965.0508 L253,980.0508 M266,965.0508 L279,980.0508 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="45" x="493.5" y="105.8457">Forum</text><ellipse cx="519" cy="35.3105" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M519,43.3105 L519,70.3105 M506,51.3105 L532,51.3105 M519,70.3105 L506,85.3105 M519,70.3105 L532,85.3105 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="45" x="493.5" y="917.0977">Forum</text><ellipse cx="519" cy="930.0508" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M519,938.0508 L519,965.0508 M506,946.0508 L532,946.0508 M519,965.0508 L506,980.0508 M519,965.0508 L532,980.0508 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="142" x="755" y="105.8457">Communities_novice</text><ellipse cx="829" cy="35.3105" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M829,43.3105 L829,70.3105 M816,51.3105 L842,51.3105 M829,70.3105 L816,85.3105 M829,70.3105 L842,85.3105 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="142" x="755" y="917.0977">Communities_novice</text><ellipse cx="829" cy="930.0508" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M829,938.0508 L829,965.0508 M816,946.0508 L842,946.0508 M829,965.0508 L816,980.0508 M829,965.0508 L842,980.0508 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129" x="1026.5" y="105.8457">Guarantors_expert</text><ellipse cx="1094" cy="35.3105" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1094,43.3105 L1094,70.3105 M1081,51.3105 L1107,51.3105 M1094,70.3105 L1081,85.3105 M1094,70.3105 L1107,85.3105 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129" x="1026.5" y="917.0977">Guarantors_expert</text><ellipse cx="1094" cy="930.0508" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1094,938.0508 L1094,965.0508 M1081,946.0508 L1107,946.0508 M1094,965.0508 L1081,980.0508 M1094,965.0508 L1107,980.0508 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="1171.5" y="105.8457">BitDAOAdmins_expert</text><ellipse cx="1250.5" cy="35.3105" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1250.5,43.3105 L1250.5,70.3105 M1237.5,51.3105 L1263.5,51.3105 M1250.5,70.3105 L1237.5,85.3105 M1250.5,70.3105 L1263.5,85.3105 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="1171.5" y="917.0977">BitDAOAdmins_expert</text><ellipse cx="1250.5" cy="930.0508" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1250.5,938.0508 L1250.5,965.0508 M1237.5,946.0508 L1263.5,946.0508 M1250.5,965.0508 L1237.5,980.0508 M1250.5,965.0508 L1263.5,980.0508 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147" x="1339.5" y="105.8457">TokenHolders_novice</text><ellipse cx="1416" cy="35.3105" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1416,43.3105 L1416,70.3105 M1403,51.3105 L1429,51.3105 M1416,70.3105 L1403,85.3105 M1416,70.3105 L1429,85.3105 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147" x="1339.5" y="917.0977">TokenHolders_novice</text><ellipse cx="1416" cy="930.0508" fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1416,938.0508 L1416,965.0508 M1403,946.0508 L1429,946.0508 M1416,965.0508 L1403,980.0508 M1416,965.0508 L1429,980.0508 " fill="none" filter="url(#f1mlfsjs1qkelm)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="64" x="1637" y="105.8457">Snapshot</text><path d="M1654,56.3105 C1654,46.3105 1672,46.3105 1672,46.3105 C1672,46.3105 1690,46.3105 1690,56.3105 L1690,82.3105 C1690,92.3105 1672,92.3105 1672,92.3105 C1672,92.3105 1654,92.3105 1654,82.3105 L1654,56.3105 " fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" style="stroke:#000000;stroke-width:1.5;"/><path d="M1654,56.3105 C1654,66.3105 1672,66.3105 1672,66.3105 C1672,66.3105 1690,66.3105 1690,56.3105 " fill="none" style="stroke:#000000;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="64" x="1637" y="917.0977">Snapshot</text><path d="M1654,930.0508 C1654,920.0508 1672,920.0508 1672,920.0508 C1672,920.0508 1690,920.0508 1690,930.0508 L1690,956.0508 C1690,966.0508 1672,966.0508 1672,966.0508 C1672,966.0508 1654,966.0508 1654,956.0508 L1654,930.0508 " fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" style="stroke:#000000;stroke-width:1.5;"/><path d="M1654,930.0508 C1654,940.0508 1672,940.0508 1672,940.0508 C1672,940.0508 1690,940.0508 1690,930.0508 " fill="none" style="stroke:#000000;stroke-width:1.5;"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="75" x="1721" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="75" x="1717" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61" x="1724" y="93.8457">Executor</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="75" x="1721" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="75" x="1717" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61" x="1724" y="928.0977">Executor</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="108" x="1814" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="108" x="1810" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="94" x="1817" y="93.8457">BondContract</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="108" x="1814" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="108" x="1810" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="94" x="1817" y="928.0977">BondContract</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="131" x="1940" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="131" x="1936" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="117" x="1943" y="93.8457">RewardsContract</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="131" x="1940" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="131" x="1936" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="117" x="1943" y="928.0977">RewardsContract</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="140" x="2089" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="140" x="2085" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="126" x="2092" y="93.8457">InsuranceContract</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="140" x="2089" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="140" x="2085" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="126" x="2092" y="928.0977">InsuranceContract</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="119" x="2247" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="119" x="2243" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="105" x="2250" y="93.8457">GrantsTreasury</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="119" x="2247" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="119" x="2243" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="105" x="2250" y="928.0977">GrantsTreasury</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="122" x="2437.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="122" x="2433.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="108" x="2440.5" y="93.8457">BitDAOTreasury</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="122" x="2437.5" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="122" x="2433.5" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="108" x="2440.5" y="928.0977">BitDAOTreasury</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="182" x="2577.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="182" x="2573.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="168" x="2580.5" y="93.8457">BitDAOGovernanceProxy</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="182" x="2577.5" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="182" x="2573.5" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="168" x="2580.5" y="928.0977">BitDAOGovernanceProxy</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="2777.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="2773.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147" x="2780.5" y="93.8457">BitDAOTreasuryProxy</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="2777.5" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="2773.5" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147" x="2780.5" y="928.0977">BitDAOTreasuryProxy</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="114" x="2956.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="114" x="2952.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="2959.5" y="93.8457">ExecutorProxy</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="114" x="2956.5" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="114" x="2952.5" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100" x="2959.5" y="928.0977">ExecutorProxy</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="3088.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="3084.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147" x="3091.5" y="93.8457">BitDAOGovernanceV2</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="3088.5" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="3084.5" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147" x="3091.5" y="928.0977">BitDAOGovernanceV2</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="52" x="3267.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="52" x="3263.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="38" x="3270.5" y="93.8457">LDAO</text><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="52" x="3267.5" y="903.5625"/><rect fill="#FEFECE" filter="url(#f1mlfsjs1qkelm)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="52" x="3263.5" y="907.5625"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="38" x="3270.5" y="928.0977">LDAO</text><line style="stroke:#000000;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="0" x2="3328.5" y1="119.7988" y2="119.7988"/><rect fill="#EEEEEE" filter="url(#f1mlfsjs1qkelm)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="3328.5" x="0" y="141.4541"/><line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="3328.5" y1="141.4541" y2="141.4541"/><line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="3328.5" y1="144.4541" y2="144.4541"/><rect fill="#EEEEEE" filter="url(#f1mlfsjs1qkelm)" height="23.3105" style="stroke:#000000;stroke-width:2.0;" width="85" x="1621.75" y="130.7988"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="67" x="1627.75" y="147.3672">Insurance</text><polygon fill="#A80036" points="2147,181.4199,2157,185.4199,2147,189.4199,2151,185.4199" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="65" x2="2153" y1="185.4199" y2="185.4199"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="72" y="180.6777">Insurance:[01]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="143" x="165" y="180.6777">create insurance ticket</text><polygon fill="#A80036" points="2147,210.7305,2157,214.7305,2147,218.7305,2151,214.7305" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="65" x2="2153" y1="214.7305" y2="214.7305"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="72" y="209.9883">Insurance:[02]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="210" x="165" y="209.9883">pay for insurance daily / monthly</text><polygon fill="#A80036" points="2147,240.041,2157,244.041,2147,248.041,2151,244.041" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="65" x2="2153" y1="244.041" y2="244.041"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="72" y="239.2988">Insurance:[03]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="76" x="165" y="239.2988">compensate</text><line style="stroke:#A80036;stroke-width:1.0;" x1="829" x2="871" y1="273.3516" y2="273.3516"/><line style="stroke:#A80036;stroke-width:1.0;" x1="871" x2="871" y1="273.3516" y2="286.3516"/><line style="stroke:#A80036;stroke-width:1.0;" x1="830" x2="871" y1="286.3516" y2="286.3516"/><polygon fill="#A80036" points="840,282.3516,830,286.3516,840,290.3516,836,286.3516" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="836" y="268.6094">Insurance:[04]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="91" x="929" y="268.6094">delegate votes</text><polygon fill="#A80036" points="1660,311.6621,1670,315.6621,1660,319.6621,1664,315.6621" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="65" x2="1666" y1="315.6621" y2="315.6621"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="72" y="310.9199">Insurance:[05]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="103" x="165" y="310.9199">submit proposal</text><polygon fill="#A80036" points="1660,340.9727,1670,344.9727,1660,348.9727,1664,344.9727" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1094" x2="1666" y1="344.9727" y2="344.9727"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1101" y="340.2305">Insurance:[06]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="86" x="1194" y="340.2305">get proposals</text><polygon fill="#A80036" points="1105,370.2832,1095,374.2832,1105,378.2832,1101,374.2832" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1099" x2="1671" y1="374.2832" y2="374.2832"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1111" y="369.541">Insurance:[07]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="103" x="1204" y="369.541">list of proposals</text><polygon fill="#A80036" points="1660,399.5938,1670,403.5938,1660,407.5938,1664,403.5938" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1094" x2="1666" y1="403.5938" y2="403.5938"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1101" y="398.8516">Insurance:[08]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="106" x="1194" y="398.8516">vote on proposal</text><polygon fill="#A80036" points="1105,428.9043,1095,432.9043,1105,436.9043,1101,432.9043" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1099" x2="1671" y1="432.9043" y2="432.9043"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1111" y="428.1621">Insurance:[09]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="112" x="1204" y="428.1621">vote confirmation</text><polygon fill="#A80036" points="1660,458.2148,1670,462.2148,1660,466.2148,1664,462.2148" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1250.5" x2="1666" y1="462.2148" y2="462.2148"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1257.5" y="457.4727">Insurance:[10]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="91" x="1350.5" y="457.4727">get vote result</text><polygon fill="#A80036" points="1261.5,487.5254,1251.5,491.5254,1261.5,495.5254,1257.5,491.5254" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1255.5" x2="1671" y1="491.5254" y2="491.5254"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1267.5" y="486.7832">Insurance:[11]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="127" x="1360.5" y="486.7832">pass/fail vote result</text><polygon fill="#A80036" points="2486.5,516.8359,2496.5,520.8359,2486.5,524.8359,2490.5,520.8359" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1250.5" x2="2492.5" y1="520.8359" y2="520.8359"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1257.5" y="516.0938">Insurance:[12]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="126" x="1350.5" y="516.0938">allow funds transfer</text><polygon fill="#A80036" points="2170,546.1465,2160,550.1465,2170,554.1465,2166,550.1465" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="2164" x2="2497.5" y1="550.1465" y2="550.1465"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="2176" y="545.4043">Insurance:[13]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="2269" y="545.4043">transfer funds</text><polygon fill="#A80036" points="76,575.457,66,579.457,76,583.457,72,579.457" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="70" x2="2158" y1="579.457" y2="579.457"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="82" y="574.7148">Insurance:[14]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="108" x="175" y="574.7148">execute proposal</text><polygon fill="#A80036" points="2147,604.7676,2157,608.7676,2147,612.7676,2151,608.7676" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1250.5" x2="2153" y1="608.7676" y2="608.7676"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1257.5" y="604.0254">Insurance:[15]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="243" x="1350.5" y="604.0254">if (high debt) terminate alice insurance</text><line style="stroke:#A80036;stroke-width:1.0;" x1="829" x2="871" y1="638.0781" y2="638.0781"/><line style="stroke:#A80036;stroke-width:1.0;" x1="871" x2="871" y1="638.0781" y2="651.0781"/><line style="stroke:#A80036;stroke-width:1.0;" x1="830" x2="871" y1="651.0781" y2="651.0781"/><polygon fill="#A80036" points="840,647.0781,830,651.0781,840,655.0781,836,651.0781" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="836" y="633.3359">Insurance:[16]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="91" x="929" y="633.3359">delegate votes</text><polygon fill="#A80036" points="1660,676.3887,1670,680.3887,1660,684.3887,1664,680.3887" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1250.5" x2="1666" y1="680.3887" y2="680.3887"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1257.5" y="675.6465">Insurance:[17]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="103" x="1350.5" y="675.6465">submit proposal</text><polygon fill="#A80036" points="1660,705.6992,1670,709.6992,1660,713.6992,1664,709.6992" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1094" x2="1666" y1="709.6992" y2="709.6992"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1101" y="704.957">Insurance:[18]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="105" x="1194" y="704.957">get all proposals</text><polygon fill="#A80036" points="1105,735.0098,1095,739.0098,1105,743.0098,1101,739.0098" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1099" x2="1671" y1="739.0098" y2="739.0098"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1111" y="734.2676">Insurance:[19]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="103" x="1204" y="734.2676">list of proposals</text><polygon fill="#A80036" points="1660,764.3203,1670,768.3203,1660,772.3203,1664,768.3203" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1094" x2="1666" y1="768.3203" y2="768.3203"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1101" y="763.5781">Insurance:[20]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="106" x="1194" y="763.5781">vote on proposal</text><polygon fill="#A80036" points="1660,793.6309,1670,797.6309,1660,801.6309,1664,797.6309" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1250.5" x2="1666" y1="797.6309" y2="797.6309"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1257.5" y="792.8887">Insurance:[21]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="91" x="1350.5" y="792.8887">get vote result</text><polygon fill="#A80036" points="1261.5,822.9414,1251.5,826.9414,1261.5,830.9414,1257.5,826.9414" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1255.5" x2="1671" y1="826.9414" y2="826.9414"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1267.5" y="822.1992">Insurance:[22]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="127" x="1360.5" y="822.1992">pass/fail vote result</text><polygon fill="#A80036" points="2147,852.252,2157,856.252,2147,860.252,2151,856.252" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1250.5" x2="2153" y1="856.252" y2="856.252"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1257.5" y="851.5098">Insurance:[23]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="125" x="1350.5" y="851.5098">terminate insurance</text><polygon fill="#A80036" points="1261.5,881.5625,1251.5,885.5625,1261.5,889.5625,1257.5,885.5625" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1255.5" x2="2158" y1="885.5625" y2="885.5625"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="89" x="1267.5" y="880.8203">Insurance:[24]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="108" x="1360.5" y="880.8203">execute proposal</text><line style="stroke:#000000;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="0" x2="3328.5" y1="893.5625" y2="893.5625"/><!--MD5=[13b1fec1cc0d6c0bdf0a8f9a1f795a91]
+@startuml
+!pragma layout smetana
+'skinparam defaultFontSize 29
+
+'https://plantuml.com/sequence-diagram
+box "(community)" #LightYellow
+actor Alice_novice as alice
+actor Bob as bob
+end box
+
+box "(offchain)" #Coral
+actor Forum as forum
+end box
+
+box "(community)" #LightGray
+actor Communities_novice as community
+actor Guarantors_expert as guarantor
+end box
+
+box "(multisig)" #Peru
+actor BitDAOAdmins_expert as bitdaoadmin
+end box
+
+box "(token)" #OliveDrab
+actor TokenHolders_novice as tokenholders
+endbox
+
+box "(offchain)" #Coral
+database Snapshot as snapshot
+end box
+
+box "(onchain)" #Lavender
+collections Executor as executor
+collections BondContract as bondcontract
+collections RewardsContract as rewardscontract
+collections InsuranceContract as insurancecontract
+collections GrantsTreasury as grantstreasury
+collections BitDAOTreasury as bitdaotreasury
+collections BitDAOGovernanceProxy as governanceproxy
+collections BitDAOTreasuryProxy as treasuryproxy
+collections ExecutorProxy as executorproxy
+collections BitDAOGovernanceV2 as bitdaogovernance
+collections LDAO
+end box
+
+autonumber "Current:[00]"
+
+== Current ==
+
+alice -> grantstreasury: create grants treasury
+alice <- - grantstreasury: treasury address
+
+alice -> forum: create forum proposal
+activate forum
+community -> forum: get proposals
+community <- - forum: list of proposals
+community -> forum: put positive/negative feedback
+alice <- - forum: get positive/negative feedback
+deactivate forum
+
+community -> community: delegate votes
+
+alice -> snapshot: submit proposal
+activate snapshot
+tokenholders -> snapshot: get proposals
+tokenholders <- - snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- - snapshot: vote confirmation
+
+'alice -> snapshot: get Alice's proposal result
+'alice <- - snapshot: Alice's proposal pass/fail result
+
+bitdaoadmin -> snapshot: get Alice's proposal result
+bitdaoadmin <- - snapshot: Alice's proposal pass/fail result
+deactivate snapshot
+
+bitdaoadmin -> bitdaotreasury: transfer funds to grants treasury
+bitdaotreasury -> grantstreasury: funds transfer
+
+alt#Gold #DarkSeaGreen trace
+  alice <- - grantstreasury: transfer confirmation
+end
+
+alice - -> alice: execute proposal
+
+newpage
+
+autonumber "Bond:[00]"
+
+== Bond ==
+
+
+alice -> grantstreasury: create grants treasury
+alice <- - grantstreasury: treasury address
+
+' bond
+
+alice -> forum: create forum proposal
+activate forum
+guarantor -> forum: get proposals
+guarantor <- - forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+alice -> bondcontract: create bond
+guarantor -> bondcontract: contribute BIT tokens
+guarantor <- - bondcontract: ERC20 Fungible bond tokens (1:1 swap)
+
+' treasury
+
+community -> forum: get proposals
+community <- - forum: list of proposals
+community -> forum: put positive/negative feedback
+alice <- - forum: get positive/negative feedback
+deactivate forum
+
+community - -> community: delegate votes
+
+alice -> snapshot: submit proposal
+activate snapshot
+tokenholders -> snapshot: get proposals
+tokenholders <- - snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- - snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> bitdaotreasury: allow funds transfer
+bitdaotreasury -> grantstreasury: transfer funds
+
+' execution
+
+alice - -> alice: execute proposal
+
+
+' tranche request
+
+'alice -> forum: create tranche release request forum proposal
+'activate forum
+'guarantor -> forum: get proposals
+'guarantor <- - forum: list of proposals
+'guarantor -> forum: put positive/negative feedback
+'
+'community -> forum: get proposals
+'community <- - forum: list of proposals
+'community -> forum: put positive/negative feedback
+'
+'alice <- - forum: get positive/negative feedback
+'deactivate forum
+'
+'community - -> community: delegate votes
+
+' bond release
+
+alice -> forum: create bond release request forum proposal
+activate forum
+
+guarantor -> forum: get proposals
+guarantor <- - forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+community -> forum: get proposals
+community <- - forum: list of proposals
+community -> forum: put positive/negative feedback
+
+alice <- - forum: get positive/negative feedback
+deactivate forum
+
+community - -> community: delegate votes
+
+alice -> snapshot: submit bond release request proposal
+activate snapshot
+guarantor -> snapshot: get proposals
+guarantor <- - snapshot: list of proposals
+guarantor -> snapshot: vote to release or proportional slash
+
+tokenholders -> snapshot: get proposals
+tokenholders <- - snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- - snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <- - snapshot: pass/fail proposal result
+
+alt#Gold #LightBlue pass
+    bitdaoadmin -> bondcontract: release bond
+    bitdaoadmin <- - bondcontract: release confirmation
+    guarantor -> bondcontract: submit and redeem bond tokens
+    guarantor <- - bondcontract: transfer BIT tokens
+else #Pink fail
+    bitdaoadmin -> bondcontract: slash bond
+    bondcontract -> bitdaotreasury: transfer any slashed BIT tokens
+    guarantor -> bondcontract: submit and redeem bond tokens (relative to non-slashed portion)
+    guarantor <- - bondcontract: transfer BIT tokens
+end
+
+alt#Gold #DarkSeaGreen trace
+  bitdaoadmin <- - bondcontract: TxHash
+end
+
+newpage
+
+autonumber "Roles:[00]"
+
+== Roles ==
+
+alice -> forum: submit create role proposal
+community -> forum: list role proposals
+community <- - forum: role proposals
+community -> forum: positive/negative feedback
+alice <- - forum: get positive/negative feedback
+
+community -> community: delegate votes
+
+alice -> snapshot: create admin role
+
+bitdaoadmin -> snapshot: list role proposals
+bitdaoadmin <- - snapshot: role proposals
+bitdaoadmin -> snapshot: get results
+bitdaoadmin <- - snapshot: list of results
+
+bitdaoadmin -> bitdaogovernance: create role
+
+alt#Gold #DarkSeaGreen trace
+  bitdaoadmin <- - bitdaogovernance: TxHash
+end
+
+newpage
+
+autonumber "Insurance:[00]"
+
+== Insurance ==
+
+alice -> insurancecontract: create insurance ticket
+
+
+alice -> insurancecontract: pay for insurance daily / monthly
+
+
+alice -> insurancecontract: compensate
+
+community -> community: delegate votes
+
+alice -> snapshot: submit proposal
+guarantor -> snapshot: get proposals
+guarantor <- - snapshot: list of proposals
+guarantor -> snapshot: vote on proposal
+guarantor <- - snapshot: vote confirmation
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <- - snapshot: pass/fail vote result
+
+bitdaoadmin -> bitdaotreasury: allow funds transfer
+bitdaotreasury -> insurancecontract: transfer funds
+
+alice <- - insurancecontract: execute proposal
+
+
+bitdaoadmin -> insurancecontract: if (high debt) terminate alice insurance
+
+community -> community: delegate votes
+
+bitdaoadmin -> snapshot: submit proposal
+guarantor -> snapshot: get all proposals
+guarantor <- - snapshot: list of proposals
+guarantor -> snapshot: vote on proposal
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <- - snapshot: pass/fail vote result
+
+bitdaoadmin -> insurancecontract: terminate insurance
+bitdaoadmin <- - insurancecontract: execute proposal
+
+newpage
+
+autonumber "Upgrades:[00]"
+
+== Upgrades ==
+
+bitdaoadmin -> governanceproxy: deploy proxy and set initial implementation
+bitdaoadmin -> treasuryproxy: deploy proxy and set initial implementation
+bitdaoadmin -> executorproxy: deploy proxy and set initial implementation
+
+
+alice -> bitdaogovernance: deploy new bitdaogovernance implementation
+alice -> bitdaotreasury: deploy new bitdaotreasury implementation
+alice -> executor: deploy new executor implementation
+
+alice -> forum: create forum upgrade proposal
+alice <- community: positive/negative feedback
+
+community -> community: delegate role based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> governanceproxy: set new bitdaogovernance implementation
+executor -> treasuryproxy: set new bitdaotreasury implementation
+executor -> executorproxy: set new executor implementation
+
+newpage
+
+autonumber "Rewards:[00]"
+
+== Rewards ==
+
+alice -> forum: create forum proposal
+alice <- guarantor: positive/negative feedback
+alice -> rewardscontract: create rewards program
+
+community -> community: delegate votes
+
+alice -> snapshot: submit proposal
+
+bitdaoadmin -> bitdaotreasury: allow funds
+bitdaotreasury -> rewardscontract: transfer funds for rewards
+
+alice <- - rewardscontract: execute proposal
+
+
+bob -> forum: create forum proposal
+bob <- guarantor: positive/negative feedback
+
+bob -> snapshot: submit release request
+community -> community: delegate votes
+community -> snapshot: vote
+community -> rewardscontract: claim reward
+
+
+@enduml
+
+@startuml
+!pragma layout smetana
+
+box "(community)" #LightYellow
+actor Alice_novice as alice
+actor Bob as bob
+end box
+
+box "(offchain)" #Coral
+actor Forum as forum
+end box
+
+box "(community)" #LightGray
+actor Communities_novice as community
+actor Guarantors_expert as guarantor
+end box
+
+box "(multisig)" #Peru
+actor BitDAOAdmins_expert as bitdaoadmin
+end box
+
+box "(token)" #OliveDrab
+actor TokenHolders_novice as tokenholders
+endbox
+
+box "(offchain)" #Coral
+database Snapshot as snapshot
+end box
+
+box "(onchain)" #Lavender
+collections Executor as executor
+collections BondContract as bondcontract
+collections RewardsContract as rewardscontract
+collections InsuranceContract as insurancecontract
+collections GrantsTreasury as grantstreasury
+collections BitDAOTreasury as bitdaotreasury
+collections BitDAOGovernanceProxy as governanceproxy
+collections BitDAOTreasuryProxy as treasuryproxy
+collections ExecutorProxy as executorproxy
+collections BitDAOGovernanceV2 as bitdaogovernance
+collections LDAO
+end box
+
+autonumber "Current:[00]"
+
+== Current ==
+
+alice -> grantstreasury: create grants treasury
+alice <- - grantstreasury: treasury address
+
+alice -> forum: create forum proposal
+activate forum
+community -> forum: get proposals
+community <- - forum: list of proposals
+community -> forum: put positive/negative feedback
+alice <- - forum: get positive/negative feedback
+deactivate forum
+
+community -> community: delegate votes
+
+alice -> snapshot: submit proposal
+activate snapshot
+tokenholders -> snapshot: get proposals
+tokenholders <- - snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- - snapshot: vote confirmation
+
+
+bitdaoadmin -> snapshot: get Alice's proposal result
+bitdaoadmin <- - snapshot: Alice's proposal pass/fail result
+deactivate snapshot
+
+bitdaoadmin -> bitdaotreasury: transfer funds to grants treasury
+bitdaotreasury -> grantstreasury: funds transfer
+
+alt#Gold #DarkSeaGreen trace
+  alice <- - grantstreasury: transfer confirmation
+end
+
+alice - -> alice: execute proposal
+
+newpage
+
+autonumber "Bond:[00]"
+
+== Bond ==
+
+
+alice -> grantstreasury: create grants treasury
+alice <- - grantstreasury: treasury address
+
+
+alice -> forum: create forum proposal
+activate forum
+guarantor -> forum: get proposals
+guarantor <- - forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+alice -> bondcontract: create bond
+guarantor -> bondcontract: contribute BIT tokens
+guarantor <- - bondcontract: ERC20 Fungible bond tokens (1:1 swap)
+
+
+community -> forum: get proposals
+community <- - forum: list of proposals
+community -> forum: put positive/negative feedback
+alice <- - forum: get positive/negative feedback
+deactivate forum
+
+community - -> community: delegate votes
+
+alice -> snapshot: submit proposal
+activate snapshot
+tokenholders -> snapshot: get proposals
+tokenholders <- - snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- - snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> bitdaotreasury: allow funds transfer
+bitdaotreasury -> grantstreasury: transfer funds
+
+
+alice - -> alice: execute proposal
+
+
+
+
+
+alice -> forum: create bond release request forum proposal
+activate forum
+
+guarantor -> forum: get proposals
+guarantor <- - forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+community -> forum: get proposals
+community <- - forum: list of proposals
+community -> forum: put positive/negative feedback
+
+alice <- - forum: get positive/negative feedback
+deactivate forum
+
+community - -> community: delegate votes
+
+alice -> snapshot: submit bond release request proposal
+activate snapshot
+guarantor -> snapshot: get proposals
+guarantor <- - snapshot: list of proposals
+guarantor -> snapshot: vote to release or proportional slash
+
+tokenholders -> snapshot: get proposals
+tokenholders <- - snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- - snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <- - snapshot: pass/fail proposal result
+
+alt#Gold #LightBlue pass
+    bitdaoadmin -> bondcontract: release bond
+    bitdaoadmin <- - bondcontract: release confirmation
+    guarantor -> bondcontract: submit and redeem bond tokens
+    guarantor <- - bondcontract: transfer BIT tokens
+else #Pink fail
+    bitdaoadmin -> bondcontract: slash bond
+    bondcontract -> bitdaotreasury: transfer any slashed BIT tokens
+    guarantor -> bondcontract: submit and redeem bond tokens (relative to non-slashed portion)
+    guarantor <- - bondcontract: transfer BIT tokens
+end
+
+alt#Gold #DarkSeaGreen trace
+  bitdaoadmin <- - bondcontract: TxHash
+end
+
+newpage
+
+autonumber "Roles:[00]"
+
+== Roles ==
+
+alice -> forum: submit create role proposal
+community -> forum: list role proposals
+community <- - forum: role proposals
+community -> forum: positive/negative feedback
+alice <- - forum: get positive/negative feedback
+
+community -> community: delegate votes
+
+alice -> snapshot: create admin role
+
+bitdaoadmin -> snapshot: list role proposals
+bitdaoadmin <- - snapshot: role proposals
+bitdaoadmin -> snapshot: get results
+bitdaoadmin <- - snapshot: list of results
+
+bitdaoadmin -> bitdaogovernance: create role
+
+alt#Gold #DarkSeaGreen trace
+  bitdaoadmin <- - bitdaogovernance: TxHash
+end
+
+newpage
+
+autonumber "Insurance:[00]"
+
+== Insurance ==
+
+alice -> insurancecontract: create insurance ticket
+
+
+alice -> insurancecontract: pay for insurance daily / monthly
+
+
+alice -> insurancecontract: compensate
+
+community -> community: delegate votes
+
+alice -> snapshot: submit proposal
+guarantor -> snapshot: get proposals
+guarantor <- - snapshot: list of proposals
+guarantor -> snapshot: vote on proposal
+guarantor <- - snapshot: vote confirmation
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <- - snapshot: pass/fail vote result
+
+bitdaoadmin -> bitdaotreasury: allow funds transfer
+bitdaotreasury -> insurancecontract: transfer funds
+
+alice <- - insurancecontract: execute proposal
+
+
+bitdaoadmin -> insurancecontract: if (high debt) terminate alice insurance
+
+community -> community: delegate votes
+
+bitdaoadmin -> snapshot: submit proposal
+guarantor -> snapshot: get all proposals
+guarantor <- - snapshot: list of proposals
+guarantor -> snapshot: vote on proposal
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <- - snapshot: pass/fail vote result
+
+bitdaoadmin -> insurancecontract: terminate insurance
+bitdaoadmin <- - insurancecontract: execute proposal
+
+newpage
+
+autonumber "Upgrades:[00]"
+
+== Upgrades ==
+
+bitdaoadmin -> governanceproxy: deploy proxy and set initial implementation
+bitdaoadmin -> treasuryproxy: deploy proxy and set initial implementation
+bitdaoadmin -> executorproxy: deploy proxy and set initial implementation
+
+
+alice -> bitdaogovernance: deploy new bitdaogovernance implementation
+alice -> bitdaotreasury: deploy new bitdaotreasury implementation
+alice -> executor: deploy new executor implementation
+
+alice -> forum: create forum upgrade proposal
+alice <- community: positive/negative feedback
+
+community -> community: delegate role based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> governanceproxy: set new bitdaogovernance implementation
+executor -> treasuryproxy: set new bitdaotreasury implementation
+executor -> executorproxy: set new executor implementation
+
+newpage
+
+autonumber "Rewards:[00]"
+
+== Rewards ==
+
+alice -> forum: create forum proposal
+alice <- guarantor: positive/negative feedback
+alice -> rewardscontract: create rewards program
+
+community -> community: delegate votes
+
+alice -> snapshot: submit proposal
+
+bitdaoadmin -> bitdaotreasury: allow funds
+bitdaotreasury -> rewardscontract: transfer funds for rewards
+
+alice <- - rewardscontract: execute proposal
+
+
+bob -> forum: create forum proposal
+bob <- guarantor: positive/negative feedback
+
+bob -> snapshot: submit release request
+community -> community: delegate votes
+community -> snapshot: vote
+community -> rewardscontract: claim reward
+
+
+@enduml
+
+PlantUML version 1.2021.12(Wed Oct 06 02:01:58 AEST 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: AU
+--></g></svg>

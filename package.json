@@ -22,7 +22,7 @@
     "lint": "eslint . --ext .ts",
     "plant": "npx node-plantuml ./docs/specs",
     "prepare": "husky install",
-    "size": "npx hardhat run scripts/contractBytecodeSize.js",
+    "size": "npx hardhat run scripts/contractBytecodeSize.js"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",

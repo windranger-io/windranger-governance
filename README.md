@@ -10,7 +10,7 @@ Governance contracts framework developed by Windranger to be proposed to BitDAO.
 
 [Use cases](docs/use_cases.md)
 
-[Flows](docs/flows/flows.puml)
+[Flows](docs/specs/flows.puml)
 
 ## Sequence diagrams
 
