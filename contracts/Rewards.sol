@@ -6,16 +6,14 @@ import '@openzeppelin/contracts/utils/Address.sol';
 import '@openzeppelin/contracts/utils/Context.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import './interfaces/IGovernance.sol';
+import './utils/GovernanceControl.sol';
 
 // Rewards contract.
-contract Rewards is Context {
+contract Rewards is GovernanceControl {
     using SafeERC20 for IERC20;
 
     // Reward token, in which rewards are given.
     IERC20 public rewardToken;
-    // Governance contract.
-    IGovernance public governance;
     // Treasury contract.
     address public treasury;
     // Reward per vote made during successful governance proposal.
@@ -32,26 +30,17 @@ contract Rewards is Context {
     event Claim(address claimer, uint256 proposalId, uint256 reward);
     event Allocated(uint256 rewards);
 
-    modifier onlyGovernance() {
-        require(
-            _msgSender() == governance.executor(),
-            'Rewards:: onlyGovernance'
-        );
-        _;
-    }
-
     modifier onlyTreasury() {
         require(_msgSender() == treasury, 'Rewards:: onlyTreasury');
         _;
     }
 
     constructor(
-        IGovernance governance_,
+        address governance_,
         address treasury_,
         IERC20 rewardToken_,
         uint256 rewardPerVote_
-    ) {
-        governance = governance_;
+    ) GovernanceControl(governance_) {
         treasury = treasury_;
         rewardToken = rewardToken_;
         rewardPerVote = rewardPerVote_;
@@ -63,10 +52,6 @@ contract Rewards is Context {
 
     function setRewardToken(IERC20 rewardToken_) external onlyGovernance {
         rewardToken = rewardToken_;
-    }
-
-    function setGovernance(IGovernance governance_) external onlyGovernance {
-        governance = governance_;
     }
 
     function setTreasury(address treasury_) external onlyGovernance {

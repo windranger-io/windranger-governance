@@ -87,6 +87,14 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         uint96[] votes;
     }
 
+    /**
+     * @dev VotingParams structure for action/protocol.
+     */
+    struct VotingParams {
+        bytes32 role;
+        uint256 quorum;
+    }
+
     IOpenVoting public openVotingOracle;
     IRoleVoting public roleVotingOracle;
     ISnapshotVoting public token;
@@ -99,11 +107,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     mapping(uint256 => bytes32) private _timelockIds;
     mapping(bytes32 => uint256) private _roles;
     mapping(bytes32 => mapping(address => bool)) public votersRoles;
-    mapping(address => mapping(string => bytes32)) public actionsRoles;
-    mapping(address => mapping(string => uint256)) public actionsQuorums;
-    mapping(address => bytes32) public protocolsRoles;
-    mapping(address => uint256) public protocolsQuorums;
     mapping(bytes32 => uint256) public proposalThresholds;
+    mapping(address => mapping(string => VotingParams)) public actions;
+    mapping(address => VotingParams) public protocols;
 
     mapping(uint256 => Proposal) private _proposals;
     mapping(address => uint256) private _nonces;
@@ -177,7 +183,10 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         proposalThresholds[DEVELOPER_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
         proposalThresholds[LEGAL_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
         proposalThresholds[TREASURY_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
-        actionsRoles[address(this)]['setTreasury(address)'] = TREASURY_ROLE;
+        actions[address(this)]['setTreasury(address)'] = VotingParams(
+            TREASURY_ROLE,
+            DEFAULT_PROPOSAL_THRESHOLD
+        );
     }
 
     /**
@@ -219,7 +228,10 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
             'Governance::setInitialTreasury: treasury was set'
         );
         treasury = treasury_;
-        protocolsRoles[treasury_] = TREASURY_ROLE;
+        protocols[treasury_] = VotingParams(
+            TREASURY_ROLE,
+            DEFAULT_PROPOSAL_THRESHOLD
+        );
     }
 
     function setTreasury(address treasury_) external virtual onlyGovernance {
@@ -228,7 +240,10 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
             "Governance::setTreasury: treasury wasn't set or the same"
         );
         treasury = treasury_;
-        protocolsRoles[treasury_] = TREASURY_ROLE;
+        protocols[treasury_] = VotingParams(
+            TREASURY_ROLE,
+            DEFAULT_PROPOSAL_THRESHOLD
+        );
     }
 
     function setVotesOracle(address votesOracle_)
@@ -261,8 +276,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         bytes32 role,
         uint256 quorum
     ) external virtual onlyGovernance {
-        protocolsRoles[protocol] = role;
-        protocolsQuorums[protocol] = quorum;
+        protocols[protocol] = VotingParams(role, quorum);
     }
 
     function unregisterProtocol(address protocol)
@@ -270,20 +284,25 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         virtual
         onlyGovernance
     {
-        delete protocolsRoles[protocol];
-        protocolsQuorums[protocol] = 0;
+        delete protocols[protocol];
     }
 
     function registerRole(bytes32 role) external virtual onlyGovernance {
+        require(_roles[role] == 0, 'Governance::registerRole: role exists');
         rolesList.push(role);
         _roles[role] = rolesList.length;
     }
 
-    function unregisterRole(bytes32 role) external virtual onlyGovernance {
+    function unregisterRole(bytes32 role)
+        external
+        virtual
+        roleExists(role)
+        onlyGovernance
+    {
         rolesList[_roles[role]] = rolesList[rolesList.length - 1];
         _roles[rolesList[rolesList.length - 1]] = _roles[role];
-        delete rolesList[rolesList.length - 1];
-        _roles[role] = 0;
+        rolesList.pop();
+        delete _roles[role];
     }
 
     function registerAction(
@@ -292,8 +311,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         bytes32 role,
         uint256 quorum
     ) external virtual roleExists(role) onlyGovernance {
-        actionsRoles[target][signature] = role;
-        actionsQuorums[target][signature] = quorum;
+        actions[target][signature] = VotingParams(role, quorum);
     }
 
     function unregisterAction(
@@ -301,8 +319,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         string calldata signature,
         bytes32 role
     ) external virtual roleExists(role) onlyGovernance {
-        delete actionsRoles[target][signature];
-        actionsQuorums[target][signature] = 0;
+        delete actions[target][signature];
     }
 
     function addRoleMember(
@@ -434,10 +451,10 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
 
         for (uint256 i = 0; i < targets.length; ++i) {
             if (targets[i] != address(this)) {
-                bool registeredAction = (protocolsRoles[targets[i]] ==
+                bool registeredAction = (protocols[targets[i]].role ==
                     roles[i]);
                 for (uint256 j = 0; j < roles.length; ++j) {
-                    if (actionsRoles[targets[i]][signatures[i]] == roles[i]) {
+                    if (actions[targets[i]][signatures[i]].role == roles[i]) {
                         registeredAction = true;
                     }
                 }
@@ -856,14 +873,13 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         for (uint256 i = 0; i < proposal.signatures.length; ++i) {
             uint256 quorum = 0;
             if (
-                actionsQuorums[proposal.targets[i]][proposal.signatures[i]] != 0
+                actions[proposal.targets[i]][proposal.signatures[i]].quorum != 0
             ) {
-                quorum = actionsQuorums[proposal.targets[i]][
-                    proposal.signatures[i]
-                ];
+                quorum = actions[proposal.targets[i]][proposal.signatures[i]]
+                    .quorum;
             }
-            if (quorum == 0 && protocolsQuorums[proposal.targets[i]] != 0) {
-                quorum = protocolsQuorums[proposal.targets[i]];
+            if (quorum == 0 && protocols[proposal.targets[i]].quorum != 0) {
+                quorum = protocols[proposal.targets[i]].quorum;
             }
             if (quorum == 0) {
                 quorum = DEFAULT_PROPOSAL_THRESHOLD;

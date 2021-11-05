@@ -6,39 +6,19 @@ import '@openzeppelin/contracts/utils/Address.sol';
 import '@openzeppelin/contracts/utils/Context.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import './interfaces/IGovernance.sol';
 import './interfaces/IRewards.sol';
+import './utils/GovernanceControl.sol';
 
 /// @title Treasury contract.
-contract Treasury is Context {
+contract Treasury is GovernanceControl {
     using SafeERC20 for IERC20;
-
-    IGovernance public governance;
 
     event Received(address from, address asset, uint256 amount);
     event Sent(address to, address asset, uint256 amount);
     event IncreasedAllowance(address spender, address asset, uint256 amount);
     event DecreasedAllowance(address spender, address asset, uint256 amount);
 
-    modifier onlyGovernance() {
-        require(
-            _msgSender() == governance.executor(),
-            'Treasury: onlyGovernance'
-        );
-        _;
-    }
-
-    constructor(IGovernance governance_) {
-        governance = governance_;
-    }
-
-    function setGovernance(IGovernance governance_)
-        external
-        virtual
-        onlyGovernance
-    {
-        governance = governance_;
-    }
+    constructor(address governance_) GovernanceControl(governance_) {}
 
     function increaseAllowance(
         address spender,

@@ -8,7 +8,6 @@ import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import './Treasury.sol';
-import './interfaces/IGovernance.sol';
 
 /// @title Treasury contract with insurance.
 contract TreasuryInsurance is Treasury, ERC721 {
@@ -44,7 +43,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
     event PaidInsurance(uint256 id, uint256 payment);
     event Compensated(uint256 id, uint256 compensation);
 
-    constructor(IGovernance governance_)
+    constructor(address governance_)
         Treasury(governance_)
         ERC721('BITDAO_TREASURY_INSURANCE', 'BITTI')
     {}
