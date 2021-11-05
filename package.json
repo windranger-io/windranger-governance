@@ -20,9 +20,9 @@
     "test": "npx hardhat test",
     "format": "prettier ./**/*.ts --write && prettier --write 'contracts/**/*.sol'",
     "lint": "eslint . --ext .ts",
+    "plant": "npx node-plantuml ./docs/specs",
     "prepare": "husky install",
     "size": "npx hardhat run scripts/contractBytecodeSize.js",
-    "plant": "node ./scripts/plantuml.mjs ./docs/flows/flows.puml"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
@@ -44,6 +44,7 @@
     "hardhat": "^2.6.2",
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
+    "node-plantuml": "windranger-io/node-plantuml#fcfc730",
     "prettier": "^2.4.1",
     "ts-node": "^10.2.1",
     "typechain": "^5.1.2",

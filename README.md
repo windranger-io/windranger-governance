@@ -83,6 +83,25 @@ Do the following in a different terminal window:
 
 `npm run test`
 
+## Sequence Diagram Rendering
+
+To create or update the renders for the Plant UML sequence diagrams
+
+#### Ensure Java is installed
+
+```shell
+java -version
+```
+
+The output will vary depending on OS, however if it fails claiming Java is not found, then you must install before proceeding.
+
+#### Generate renders for all Plant UML documents under `docs/spec`
+
+```shell
+npm run plant
+```
+
+
 ## Security
 
 Not yet defined
