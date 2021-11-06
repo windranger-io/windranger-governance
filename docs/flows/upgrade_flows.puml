@@ -202,7 +202,8 @@ bitdaoadmin <-- bitdaogovernance: pass/fail vote result
 
 bitdaoadmin -> bitdaogovernance: start execution
 executor <-- bitdaogovernance: execute proposal
-executor -> proxyadmin: call token proxy upgrade to new token implementation
+executor -> proxyadmin: upgrade
+note right: call token proxy upgrade to new token implementation
 
 newpage
 
