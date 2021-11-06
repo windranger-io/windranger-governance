@@ -37,6 +37,8 @@ collections Token as token
 collections BondContract as bondcontract
 collections BitDAOTreasury as bitdaotreasury
 collections BitDAOGovernanceV2 as bitdaogovernance
+collections Vault as vault
+collections Multisig as multisig
 end box
 
 autonumber "UpgradeGovernance:[00]"
