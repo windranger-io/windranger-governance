@@ -181,7 +181,7 @@ autonumber "UpgradeToken:[00]"
 bitdaoadmin -> token: deploy initial token contract logic and set governance
 bitdaoadmin <-- token: token contract logic address
 bitdaoadmin -> proxyadmin: deploy admin for token proxy
-bitdaoadmin <-- proxyadmin: bond factory contract proxy admin address
+bitdaoadmin <-- proxyadmin: token factory contract proxy admin address
 bitdaoadmin -> proxy: deploy token proxy and set logic and admin
 bitdaoadmin <-- proxy: token proxy address
 bitdaoadmin -> proxyadmin: set executor as admin
