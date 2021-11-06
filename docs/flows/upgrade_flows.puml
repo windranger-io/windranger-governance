@@ -169,7 +169,8 @@ bitdaoadmin <-- bitdaogovernance: pass/fail vote result
 
 bitdaoadmin -> bitdaogovernance: start execution
 executor <-- bitdaogovernance: execute proposal
-executor -> proxyadmin: call bond contract proxy upgrade to new bond contract implementation
+executor -> proxyadmin: upgrade
+note right: call bond contract proxy upgrade to new bond contract implementation
 
 newpage
 
