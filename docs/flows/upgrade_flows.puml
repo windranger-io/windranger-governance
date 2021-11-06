@@ -71,7 +71,8 @@ bitdaoadmin <-- bitdaogovernance: pass/fail vote result
 
 bitdaoadmin -> bitdaogovernance: start execution
 executor <-- bitdaogovernance: execute proposal
-executor -> proxyadmin: call governance proxy upgrade to new bitdaogovernance implementation
+executor -> proxyadmin: upgrade
+note right: call governance proxy upgrade to new bitdaogovernance implementation
 
 newpage
 
