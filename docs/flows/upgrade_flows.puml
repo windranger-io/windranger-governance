@@ -137,7 +137,8 @@ bitdaoadmin <-- bitdaogovernance: pass/fail vote result
 
 bitdaoadmin -> bitdaogovernance: start execution
 executor <-- bitdaogovernance: execute proposal
-executor -> proxyadmin: call vault proxy upgrade to new vault implementation
+executor -> proxyadmin: upgrade
+note right: call vault proxy upgrade to new vault implementation
 
 newpage
 
