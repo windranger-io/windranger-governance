@@ -142,7 +142,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
      * sure this modifier is consistant with the execution model.
      */
     modifier onlyGovernance() {
-        require(_msgSender() == executor(), 'Governance: onlyGovernance');
+        require(_msgSender() == _executor(), 'Governance: onlyGovernance');
         _;
     }
 
@@ -193,7 +193,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
      * @dev Address through which the governor executes action. Will be overloaded by module that execute actions
      * through another contract such as a timelock.
      */
-    function executor() public view virtual returns (address) {
+    function _executor() internal view virtual returns (address) {
         return address(_timelock);
     }
 
