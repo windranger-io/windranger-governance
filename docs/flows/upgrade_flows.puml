@@ -1,0 +1,288 @@
+@startuml
+!pragma layout smetana
+'skinparam defaultFontSize 29
+
+'https://plantuml.com/sequence-diagram
+box "(community)" #LightYellow
+actor Alice_novice as alice
+actor Bob as bob
+end box
+
+box "(offchain)" #Coral
+actor Forum as forum
+end box
+
+box "(community)" #LightGray
+actor Communities_novice as community
+actor Guarantors_expert as guarantor
+end box
+
+box "(multisig)" #Peru
+actor BitDAOAdmins_expert as bitdaoadmin
+end box
+
+box "(token)" #OliveDrab
+actor TokenHolders_novice as tokenholders
+endbox
+
+box "(offchain)" #Coral
+database Snapshot as snapshot
+end box
+
+box "(onchain)" #Lavender
+collections Proxy as proxy
+collections ProxyAdmin as proxyadmin
+collections Executor as executor
+collections Token as token
+collections BondContract as bondcontract
+collections BitDAOTreasury as bitdaotreasury
+collections BitDAOGovernanceV2 as bitdaogovernance
+collections Vault as vault
+collections Multisig as multisig
+end box
+
+autonumber "UpgradeGovernance:[00]"
+
+== Upgrade Governance ==
+
+bitdaoadmin -> executor: deploy timelock executor
+bitdaoadmin <-- executor: timelock address
+bitdaoadmin -> bitdaogovernance: deploy initial governance contract logic and set executor address
+bitdaoadmin <-- bitdaogovernance: governance implementation address
+bitdaoadmin -> proxyadmin: deploy admin for governance proxy
+bitdaoadmin <-- proxyadmin: governance proxyadmin address
+bitdaoadmin -> proxy: deploy governance proxy and set logic and admin addreses
+bitdaoadmin <-- proxy: governance proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> bitdaogovernance: deploy new bitdaogovernance implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- community: positive/negative feedback
+
+community -> community: delegate role (developer/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <-- bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <-- bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call governance proxy upgrade to new bitdaogovernance implementation
+
+newpage
+
+autonumber "UpgradeTreasury:[00]"
+
+== Upgrade Treasury ==
+
+bitdaoadmin -> bitdaotreasury: deploy initial treasury contract logic and set governance address
+bitdaoadmin <-- bitdaotreasury: bitdaotreasury contract logic address
+bitdaoadmin -> bitdaotreasury: set governance
+bitdaoadmin -> proxyadmin: deploy admin for treasury proxy
+bitdaoadmin <-- proxyadmin: treasury proxyadmin address
+bitdaoadmin -> proxy: deploy treasury proxy and set logic and admin
+bitdaoadmin <-- proxy: treasury proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> bitdaotreasury: deploy new bitdaotreasury implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <-- community: positive/negative feedback
+
+community -> community: delegate role (treasury/developer/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <-- bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <-- bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call treasury proxy upgrade to new bitdaotreasury implementation
+
+newpage
+
+autonumber "UpgradeVault:[00]"
+
+== Upgrade Vault ==
+
+bitdaoadmin -> vault: deploy initial vault contract logic and set treasury
+bitdaoadmin <-- vault: vault contract logic address
+bitdaoadmin -> proxyadmin: deploy admin for vault proxy
+bitdaoadmin <-- proxyadmin: vault proxyadmin address
+bitdaoadmin -> proxy: deploy vault proxy and set logic and admin
+bitdaoadmin <-- proxy: vault proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> vault: deploy new vault implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <-- community: positive/negative feedback
+
+community -> community: delegate role (treasury/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <-- bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <-- bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call vault proxy upgrade to new vault implementation
+
+newpage
+
+autonumber "UpgradeBond:[00]"
+
+== Upgrade Bond ==
+
+bitdaoadmin -> bondcontract: deploy initial bond factory contract logic and set treasury
+bitdaoadmin <-- bondcontract: bondcontract contract logic address
+bitdaoadmin -> proxyadmin: deploy admin for bondcontract proxy
+bitdaoadmin <-- proxyadmin: bond factory contract proxy admin address
+bitdaoadmin -> proxy: deploy bond factory proxy and set logic and admin
+bitdaoadmin <-- proxy: bond factory proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> bondcontract: deploy new bond factory contract implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- community: positive/negative feedback
+
+community -> community: delegate role (treasury/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <-- bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <-- bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call bond contract proxy upgrade to new bond contract implementation
+
+newpage
+
+autonumber "UpgradeToken:[00]"
+
+== Upgrade Token / Derivative ==
+
+bitdaoadmin -> token: deploy initial token contract logic and set governance
+bitdaoadmin <-- token: token contract logic address
+bitdaoadmin -> proxyadmin: deploy admin for token proxy
+bitdaoadmin <-- proxyadmin: token factory contract proxy admin address
+bitdaoadmin -> proxy: deploy token proxy and set logic and admin
+bitdaoadmin <-- proxy: token proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> token: deploy new token contract implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <-- community: positive/negative feedback
+
+community -> community: delegate role based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <-- bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <-- bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call token proxy upgrade to new token implementation
+
+newpage
+
+autonumber "UpgradeSnapshot:[00]"
+
+== Upgrade Snapshot ==
+
+alice -> forum: create snapshot upgrade request forum proposal
+activate forum
+
+guarantor -> forum: get proposals
+guarantor <-- forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+community -> forum: get proposals
+community <-- forum: list of proposals
+community -> forum: put positive/negative feedback
+
+alice <-- forum: get positive/negative feedback
+deactivate forum
+
+community --> community: delegate votes
+
+alice -> snapshot: submit snapshot upgrade request proposal
+activate snapshot
+guarantor -> snapshot: get proposals
+guarantor <-- snapshot: list of proposals
+guarantor -> snapshot: vote to release or proportional slash
+
+tokenholders -> snapshot: get proposals
+tokenholders <-- snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <-- snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <-- snapshot: pass/fail vote result
+bitdaoadmin -> snapshot: upgrade snapshot
+
+newpage
+
+autonumber "UpgradeMultisig:[00]"
+
+== Upgrade Multisig ==
+
+alice -> forum: create multisig upgrade request forum proposal
+activate forum
+
+guarantor -> forum: get proposals
+guarantor <-- forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+community -> forum: get proposals
+community <-- forum: list of proposals
+community -> forum: put positive/negative feedback
+
+alice <-- forum: get positive/negative feedback
+deactivate forum
+
+community --> community: delegate votes
+
+alice -> snapshot: submit multisig upgrade request proposal
+activate snapshot
+guarantor -> snapshot: get proposals
+guarantor <-- snapshot: list of proposals
+guarantor -> snapshot: vote to release or proportional slash
+
+tokenholders -> snapshot: get proposals
+tokenholders <-- snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <-- snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <-- snapshot: pass/fail vote result
+bitdaoadmin -> multisig: create a new multisig
+bitdaoadmin -> multisig: transfer funds from the old multisig to the new multisig
+
+
+@enduml

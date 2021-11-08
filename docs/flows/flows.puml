@@ -30,17 +30,16 @@ database Snapshot as snapshot
 end box
 
 box "(onchain)" #Lavender
+collections Proxy as proxy
+collections ProxyAdmin as proxyadmin
 collections Executor as executor
+collections Token as token
 collections BondContract as bondcontract
 collections RewardsContract as rewardscontract
 collections InsuranceContract as insurancecontract
 collections GrantsTreasury as grantstreasury
 collections BitDAOTreasury as bitdaotreasury
-collections BitDAOGovernanceProxy as governanceproxy
-collections BitDAOTreasuryProxy as treasuryproxy
-collections ExecutorProxy as executorproxy
 collections BitDAOGovernanceV2 as bitdaogovernance
-collections LDAO
 end box
 
 autonumber "Current:[00]"
@@ -269,38 +268,6 @@ bitdaoadmin <-- snapshot: pass/fail vote result
 
 bitdaoadmin -> insurancecontract: terminate insurance
 bitdaoadmin <-- insurancecontract: execute proposal
-
-newpage
-
-autonumber "Upgrades:[00]"
-
-== Upgrades ==
-
-bitdaoadmin -> governanceproxy: deploy proxy and set initial implementation
-bitdaoadmin -> treasuryproxy: deploy proxy and set initial implementation
-bitdaoadmin -> executorproxy: deploy proxy and set initial implementation
-
-
-alice -> bitdaogovernance: deploy new bitdaogovernance implementation
-alice -> bitdaotreasury: deploy new bitdaotreasury implementation
-alice -> executor: deploy new executor implementation
-
-alice -> forum: create forum upgrade proposal
-alice <- community: positive/negative feedback
-
-community -> community: delegate role based votes
-
-alice -> bitdaogovernance: submit upgrade proposal
-community -> bitdaogovernance: roles voting
-
-bitdaoadmin -> bitdaogovernance: get roles voting result
-bitdaoadmin <-- bitdaogovernance: pass/fail vote result
-
-bitdaoadmin -> bitdaogovernance: start execution
-executor <-- bitdaogovernance: execute proposal
-executor -> governanceproxy: set new bitdaogovernance implementation
-executor -> treasuryproxy: set new bitdaotreasury implementation
-executor -> executorproxy: set new executor implementation
 
 newpage
 
