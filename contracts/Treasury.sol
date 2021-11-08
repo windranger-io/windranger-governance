@@ -18,7 +18,9 @@ contract Treasury is GovernanceControl {
     event IncreasedAllowance(address spender, address asset, uint256 amount);
     event DecreasedAllowance(address spender, address asset, uint256 amount);
 
-    constructor(address governance_) GovernanceControl(governance_) {}
+    constructor(address governance_, address executor_)
+        GovernanceControl(governance_, executor_)
+    {}
 
     function increaseAllowance(
         address spender,

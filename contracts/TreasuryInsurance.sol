@@ -43,8 +43,8 @@ contract TreasuryInsurance is Treasury, ERC721 {
     event PaidInsurance(uint256 id, uint256 payment);
     event Compensated(uint256 id, uint256 compensation);
 
-    constructor(address governance_)
-        Treasury(governance_)
+    constructor(address governance_, address executor_)
+        Treasury(governance_, executor_)
         ERC721('BITDAO_TREASURY_INSURANCE', 'BITTI')
     {}
 

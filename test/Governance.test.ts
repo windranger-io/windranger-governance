@@ -79,12 +79,13 @@ describe('Governance', function () {
     )
     await this.governance.deployed()
     this.treasury = <TreasuryInsurance>(
-      await this.Treasury.deploy(this.governance.address)
+      await this.Treasury.deploy(this.governance.address, this.timelock.address)
     )
     await this.treasury.deployed()
     this.rewards = <Rewards>(
       await this.Rewards.deploy(
         this.governance.address,
+        this.timelock.address,
         this.treasury.address,
         this.bit.address,
         REWARD_PER_VOTE

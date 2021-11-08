@@ -37,10 +37,11 @@ contract Rewards is GovernanceControl {
 
     constructor(
         address governance_,
+        address executor_,
         address treasury_,
         IERC20 rewardToken_,
         uint256 rewardPerVote_
-    ) GovernanceControl(governance_) {
+    ) GovernanceControl(governance_, executor_) {
         treasury = treasury_;
         rewardToken = rewardToken_;
         rewardPerVote = rewardPerVote_;
