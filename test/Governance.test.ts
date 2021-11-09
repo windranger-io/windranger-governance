@@ -93,51 +93,96 @@ describe('Governance', function () {
     )
     await this.rewards.deployed()
     await this.governance.setInitialTreasury(this.treasury.address)
+
     this.votingPower = BN.from(VOTING_POWER)
     await this.governance.setVoterRolesAdmin(this.delegatee1.address, [
       DEVELOPER_ROLE
     ])
+    expect(
+      await this.governance.votersRoles(DEVELOPER_ROLE, this.delegatee1.address)
+    ).to.equal(true)
     await this.governance.setVoterRolesAdmin(this.delegatee2.address, [
       LEGAL_ROLE
     ])
+    expect(
+      await this.governance.votersRoles(LEGAL_ROLE, this.delegatee2.address)
+    ).to.equal(true)
     await this.governance.setVoterRolesAdmin(this.delegatee3.address, [
       TREASURY_ROLE
     ])
+    expect(
+      await this.governance.votersRoles(TREASURY_ROLE, this.delegatee3.address)
+    ).to.equal(true)
+
     await this.votesOracle.setOpenVotingPower(
       this.voter.address,
       this.votingPower
     )
+    expect(
+      await this.governance['getVotes(address)'](this.voter.address)
+    ).to.equal(this.votingPower)
     await this.votesOracle.setOpenVotingPower(
       this.delegatee1.address,
       this.votingPower
     )
+    expect(
+      await this.governance['getVotes(address)'](this.delegatee1.address)
+    ).to.equal(this.votingPower)
     await this.votesOracle.setOpenVotingPower(
       this.delegatee2.address,
       this.votingPower
     )
+    expect(
+      await this.governance['getVotes(address)'](this.delegatee2.address)
+    ).to.equal(this.votingPower)
     await this.votesOracle.setOpenVotingPower(
       this.delegatee3.address,
       this.votingPower
     )
+    expect(
+      await this.governance['getVotes(address)'](this.delegatee3.address)
+    ).to.equal(this.votingPower)
     await this.votesOracle.setOpenVotingPower(
       this.newDelegatee.address,
       this.votingPower
     )
+    expect(
+      await this.governance['getVotes(address)'](this.newDelegatee.address)
+    ).to.equal(this.votingPower)
     await this.votesOracle.setRolesVotingPower(
       this.delegatee1.address,
       [DEVELOPER_ROLE],
       [this.votingPower.mul(2)]
     )
+    expect(
+      await this.governance['getVotes(address,bytes32)'](
+        this.delegatee1.address,
+        DEVELOPER_ROLE
+      )
+    ).to.equal(this.votingPower.mul(2))
     await this.votesOracle.setRolesVotingPower(
       this.delegatee2.address,
       [LEGAL_ROLE],
       [this.votingPower.mul(2)]
     )
+    expect(
+      await this.governance['getVotes(address,bytes32)'](
+        this.delegatee2.address,
+        LEGAL_ROLE
+      )
+    ).to.equal(this.votingPower.mul(2))
     await this.votesOracle.setRolesVotingPower(
       this.delegatee3.address,
       [TREASURY_ROLE],
       [this.votingPower.mul(2)]
     )
+    expect(
+      await this.governance['getVotes(address,bytes32)'](
+        this.delegatee3.address,
+        TREASURY_ROLE
+      )
+    ).to.equal(this.votingPower.mul(2))
+
     await this.timelock.grantRole(PROPOSER_ROLE, this.governance.address)
     await this.timelock.grantRole(EXECUTOR_ROLE, this.governance.address)
 
@@ -169,26 +214,80 @@ describe('Governance', function () {
         proposalCalldatas,
         descriptionHash
       )
-      await this.governance.connect(this.voter).castVote(proposalId, 1)
-      await this.governance.connect(this.delegatee1).castVote(proposalId, 1)
-      await this.governance.connect(this.delegatee2).castVote(proposalId, 1)
-      await this.governance.connect(this.delegatee3).castVote(proposalId, 1)
-      await this.governance.connect(this.newDelegatee).castVote(proposalId, 1)
+      expect(await this.governance.state(proposalId)).to.equal(0)
+
+      this.castVoteAndCheck = async function (
+        proposalId: string,
+        proposalRoles: string[],
+        voter: SignerWithAddress,
+        role: string
+      ): Promise<void> {
+        await this.governance.connect(voter).castVote(proposalId, 1)
+        const receipt = await this.governance.getReceipt(
+          proposalId,
+          voter.address
+        )
+        if (proposalRoles.length === 0) {
+          expect(receipt.votes).to.equal(this.votingPower)
+          expect(receipt.support).to.equal(1)
+        } else {
+          let hasRole = false
+          for (const proposalRole of proposalRoles) {
+            if (proposalRole === role) {
+              expect(receipt.votes).to.equal(this.votingPower.mul(2))
+              expect(receipt.support).to.equal(1)
+              hasRole = true
+            }
+          }
+          if (!hasRole) {
+            expect(receipt.votes).to.equal(0)
+            expect(receipt.support).to.equal(1)
+          }
+        }
+      }
+
+      await this.castVoteAndCheck(proposalId, proposalRoles, this.voter, '')
+      await this.castVoteAndCheck(
+        proposalId,
+        proposalRoles,
+        this.delegatee1,
+        DEVELOPER_ROLE
+      )
+      await this.castVoteAndCheck(
+        proposalId,
+        proposalRoles,
+        this.delegatee2,
+        LEGAL_ROLE
+      )
+      await this.castVoteAndCheck(
+        proposalId,
+        proposalRoles,
+        this.delegatee3,
+        TREASURY_ROLE
+      )
+      await this.castVoteAndCheck(
+        proposalId,
+        proposalRoles,
+        this.newDelegatee,
+        ''
+      )
+
       await advanceBlockTo((await provider.getBlockNumber()) + PROPOSAL_SPAN)
+      expect(await this.governance.state(proposalId)).to.equal(4)
       await this.governance.queue(
         proposalTargets,
         proposalValues,
         proposalCalldatas,
         descriptionHash
       )
+      expect(await this.governance.state(proposalId)).to.equal(5)
       await this.governance.execute(
         proposalTargets,
         proposalValues,
         proposalCalldatas,
         descriptionHash
       )
-      const state = await this.governance.state(proposalId)
-      expect(state).to.equal(7)
+      expect(await this.governance.state(proposalId)).to.equal(7)
       return proposalId
     }
   })
@@ -324,6 +423,7 @@ describe('Governance', function () {
 
   it('Run TREASURY proposal to transfer funds', async function () {
     await this.bit.transfer(this.treasury.address, SUPPLY)
+    expect(await this.bit.balanceOf(this.treasury.address)).to.equal(SUPPLY)
 
     const proposalSignatures: string[] = ['transfer(address,address,uint256)']
     const proposalValues: string[] = ['0']
@@ -490,26 +590,41 @@ describe('Governance', function () {
       proposalCalldatas,
       description
     )
+    expect(await this.bit.balanceOf(this.rewards.address)).to.equal(
+      REWARDS_ALLOCATION
+    )
 
     await this.rewards.connect(this.delegatee3).claimVotingReward(proposalId)
+    const expectedBalance: BN = this.votingPower
+      .mul(2)
+      .mul(BN.from(REWARD_PER_VOTE))
     expect(await this.bit.balanceOf(this.delegatee3.address)).to.equal(
-      this.votingPower.mul(2).mul(BN.from(REWARD_PER_VOTE))
+      expectedBalance
+    )
+    expect(await this.bit.balanceOf(this.rewards.address)).to.equal(
+      BN.from(REWARDS_ALLOCATION).sub(expectedBalance)
     )
   })
 
   it('Insurance flow', async function () {
     // Return back funds to admin.
+    const voterBalance = await this.bit.balanceOf(this.voter.address)
     await this.bit
       .connect(this.voter)
       .transfer(
         this.admin.address,
         await this.bit.balanceOf(this.voter.address)
       )
+    expect(await this.bit.balanceOf(this.admin.address)).to.equal(voterBalance)
     // Transfer voter insurance costs.
     await this.bit.transfer(
       this.voter.address,
       BN.from(INSURANCE_COST).mul(300)
     )
+    expect(await this.bit.balanceOf(this.voter.address)).to.equal(
+      BN.from(INSURANCE_COST).mul(300)
+    )
+
     // Run treasury proposal to insure the user.
     const proposalSignatures: string[] = [
       'insure(address,address,uint256,uint256,string)'
@@ -519,6 +634,7 @@ describe('Governance', function () {
     const proposalValues: string[] = ['0']
     const proposalRoles: string[] = [TREASURY_ROLE]
     const proposalTargets: string[] = [this.treasury.address]
+    const insuranceCondition = 'Insurance against hacking attacks'
     const proposalCalldatas: string[] = [
       web3.eth.abi.encodeFunctionCall(
         {
@@ -552,7 +668,7 @@ describe('Governance', function () {
           this.bit.address,
           INSURANCE_COST,
           INSURANCE_COMPENSATION,
-          'Insurance against hacking attacks'
+          insuranceCondition
         ]
       )
     ]
@@ -566,21 +682,43 @@ describe('Governance', function () {
       description
     )
 
-    // Pay and request insurance.
     const insuranceID = await this.treasury.minted()
+    expect(insuranceID).to.equal('1')
+    expect(await this.treasury.compensationLimits(insuranceID)).to.equal(
+      INSURANCE_COMPENSATION
+    )
+    expect(await this.treasury.ownerOf(insuranceID)).to.equal(
+      this.voter.address
+    )
+    expect(await this.treasury.insuranceCosts(insuranceID)).to.equal(
+      INSURANCE_COST
+    )
+    expect(await this.treasury.insuranceAssets(insuranceID)).to.equal(
+      this.bit.address
+    )
+    expect(await this.treasury.insuranceConditions(insuranceID)).to.equal(
+      insuranceCondition
+    )
+
+    // Pay insurance.
     await this.bit
       .connect(this.voter)
       .approve(this.treasury.address, BN.from(INSURANCE_COST).mul(BN.from(300)))
     await this.treasury.connect(this.voter).payInsurance(insuranceID, 300)
+    expect(await this.treasury.paidTime(insuranceID)).to.equal('1612578696')
+    // Request insurance
+    const requestedCase = 'Unknown hacker stole funds from the smart contract'
     await this.treasury
       .connect(this.voter)
-      .requestInsurance(
-        insuranceID,
-        INSURANCE_COMPENSATION,
-        'Unknown hacker stole funds from the smart contract'
-      )
+      .requestInsurance(insuranceID, INSURANCE_COMPENSATION, requestedCase)
+    expect(await this.treasury.requestedCompensations(insuranceID)).to.equal(
+      INSURANCE_COMPENSATION
+    )
+    expect(await this.treasury.requestedCases(insuranceID)).to.equal(
+      requestedCase
+    )
 
-    // Run compensation proposal
+    // Run compensation proposal.
     description = 'Run treasury proposal to compensate user'
     proposalSignatures.pop()
     proposalSignatures.push('compensate(uint256)')
@@ -609,9 +747,12 @@ describe('Governance', function () {
       proposalCalldatas,
       description
     )
-    // Check if insurance compensation was received.
+    // Check insurance state.
     expect(await this.bit.balanceOf(this.voter.address)).to.equal(
       INSURANCE_COMPENSATION
     )
+    expect(await this.treasury.balanceOf(this.voter.address)).to.equal(0)
+    expect(await this.treasury.compensationLimits(insuranceID)).to.equal(0)
+    expect(await this.treasury.requestedCompensations(insuranceID)).to.equal(0)
   })
 })
