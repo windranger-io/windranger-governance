@@ -51,7 +51,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
     /// @notice Sets new maxium debt threshold. Can only be called by an executor
     function setMaxDebtThreshold(uint256 maxDebtThreshold_)
         external
-        onlyExecutor
+        onlyGovernance
     {
         maxDebtThreshold = maxDebtThreshold_;
     }
@@ -81,7 +81,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
         uint256 cost,
         uint256 compensationLimit,
         string calldata condition
-    ) external virtual onlyExecutor returns (uint256) {
+    ) external virtual onlyGovernance returns (uint256) {
         minted += 1;
         compensationLimits[minted] = compensationLimit;
         insuranceConditions[minted] = condition;
@@ -138,7 +138,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
 
     /// @dev compensate Compensates for an item with `id`
     /// @param id Insurance id
-    function compensate(uint256 id) external virtual onlyExecutor {
+    function compensate(uint256 id) external virtual onlyGovernance {
         require(
             requestedCompensations[id] > 0,
             'Insurance::compensate: no compensation request'

@@ -6,20 +6,16 @@ import '@openzeppelin/contracts/utils/Address.sol';
 import '@openzeppelin/contracts/utils/Context.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import './interfaces/IGovernance.sol';
+import './utils/GovernanceControl.sol';
 
 // Rewards contract.
-contract Rewards is Context {
+contract Rewards is GovernanceControl {
     using SafeERC20 for IERC20;
 
     // Reward token, in which rewards are given.
     IERC20 public rewardToken;
-    // Governance contract.
-    IGovernance public governance;
     // Treasury contract.
     address public treasury;
-    // Executor contract or wallet.
-    address public executor;
     // Reward per vote made during successful governance proposal.
     uint256 public rewardPerVote;
     // Block number of voting start for proposals, which qualify for the rewards program.
@@ -34,56 +30,33 @@ contract Rewards is Context {
     event Claim(address claimer, uint256 proposalId, uint256 reward);
     event Allocated(uint256 rewards);
 
-    modifier onlyGovernance() {
-        require(
-            _msgSender() == address(governance),
-            'Rewards:: onlyGovernance'
-        );
-        _;
-    }
-
-    modifier onlyExecutor() {
-        require(_msgSender() == executor, 'Rewards:: onlyExecutor');
-        _;
-    }
-
     modifier onlyTreasury() {
         require(_msgSender() == treasury, 'Rewards:: onlyTreasury');
         _;
     }
 
     constructor(
-        IGovernance governance_,
+        address governance_,
         address executor_,
         address treasury_,
         IERC20 rewardToken_,
         uint256 rewardPerVote_
-    ) {
-        governance = governance_;
-        executor = executor_;
+    ) GovernanceControl(governance_, executor_) {
         treasury = treasury_;
         rewardToken = rewardToken_;
         rewardPerVote = rewardPerVote_;
     }
 
-    function setRewardPerVote(uint256 rewardPerVote_) external onlyExecutor {
+    function setRewardPerVote(uint256 rewardPerVote_) external onlyGovernance {
         rewardPerVote = rewardPerVote_;
     }
 
-    function setRewardToken(IERC20 rewardToken_) external onlyExecutor {
+    function setRewardToken(IERC20 rewardToken_) external onlyGovernance {
         rewardToken = rewardToken_;
     }
 
-    function setGovernance(IGovernance governance_) external onlyExecutor {
-        governance = governance_;
-    }
-
-    function setTreasury(address treasury_) external onlyExecutor {
+    function setTreasury(address treasury_) external onlyGovernance {
         treasury = treasury_;
-    }
-
-    function setExecutor(address executor_) external onlyExecutor {
-        executor = executor_;
     }
 
     function allocate(uint256 rewards, uint256 rewardsStart_)

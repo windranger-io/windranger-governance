@@ -20,4 +20,6 @@ interface IGovernance {
         external
         view
         returns (uint256);
+
+    function executor() external view returns (address);
 }
