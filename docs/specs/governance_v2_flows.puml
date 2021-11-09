@@ -26,7 +26,7 @@ actor TokenHolders_novice as tokenholders
 endbox
 
 box "(offchain)" #Coral
-database Snapshot as snapshot
+database bitdaogovernance as bitdaogovernance
 end box
 
 box "(onchain)" #Lavender
@@ -57,21 +57,16 @@ deactivate forum
 
 community -> community: delegate votes
 
-alice -> snapshot: submit proposal
-activate snapshot
-tokenholders -> snapshot: get proposals
-tokenholders <-- snapshot: list of proposals
-tokenholders -> snapshot: vote on open proposals
-tokenholders <-- snapshot: vote confirmation
+alice -> bitdaogovernance: submit treasury role proposal
+alice <-- bitdaogovernance: success/fail if alice has treasury role
+tokenholders -> bitdaogovernance: vote on proposal
+tokenholders <-- bitdaogovernance: treasury role vote confirmation
 
-'alice -> snapshot: get Alice's proposal result
-'alice <-- snapshot: Alice's proposal pass/fail result
+bitdaoadmin -> bitdaogovernance: get Alice's proposal result
+bitdaoadmin <-- bitdaogovernance: Alice's proposal pass/fail result
 
-bitdaoadmin -> snapshot: get Alice's proposal result
-bitdaoadmin <-- snapshot: Alice's proposal pass/fail result
-deactivate snapshot
-
-bitdaoadmin -> bitdaotreasury: transfer funds to grants treasury
+bitdaoadmin -> bitdaogovernance: execute proposal
+bitdaogovernance -> bitdaotreasury: transfer funds to grants treasury
 bitdaotreasury -> grantstreasury: funds transfer
 
 alt#Gold #DarkSeaGreen trace
@@ -112,15 +107,15 @@ deactivate forum
 
 community --> community: delegate votes
 
-alice -> snapshot: submit proposal
-activate snapshot
-tokenholders -> snapshot: get proposals
-tokenholders <-- snapshot: list of proposals
-tokenholders -> snapshot: vote on open proposals
-tokenholders <-- snapshot: vote confirmation
-deactivate snapshot
+alice -> bitdaogovernance: submit treasury proposal
+alice <-- bitdaogovernance: success/fail if alice has treasury role
+tokenholders -> bitdaogovernance: vote on proposal
+tokenholders <-- bitdaogovernance: treasury role vote confirmation
 
-bitdaoadmin -> bitdaotreasury: allow funds transfer
+bitdaoadmin -> bitdaogovernance: get vote result
+bitdaoadmin <-- bitdaogovernance: pass/fail proposal result
+bitdaoadmin -> bitdaogovernance: execute proposal
+bitdaogovernance -> bitdaotreasury: allow funds transfer
 bitdaotreasury -> grantstreasury: transfer funds
 
 ' execution
@@ -163,28 +158,23 @@ deactivate forum
 
 community --> community: delegate votes
 
-alice -> snapshot: submit bond release request proposal
-activate snapshot
-guarantor -> snapshot: get proposals
-guarantor <-- snapshot: list of proposals
-guarantor -> snapshot: vote to release or proportional slash
+alice -> bitdaogovernance: submit bond release request treasury proposal
+alice <-- bitdaogovernance: success/fail if alice has treasury role
+tokenholders -> bitdaogovernance: vote on treasury proposal
+tokenholders <-- bitdaogovernance: treasury role vote confirmation
 
-tokenholders -> snapshot: get proposals
-tokenholders <-- snapshot: list of proposals
-tokenholders -> snapshot: vote on open proposals
-tokenholders <-- snapshot: vote confirmation
-deactivate snapshot
-
-bitdaoadmin -> snapshot: get vote result
-bitdaoadmin <-- snapshot: pass/fail proposal result
+bitdaoadmin -> bitdaogovernance: get vote result
+bitdaoadmin <-- bitdaogovernance: pass/fail proposal result
 
 alt#Gold #LightBlue pass
-    bitdaoadmin -> bondcontract: release bond
-    bitdaoadmin <-- bondcontract: release confirmation
+    bitdaoadmin -> bitdaogovernance: execute proposal
+    bitdaogovernance -> bondcontract: release bond
+    bitdaogovernance <-- bondcontract: release confirmation
     guarantor -> bondcontract: submit and redeem bond tokens
     guarantor <-- bondcontract: transfer BIT tokens
 else #Pink fail
-    bitdaoadmin -> bondcontract: slash bond
+    bitdaoadmin -> bitdaogovernacne: execute slashing
+    bitdaogovernance -> bondcontract: slash bond
     bondcontract -> bitdaotreasury: transfer any slashed BIT tokens
     guarantor -> bondcontract: submit and redeem bond tokens (relative to non-slashed portion)
     guarantor <-- bondcontract: transfer BIT tokens
@@ -208,12 +198,12 @@ alice <-- forum: get positive/negative feedback
 
 community -> community: delegate votes
 
-alice -> snapshot: create admin role
+alice -> bitdaogovernance: create admin role
 
-bitdaoadmin -> snapshot: list role proposals
-bitdaoadmin <-- snapshot: role proposals
-bitdaoadmin -> snapshot: get results
-bitdaoadmin <-- snapshot: list of results
+bitdaoadmin -> bitdaogovernance: list role proposals
+bitdaoadmin <-- bitdaogovernance: role proposals
+bitdaoadmin -> bitdaogovernance: get results
+bitdaoadmin <-- bitdaogovernance: list of results
 
 bitdaoadmin -> bitdaogovernance: create role
 
@@ -237,14 +227,14 @@ alice -> insurancecontract: compensate
 
 community -> community: delegate votes
 
-alice -> snapshot: submit proposal
-guarantor -> snapshot: get proposals
-guarantor <-- snapshot: list of proposals
-guarantor -> snapshot: vote on proposal
-guarantor <-- snapshot: vote confirmation
+alice -> bitdaogovernance: submit proposal
+guarantor -> bitdaogovernance: get proposals
+guarantor <-- bitdaogovernance: list of proposals
+guarantor -> bitdaogovernance: vote on proposal
+guarantor <-- bitdaogovernance: vote confirmation
 
-bitdaoadmin -> snapshot: get vote result
-bitdaoadmin <-- snapshot: pass/fail vote result
+bitdaoadmin -> bitdaogovernance: get vote result
+bitdaoadmin <-- bitdaogovernance: pass/fail vote result
 
 bitdaoadmin -> bitdaotreasury: allow funds transfer
 bitdaotreasury -> insurancecontract: transfer funds
@@ -256,13 +246,13 @@ bitdaoadmin -> insurancecontract: if (high debt) terminate alice insurance
 
 community -> community: delegate votes
 
-bitdaoadmin -> snapshot: submit proposal
-guarantor -> snapshot: get all proposals
-guarantor <-- snapshot: list of proposals
-guarantor -> snapshot: vote on proposal
+bitdaoadmin -> bitdaogovernance: submit proposal
+guarantor -> bitdaogovernance: get all proposals
+guarantor <-- bitdaogovernance: list of proposals
+guarantor -> bitdaogovernance: vote on proposal
 
-bitdaoadmin -> snapshot: get vote result
-bitdaoadmin <-- snapshot: pass/fail vote result
+bitdaoadmin -> bitdaogovernance: get vote result
+bitdaoadmin <-- bitdaogovernance: pass/fail vote result
 
 bitdaoadmin -> insurancecontract: terminate insurance
 bitdaoadmin <-- insurancecontract: execute proposal
@@ -279,7 +269,7 @@ alice -> rewardscontract: create rewards program
 
 community -> community: delegate votes
 
-alice -> snapshot: submit proposal
+alice -> bitdaogovernance: submit proposal
 
 bitdaoadmin -> bitdaotreasury: allow funds
 bitdaotreasury -> rewardscontract: transfer funds for rewards
@@ -290,9 +280,9 @@ alice <-- rewardscontract: execute proposal
 bob -> forum: create forum proposal
 bob <- guarantor: positive/negative feedback
 
-bob -> snapshot: submit release request
+bob -> bitdaogovernance: submit release request
 community -> community: delegate votes
-community -> snapshot: vote
+community -> bitdaogovernance: vote
 community -> rewardscontract: claim reward
 
 
