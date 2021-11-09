@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="895px" preserveAspectRatio="none" style="width:3213px;height:895px;background:#FFFFFF;" version="1.1" viewBox="0 0 3213 895" width="3213px" zoomAndPan="magnify"><defs><filter height="300%" id="f1o2ip1hlcv2tt" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><rect fill="#FFFFE0" height="883.1191" style="stroke:#A80036;stroke-width:1.0;" width="140" x="1" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="86" x="28" y="18.5684">(community)</text><rect fill="#FF7F50" height="883.1191" style="stroke:#A80036;stroke-width:1.0;" width="71" x="571.5" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="65" x="574.5" y="18.5684">(offchain)</text><rect fill="#D3D3D3" height="883.1191" style="stroke:#A80036;stroke-width:1.0;" width="614.5" x="902" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="86" x="1166.25" y="18.5684">(community)</text><rect fill="#CD853F" height="883.1191" style="stroke:#A80036;stroke-width:1.0;" width="166" x="1518.5" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="65" x="1569" y="18.5684">(multisig)</text><rect fill="#6B8E23" height="883.1191" style="stroke:#A80036;stroke-width:1.0;" width="161" x="1686.5" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="48" x="1743" y="18.5684">(token)</text><rect fill="#FF7F50" height="883.1191" style="stroke:#A80036;stroke-width:1.0;" width="78" x="2047" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="65" x="2053.5" y="18.5684">(offchain)</text><rect fill="#E6E6FA" height="883.1191" style="stroke:#A80036;stroke-width:1.0;" width="1078.5" x="2127" y="6"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="64" x="2634.25" y="18.5684">(onchain)</text><rect fill="#FFFFFF" filter="url(#f1o2ip1hlcv2tt)" height="205.1738" style="stroke:#A80036;stroke-width:1.0;" width="10" x="602" y="185.4199"/><rect fill="#FFFFFF" filter="url(#f1o2ip1hlcv2tt)" height="205.1738" style="stroke:#A80036;stroke-width:1.0;" width="10" x="2081" y="462.2148"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="50" x2="50" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="121" x2="121" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="606.5" x2="606.5" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="980" x2="980" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1444.5" x2="1444.5" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1601.5" x2="1601.5" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1766.5" x2="1766.5" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2086" x2="2086" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2161" x2="2161" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2255" x2="2255" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2486.5" x2="2486.5" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2570.5" x2="2570.5" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2671.5" x2="2671.5" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2804.5" x2="2804.5" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="2963.5" x2="2963.5" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="3086.5" x2="3086.5" y1="108.7988" y2="802.6309"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="3163.5" x2="3163.5" y1="108.7988" y2="802.6309"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84" x="5" y="105.8457">Alice_novice</text><ellipse cx="50" cy="35.3105" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M50,43.3105 L50,70.3105 M37,51.3105 L63,51.3105 M50,70.3105 L37,85.3105 M50,70.3105 L63,85.3105 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84" x="5" y="815.166">Alice_novice</text><ellipse cx="50" cy="828.1191" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M50,836.1191 L50,863.1191 M37,844.1191 L63,844.1191 M50,863.1191 L37,878.1191 M50,863.1191 L63,878.1191 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="26" x="105" y="105.8457">Bob</text><ellipse cx="121" cy="35.3105" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M121,43.3105 L121,70.3105 M108,51.3105 L134,51.3105 M121,70.3105 L108,85.3105 M121,70.3105 L134,85.3105 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="26" x="105" y="815.166">Bob</text><ellipse cx="121" cy="828.1191" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M121,836.1191 L121,863.1191 M108,844.1191 L134,844.1191 M121,863.1191 L108,878.1191 M121,863.1191 L134,878.1191 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="45" x="581.5" y="105.8457">Forum</text><ellipse cx="607" cy="35.3105" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M607,43.3105 L607,70.3105 M594,51.3105 L620,51.3105 M607,70.3105 L594,85.3105 M607,70.3105 L620,85.3105 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="45" x="581.5" y="815.166">Forum</text><ellipse cx="607" cy="828.1191" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M607,836.1191 L607,863.1191 M594,844.1191 L620,844.1191 M607,863.1191 L594,878.1191 M607,863.1191 L620,878.1191 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="142" x="906" y="105.8457">Communities_novice</text><ellipse cx="980" cy="35.3105" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M980,43.3105 L980,70.3105 M967,51.3105 L993,51.3105 M980,70.3105 L967,85.3105 M980,70.3105 L993,85.3105 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="142" x="906" y="815.166">Communities_novice</text><ellipse cx="980" cy="828.1191" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M980,836.1191 L980,863.1191 M967,844.1191 L993,844.1191 M980,863.1191 L967,878.1191 M980,863.1191 L993,878.1191 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129" x="1377.5" y="105.8457">Guarantors_expert</text><ellipse cx="1445" cy="35.3105" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1445,43.3105 L1445,70.3105 M1432,51.3105 L1458,51.3105 M1445,70.3105 L1432,85.3105 M1445,70.3105 L1458,85.3105 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129" x="1377.5" y="815.166">Guarantors_expert</text><ellipse cx="1445" cy="828.1191" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1445,836.1191 L1445,863.1191 M1432,844.1191 L1458,844.1191 M1445,863.1191 L1432,878.1191 M1445,863.1191 L1458,878.1191 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="1522.5" y="105.8457">BitDAOAdmins_expert</text><ellipse cx="1601.5" cy="35.3105" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1601.5,43.3105 L1601.5,70.3105 M1588.5,51.3105 L1614.5,51.3105 M1601.5,70.3105 L1588.5,85.3105 M1601.5,70.3105 L1614.5,85.3105 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="1522.5" y="815.166">BitDAOAdmins_expert</text><ellipse cx="1601.5" cy="828.1191" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1601.5,836.1191 L1601.5,863.1191 M1588.5,844.1191 L1614.5,844.1191 M1601.5,863.1191 L1588.5,878.1191 M1601.5,863.1191 L1614.5,878.1191 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147" x="1690.5" y="105.8457">TokenHolders_novice</text><ellipse cx="1767" cy="35.3105" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1767,43.3105 L1767,70.3105 M1754,51.3105 L1780,51.3105 M1767,70.3105 L1754,85.3105 M1767,70.3105 L1780,85.3105 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147" x="1690.5" y="815.166">TokenHolders_novice</text><ellipse cx="1767" cy="828.1191" fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"/><path d="M1767,836.1191 L1767,863.1191 M1754,844.1191 L1780,844.1191 M1767,863.1191 L1754,878.1191 M1767,863.1191 L1780,878.1191 " fill="none" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#A80036;stroke-width:2.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="64" x="2051" y="105.8457">Snapshot</text><path d="M2068,56.3105 C2068,46.3105 2086,46.3105 2086,46.3105 C2086,46.3105 2104,46.3105 2104,56.3105 L2104,82.3105 C2104,92.3105 2086,92.3105 2086,92.3105 C2086,92.3105 2068,92.3105 2068,82.3105 L2068,56.3105 " fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#000000;stroke-width:1.5;"/><path d="M2068,56.3105 C2068,66.3105 2086,66.3105 2086,66.3105 C2086,66.3105 2104,66.3105 2104,56.3105 " fill="none" style="stroke:#000000;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="64" x="2051" y="815.166">Snapshot</text><path d="M2068,828.1191 C2068,818.1191 2086,818.1191 2086,818.1191 C2086,818.1191 2104,818.1191 2104,828.1191 L2104,854.1191 C2104,864.1191 2086,864.1191 2086,864.1191 C2086,864.1191 2068,864.1191 2068,854.1191 L2068,828.1191 " fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" style="stroke:#000000;stroke-width:1.5;"/><path d="M2068,828.1191 C2068,838.1191 2086,838.1191 2086,838.1191 C2086,838.1191 2104,838.1191 2104,828.1191 " fill="none" style="stroke:#000000;stroke-width:1.5;"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="53" x="2135" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="53" x="2131" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="39" x="2138" y="93.8457">Proxy</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="53" x="2135" y="801.6309"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="53" x="2131" y="805.6309"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="39" x="2138" y="826.166">Proxy</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="98" x="2206" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="98" x="2202" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84" x="2209" y="93.8457">ProxyAdmin</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="98" x="2206" y="801.6309"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="98" x="2202" y="805.6309"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84" x="2209" y="826.166">ProxyAdmin</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="75" x="2449.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="75" x="2445.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61" x="2452.5" y="93.8457">Executor</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="75" x="2449.5" y="801.6309"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="75" x="2445.5" y="805.6309"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61" x="2452.5" y="826.166">Executor</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="57" x="2542.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="57" x="2538.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="43" x="2545.5" y="93.8457">Token</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="57" x="2542.5" y="801.6309"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="57" x="2538.5" y="805.6309"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="43" x="2545.5" y="826.166">Token</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="108" x="2617.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="108" x="2613.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="94" x="2620.5" y="93.8457">BondContract</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="108" x="2617.5" y="801.6309"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="108" x="2613.5" y="805.6309"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="94" x="2620.5" y="826.166">BondContract</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="122" x="2743.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="122" x="2739.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="108" x="2746.5" y="93.8457">BitDAOTreasury</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="122" x="2743.5" y="801.6309"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="122" x="2739.5" y="805.6309"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="108" x="2746.5" y="826.166">BitDAOTreasury</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="2883.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="2879.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147" x="2886.5" y="93.8457">BitDAOGovernanceV2</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="2883.5" y="801.6309"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="161" x="2879.5" y="805.6309"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="147" x="2886.5" y="826.166">BitDAOGovernanceV2</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="49" x="3062.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="49" x="3058.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35" x="3065.5" y="93.8457">Vault</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="49" x="3062.5" y="801.6309"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="49" x="3058.5" y="805.6309"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35" x="3065.5" y="826.166">Vault</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="68" x="3129.5" y="69.3105"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="68" x="3125.5" y="73.3105"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="54" x="3132.5" y="93.8457">Multisig</text><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="68" x="3129.5" y="801.6309"/><rect fill="#FEFECE" filter="url(#f1o2ip1hlcv2tt)" height="30.4883" style="stroke:#A80036;stroke-width:1.5;" width="68" x="3125.5" y="805.6309"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="54" x="3132.5" y="826.166">Multisig</text><rect fill="#FFFFFF" filter="url(#f1o2ip1hlcv2tt)" height="205.1738" style="stroke:#A80036;stroke-width:1.0;" width="10" x="602" y="185.4199"/><rect fill="#FFFFFF" filter="url(#f1o2ip1hlcv2tt)" height="205.1738" style="stroke:#A80036;stroke-width:1.0;" width="10" x="2081" y="462.2148"/><line style="stroke:#000000;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="0" x2="3206.5" y1="119.7988" y2="119.7988"/><rect fill="#EEEEEE" filter="url(#f1o2ip1hlcv2tt)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="3206.5" x="0" y="141.4541"/><line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="3206.5" y1="141.4541" y2="141.4541"/><line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="3206.5" y1="144.4541" y2="144.4541"/><rect fill="#EEEEEE" filter="url(#f1o2ip1hlcv2tt)" height="23.3105" style="stroke:#000000;stroke-width:2.0;" width="135" x="1535.75" y="130.7988"/><text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthAdjust="spacing" textLength="117" x="1541.75" y="147.3672">Upgrade Multisig</text><polygon fill="#A80036" points="590,181.4199,600,185.4199,590,189.4199,594,185.4199" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="50" x2="596" y1="185.4199" y2="185.4199"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="57" y="180.6777">UpgradeMultisig:[01]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="301" x="192" y="180.6777">create multisig upgrade request forum proposal</text><polygon fill="#A80036" points="623,210.7305,613,214.7305,623,218.7305,619,214.7305" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="617" x2="1444" y1="214.7305" y2="214.7305"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="629" y="209.9883">UpgradeMultisig:[02]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="86" x="764" y="209.9883">get proposals</text><polygon fill="#A80036" points="1433,240.041,1443,244.041,1433,248.041,1437,244.041" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="612" x2="1439" y1="244.041" y2="244.041"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="619" y="239.2988">UpgradeMultisig:[03]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="103" x="754" y="239.2988">list of proposals</text><polygon fill="#A80036" points="623,269.3516,613,273.3516,623,277.3516,619,273.3516" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="617" x2="1444" y1="273.3516" y2="273.3516"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="629" y="268.6094">UpgradeMultisig:[04]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="196" x="764" y="268.6094">put positive/negative feedback</text><polygon fill="#A80036" points="623,298.6621,613,302.6621,623,306.6621,619,302.6621" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="617" x2="979" y1="302.6621" y2="302.6621"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="629" y="297.9199">UpgradeMultisig:[05]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="86" x="764" y="297.9199">get proposals</text><polygon fill="#A80036" points="968,327.9727,978,331.9727,968,335.9727,972,331.9727" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="612" x2="974" y1="331.9727" y2="331.9727"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="619" y="327.2305">UpgradeMultisig:[06]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="103" x="754" y="327.2305">list of proposals</text><polygon fill="#A80036" points="623,357.2832,613,361.2832,623,365.2832,619,361.2832" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="617" x2="979" y1="361.2832" y2="361.2832"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="629" y="356.541">UpgradeMultisig:[07]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="196" x="764" y="356.541">put positive/negative feedback</text><polygon fill="#A80036" points="61,386.5938,51,390.5938,61,394.5938,57,390.5938" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="55" x2="606" y1="390.5938" y2="390.5938"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="67" y="385.8516">UpgradeMultisig:[08]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="195" x="202" y="385.8516">get positive/negative feedback</text><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="980" x2="1022" y1="419.9043" y2="419.9043"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1022" x2="1022" y1="419.9043" y2="432.9043"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="981" x2="1022" y1="432.9043" y2="432.9043"/><polygon fill="#A80036" points="991,428.9043,981,432.9043,991,436.9043,987,432.9043" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="987" y="415.1621">UpgradeMultisig:[09]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="91" x="1122" y="415.1621">delegate votes</text><polygon fill="#A80036" points="2069,458.2148,2079,462.2148,2069,466.2148,2073,462.2148" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="50" x2="2075" y1="462.2148" y2="462.2148"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="57" y="457.4727">UpgradeMultisig:[10]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="265" x="192" y="457.4727">submit multisig upgrade request proposal</text><polygon fill="#A80036" points="2069,487.5254,2079,491.5254,2069,495.5254,2073,491.5254" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1445" x2="2075" y1="491.5254" y2="491.5254"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1452" y="486.7832">UpgradeMultisig:[11]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="86" x="1587" y="486.7832">get proposals</text><polygon fill="#A80036" points="1456,516.8359,1446,520.8359,1456,524.8359,1452,520.8359" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1450" x2="2080" y1="520.8359" y2="520.8359"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1462" y="516.0938">UpgradeMultisig:[12]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="103" x="1597" y="516.0938">list of proposals</text><polygon fill="#A80036" points="2069,546.1465,2079,550.1465,2069,554.1465,2073,550.1465" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1445" x2="2075" y1="550.1465" y2="550.1465"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1452" y="545.4043">UpgradeMultisig:[13]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="228" x="1587" y="545.4043">vote to release or proportional slash</text><polygon fill="#A80036" points="2069,575.457,2079,579.457,2069,583.457,2073,579.457" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1767" x2="2075" y1="579.457" y2="579.457"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1774" y="574.7148">UpgradeMultisig:[14]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="86" x="1909" y="574.7148">get proposals</text><polygon fill="#A80036" points="1778,604.7676,1768,608.7676,1778,612.7676,1774,608.7676" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1772" x2="2080" y1="608.7676" y2="608.7676"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1784" y="604.0254">UpgradeMultisig:[15]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="103" x="1919" y="604.0254">list of proposals</text><polygon fill="#A80036" points="2069,634.0781,2079,638.0781,2069,642.0781,2073,638.0781" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1767" x2="2075" y1="638.0781" y2="638.0781"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1774" y="633.3359">UpgradeMultisig:[16]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="148" x="1909" y="633.3359">vote on open proposals</text><polygon fill="#A80036" points="1778,663.3887,1768,667.3887,1778,671.3887,1774,667.3887" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1772" x2="2085" y1="667.3887" y2="667.3887"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1784" y="662.6465">UpgradeMultisig:[17]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="112" x="1919" y="662.6465">vote confirmation</text><polygon fill="#A80036" points="2074,692.6992,2084,696.6992,2074,700.6992,2078,696.6992" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1601.5" x2="2080" y1="696.6992" y2="696.6992"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1608.5" y="691.957">UpgradeMultisig:[18]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="91" x="1743.5" y="691.957">get vote result</text><polygon fill="#A80036" points="1612.5,722.0098,1602.5,726.0098,1612.5,730.0098,1608.5,726.0098" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="1606.5" x2="2085" y1="726.0098" y2="726.0098"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1618.5" y="721.2676">UpgradeMultisig:[19]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="127" x="1753.5" y="721.2676">pass/fail vote result</text><polygon fill="#A80036" points="3151.5,751.3203,3161.5,755.3203,3151.5,759.3203,3155.5,755.3203" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1601.5" x2="3157.5" y1="755.3203" y2="755.3203"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1608.5" y="750.5781">UpgradeMultisig:[20]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="134" x="1743.5" y="750.5781">create a new multisig</text><polygon fill="#A80036" points="3151.5,780.6309,3161.5,784.6309,3151.5,788.6309,3155.5,784.6309" style="stroke:#A80036;stroke-width:1.0;"/><line style="stroke:#A80036;stroke-width:1.0;" x1="1601.5" x2="3157.5" y1="784.6309" y2="784.6309"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="131" x="1608.5" y="779.8887">UpgradeMultisig:[21]</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="353" x="1743.5" y="779.8887">transfer funds from the old multisig to the new multisig</text><!--MD5=[0fed78c88d010cac0f87b225a90311ec]
+@startuml
+!pragma layout smetana
+'skinparam defaultFontSize 29
+
+'https://plantuml.com/sequence-diagram
+box "(community)" #LightYellow
+actor Alice_novice as alice
+actor Bob as bob
+end box
+
+box "(offchain)" #Coral
+actor Forum as forum
+end box
+
+box "(community)" #LightGray
+actor Communities_novice as community
+actor Guarantors_expert as guarantor
+end box
+
+box "(multisig)" #Peru
+actor BitDAOAdmins_expert as bitdaoadmin
+end box
+
+box "(token)" #OliveDrab
+actor TokenHolders_novice as tokenholders
+endbox
+
+box "(offchain)" #Coral
+database Snapshot as snapshot
+end box
+
+box "(onchain)" #Lavender
+collections Proxy as proxy
+collections ProxyAdmin as proxyadmin
+collections Executor as executor
+collections Token as token
+collections BondContract as bondcontract
+collections BitDAOTreasury as bitdaotreasury
+collections BitDAOGovernanceV2 as bitdaogovernance
+collections Vault as vault
+collections Multisig as multisig
+end box
+
+autonumber "UpgradeGovernance:[00]"
+
+== Upgrade Governance ==
+
+bitdaoadmin -> executor: deploy timelock executor
+bitdaoadmin <- - executor: timelock address
+bitdaoadmin -> bitdaogovernance: deploy initial governance contract logic and set executor address
+bitdaoadmin <- - bitdaogovernance: governance implementation address
+bitdaoadmin -> proxyadmin: deploy admin for governance proxy
+bitdaoadmin <- - proxyadmin: governance proxyadmin address
+bitdaoadmin -> proxy: deploy governance proxy and set logic and admin addreses
+bitdaoadmin <- - proxy: governance proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> bitdaogovernance: deploy new bitdaogovernance implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- community: positive/negative feedback
+
+community -> community: delegate role (developer/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call governance proxy upgrade to new bitdaogovernance implementation
+
+newpage
+
+autonumber "UpgradeTreasury:[00]"
+
+== Upgrade Treasury ==
+
+bitdaoadmin -> bitdaotreasury: deploy initial treasury contract logic and set governance address
+bitdaoadmin <- - bitdaotreasury: bitdaotreasury contract logic address
+bitdaoadmin -> bitdaotreasury: set governance
+bitdaoadmin -> proxyadmin: deploy admin for treasury proxy
+bitdaoadmin <- - proxyadmin: treasury proxyadmin address
+bitdaoadmin -> proxy: deploy treasury proxy and set logic and admin
+bitdaoadmin <- - proxy: treasury proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> bitdaotreasury: deploy new bitdaotreasury implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- - community: positive/negative feedback
+
+community -> community: delegate role (treasury/developer/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call treasury proxy upgrade to new bitdaotreasury implementation
+
+newpage
+
+autonumber "UpgradeVault:[00]"
+
+== Upgrade Vault ==
+
+bitdaoadmin -> vault: deploy initial vault contract logic and set treasury
+bitdaoadmin <- - vault: vault contract logic address
+bitdaoadmin -> proxyadmin: deploy admin for vault proxy
+bitdaoadmin <- - proxyadmin: vault proxyadmin address
+bitdaoadmin -> proxy: deploy vault proxy and set logic and admin
+bitdaoadmin <- - proxy: vault proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> vault: deploy new vault implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- - community: positive/negative feedback
+
+community -> community: delegate role (treasury/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call vault proxy upgrade to new vault implementation
+
+newpage
+
+autonumber "UpgradeBond:[00]"
+
+== Upgrade Bond ==
+
+bitdaoadmin -> bondcontract: deploy initial bond factory contract logic and set treasury
+bitdaoadmin <- - bondcontract: bondcontract contract logic address
+bitdaoadmin -> proxyadmin: deploy admin for bondcontract proxy
+bitdaoadmin <- - proxyadmin: bond factory contract proxy admin address
+bitdaoadmin -> proxy: deploy bond factory proxy and set logic and admin
+bitdaoadmin <- - proxy: bond factory proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> bondcontract: deploy new bond factory contract implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- community: positive/negative feedback
+
+community -> community: delegate role (treasury/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call bond contract proxy upgrade to new bond contract implementation
+
+newpage
+
+autonumber "UpgradeToken:[00]"
+
+== Upgrade Token / Derivative ==
+
+bitdaoadmin -> token: deploy initial token contract logic and set governance
+bitdaoadmin <- - token: token contract logic address
+bitdaoadmin -> proxyadmin: deploy admin for token proxy
+bitdaoadmin <- - proxyadmin: token factory contract proxy admin address
+bitdaoadmin -> proxy: deploy token proxy and set logic and admin
+bitdaoadmin <- - proxy: token proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> token: deploy new token contract implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- - community: positive/negative feedback
+
+community -> community: delegate role based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call token proxy upgrade to new token implementation
+
+newpage
+
+autonumber "UpgradeSnapshot:[00]"
+
+== Upgrade Snapshot ==
+
+alice -> forum: create snapshot upgrade request forum proposal
+activate forum
+
+guarantor -> forum: get proposals
+guarantor <- - forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+community -> forum: get proposals
+community <- - forum: list of proposals
+community -> forum: put positive/negative feedback
+
+alice <- - forum: get positive/negative feedback
+deactivate forum
+
+community - -> community: delegate votes
+
+alice -> snapshot: submit snapshot upgrade request proposal
+activate snapshot
+guarantor -> snapshot: get proposals
+guarantor <- - snapshot: list of proposals
+guarantor -> snapshot: vote to release or proportional slash
+
+tokenholders -> snapshot: get proposals
+tokenholders <- - snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- - snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <- - snapshot: pass/fail vote result
+bitdaoadmin -> snapshot: upgrade snapshot
+
+newpage
+
+autonumber "UpgradeMultisig:[00]"
+
+== Upgrade Multisig ==
+
+alice -> forum: create multisig upgrade request forum proposal
+activate forum
+
+guarantor -> forum: get proposals
+guarantor <- - forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+community -> forum: get proposals
+community <- - forum: list of proposals
+community -> forum: put positive/negative feedback
+
+alice <- - forum: get positive/negative feedback
+deactivate forum
+
+community - -> community: delegate votes
+
+alice -> snapshot: submit multisig upgrade request proposal
+activate snapshot
+guarantor -> snapshot: get proposals
+guarantor <- - snapshot: list of proposals
+guarantor -> snapshot: vote to release or proportional slash
+
+tokenholders -> snapshot: get proposals
+tokenholders <- - snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- - snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <- - snapshot: pass/fail vote result
+bitdaoadmin -> multisig: create a new multisig
+bitdaoadmin -> multisig: transfer funds from the old multisig to the new multisig
+
+
+@enduml
+
+@startuml
+!pragma layout smetana
+
+box "(community)" #LightYellow
+actor Alice_novice as alice
+actor Bob as bob
+end box
+
+box "(offchain)" #Coral
+actor Forum as forum
+end box
+
+box "(community)" #LightGray
+actor Communities_novice as community
+actor Guarantors_expert as guarantor
+end box
+
+box "(multisig)" #Peru
+actor BitDAOAdmins_expert as bitdaoadmin
+end box
+
+box "(token)" #OliveDrab
+actor TokenHolders_novice as tokenholders
+endbox
+
+box "(offchain)" #Coral
+database Snapshot as snapshot
+end box
+
+box "(onchain)" #Lavender
+collections Proxy as proxy
+collections ProxyAdmin as proxyadmin
+collections Executor as executor
+collections Token as token
+collections BondContract as bondcontract
+collections BitDAOTreasury as bitdaotreasury
+collections BitDAOGovernanceV2 as bitdaogovernance
+collections Vault as vault
+collections Multisig as multisig
+end box
+
+autonumber "UpgradeGovernance:[00]"
+
+== Upgrade Governance ==
+
+bitdaoadmin -> executor: deploy timelock executor
+bitdaoadmin <- - executor: timelock address
+bitdaoadmin -> bitdaogovernance: deploy initial governance contract logic and set executor address
+bitdaoadmin <- - bitdaogovernance: governance implementation address
+bitdaoadmin -> proxyadmin: deploy admin for governance proxy
+bitdaoadmin <- - proxyadmin: governance proxyadmin address
+bitdaoadmin -> proxy: deploy governance proxy and set logic and admin addreses
+bitdaoadmin <- - proxy: governance proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> bitdaogovernance: deploy new bitdaogovernance implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- community: positive/negative feedback
+
+community -> community: delegate role (developer/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call governance proxy upgrade to new bitdaogovernance implementation
+
+newpage
+
+autonumber "UpgradeTreasury:[00]"
+
+== Upgrade Treasury ==
+
+bitdaoadmin -> bitdaotreasury: deploy initial treasury contract logic and set governance address
+bitdaoadmin <- - bitdaotreasury: bitdaotreasury contract logic address
+bitdaoadmin -> bitdaotreasury: set governance
+bitdaoadmin -> proxyadmin: deploy admin for treasury proxy
+bitdaoadmin <- - proxyadmin: treasury proxyadmin address
+bitdaoadmin -> proxy: deploy treasury proxy and set logic and admin
+bitdaoadmin <- - proxy: treasury proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> bitdaotreasury: deploy new bitdaotreasury implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- - community: positive/negative feedback
+
+community -> community: delegate role (treasury/developer/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call treasury proxy upgrade to new bitdaotreasury implementation
+
+newpage
+
+autonumber "UpgradeVault:[00]"
+
+== Upgrade Vault ==
+
+bitdaoadmin -> vault: deploy initial vault contract logic and set treasury
+bitdaoadmin <- - vault: vault contract logic address
+bitdaoadmin -> proxyadmin: deploy admin for vault proxy
+bitdaoadmin <- - proxyadmin: vault proxyadmin address
+bitdaoadmin -> proxy: deploy vault proxy and set logic and admin
+bitdaoadmin <- - proxy: vault proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> vault: deploy new vault implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- - community: positive/negative feedback
+
+community -> community: delegate role (treasury/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call vault proxy upgrade to new vault implementation
+
+newpage
+
+autonumber "UpgradeBond:[00]"
+
+== Upgrade Bond ==
+
+bitdaoadmin -> bondcontract: deploy initial bond factory contract logic and set treasury
+bitdaoadmin <- - bondcontract: bondcontract contract logic address
+bitdaoadmin -> proxyadmin: deploy admin for bondcontract proxy
+bitdaoadmin <- - proxyadmin: bond factory contract proxy admin address
+bitdaoadmin -> proxy: deploy bond factory proxy and set logic and admin
+bitdaoadmin <- - proxy: bond factory proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> bondcontract: deploy new bond factory contract implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- community: positive/negative feedback
+
+community -> community: delegate role (treasury/all) based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call bond contract proxy upgrade to new bond contract implementation
+
+newpage
+
+autonumber "UpgradeToken:[00]"
+
+== Upgrade Token / Derivative ==
+
+bitdaoadmin -> token: deploy initial token contract logic and set governance
+bitdaoadmin <- - token: token contract logic address
+bitdaoadmin -> proxyadmin: deploy admin for token proxy
+bitdaoadmin <- - proxyadmin: token factory contract proxy admin address
+bitdaoadmin -> proxy: deploy token proxy and set logic and admin
+bitdaoadmin <- - proxy: token proxy address
+bitdaoadmin -> proxyadmin: set executor as admin
+
+
+alice -> token: deploy new token contract implementation
+
+alice -> forum: create forum upgrade proposal with new bitdaogovernance
+alice <- - community: positive/negative feedback
+
+community -> community: delegate role based votes
+
+alice -> bitdaogovernance: submit upgrade proposal
+community -> bitdaogovernance: roles voting
+
+bitdaoadmin -> bitdaogovernance: get roles voting result
+bitdaoadmin <- - bitdaogovernance: pass/fail vote result
+
+bitdaoadmin -> bitdaogovernance: start execution
+executor <- - bitdaogovernance: execute proposal
+executor -> proxyadmin: upgrade
+note right: call token proxy upgrade to new token implementation
+
+newpage
+
+autonumber "UpgradeSnapshot:[00]"
+
+== Upgrade Snapshot ==
+
+alice -> forum: create snapshot upgrade request forum proposal
+activate forum
+
+guarantor -> forum: get proposals
+guarantor <- - forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+community -> forum: get proposals
+community <- - forum: list of proposals
+community -> forum: put positive/negative feedback
+
+alice <- - forum: get positive/negative feedback
+deactivate forum
+
+community - -> community: delegate votes
+
+alice -> snapshot: submit snapshot upgrade request proposal
+activate snapshot
+guarantor -> snapshot: get proposals
+guarantor <- - snapshot: list of proposals
+guarantor -> snapshot: vote to release or proportional slash
+
+tokenholders -> snapshot: get proposals
+tokenholders <- - snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- - snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <- - snapshot: pass/fail vote result
+bitdaoadmin -> snapshot: upgrade snapshot
+
+newpage
+
+autonumber "UpgradeMultisig:[00]"
+
+== Upgrade Multisig ==
+
+alice -> forum: create multisig upgrade request forum proposal
+activate forum
+
+guarantor -> forum: get proposals
+guarantor <- - forum: list of proposals
+guarantor -> forum: put positive/negative feedback
+
+community -> forum: get proposals
+community <- - forum: list of proposals
+community -> forum: put positive/negative feedback
+
+alice <- - forum: get positive/negative feedback
+deactivate forum
+
+community - -> community: delegate votes
+
+alice -> snapshot: submit multisig upgrade request proposal
+activate snapshot
+guarantor -> snapshot: get proposals
+guarantor <- - snapshot: list of proposals
+guarantor -> snapshot: vote to release or proportional slash
+
+tokenholders -> snapshot: get proposals
+tokenholders <- - snapshot: list of proposals
+tokenholders -> snapshot: vote on open proposals
+tokenholders <- - snapshot: vote confirmation
+deactivate snapshot
+
+bitdaoadmin -> snapshot: get vote result
+bitdaoadmin <- - snapshot: pass/fail vote result
+bitdaoadmin -> multisig: create a new multisig
+bitdaoadmin -> multisig: transfer funds from the old multisig to the new multisig
+
+
+@enduml
+
+PlantUML version 1.2021.12(Wed Oct 06 02:01:58 AEST 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: AU
+--></g></svg>
