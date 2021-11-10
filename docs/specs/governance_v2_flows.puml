@@ -81,7 +81,6 @@ autonumber "Bond:[00]"
 
 == Bond ==
 
-
 alice -> grantstreasury: create grants treasury
 alice <-- grantstreasury: treasury address
 
@@ -121,24 +120,6 @@ bitdaotreasury -> grantstreasury: transfer funds
 ' execution
 
 alice --> alice: execute proposal
-
-
-' tranche request
-
-'alice -> forum: create tranche release request forum proposal
-'activate forum
-'guarantor -> forum: get proposals
-'guarantor <-- forum: list of proposals
-'guarantor -> forum: put positive/negative feedback
-'
-'community -> forum: get proposals
-'community <-- forum: list of proposals
-'community -> forum: put positive/negative feedback
-'
-'alice <-- forum: get positive/negative feedback
-'deactivate forum
-'
-'community --> community: delegate votes
 
 ' bond release
 
