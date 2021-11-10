@@ -17,9 +17,6 @@ abstract contract GovernanceControl is Context {
     /// Governance executor.
     address private _executor;
 
-    /**
-     * @dev Initializes the contract setting the governance.
-     */
     constructor(address governance_, address executor_) {
         require(
             governance_ != address(0) && executor_ != address(0),
@@ -43,26 +40,14 @@ abstract contract GovernanceControl is Context {
         _;
     }
 
-    /**
-     * @dev Governance getter.
-     */
     function governance() external view virtual returns (address) {
         return address(_governance);
     }
 
-    /**
-     * @dev Executor getter.
-     */
     function executor() external view virtual returns (address) {
         return _executor;
     }
 
-    /**
-     * @dev Sets governance contract to a new governance.
-     *
-     * Requirements:
-     * - caller must be governance executor.
-     */
     function setGovernance(address governance_)
         external
         virtual
@@ -75,12 +60,6 @@ abstract contract GovernanceControl is Context {
         _governance = IGovernance(governance_);
     }
 
-    /**
-     * @dev Sets executor to a new executor.
-     *
-     * Requirements:
-     * - contract must be governance executor.
-     */
     function setExecutor(address executor_) external virtual onlyGovernance {
         require(
             executor_ != address(0) && _executor != executor_,

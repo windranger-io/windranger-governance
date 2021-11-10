@@ -53,9 +53,6 @@ contract TreasuryInsurance is Treasury, ERC721 {
         ERC721('BITDAO_TREASURY_INSURANCE', 'BITTI')
     {}
 
-    /**
-     * @dev Sets new maxium debt threshold. Can only be called by an executor
-     */
     function setMaxDebtThreshold(uint256 maxDebtThreshold_)
         external
         onlyGovernance
@@ -67,9 +64,6 @@ contract TreasuryInsurance is Treasury, ERC721 {
         _maxDebtThreshold = maxDebtThreshold_;
     }
 
-    /**
-     * @dev Calculates debt for an item `id`
-     */
     function debt(uint256 id) public view virtual returns (uint256) {
         if (block.timestamp > _paidTime[id]) {
             return (block.timestamp - _paidTime[id]) * _insuranceCosts[id];
@@ -77,23 +71,14 @@ contract TreasuryInsurance is Treasury, ERC721 {
         return 0;
     }
 
-    /**
-     * @dev Returns max debt threshold.
-     */
     function maxDebtThreshold() external view virtual returns (uint256) {
         return _maxDebtThreshold;
     }
 
-    /**
-     * @dev Returns minted insurance.
-     */
     function minted() external view virtual returns (uint256) {
         return _minted;
     }
 
-    /**
-     * @dev Returns insurance `id` compensation limit.
-     */
     function compensationLimits(uint256 id)
         external
         view
@@ -103,9 +88,6 @@ contract TreasuryInsurance is Treasury, ERC721 {
         return _compensationLimits[id];
     }
 
-    /**
-     * @dev Returns insurance `id` condition.
-     */
     function insuranceConditions(uint256 id)
         external
         view
@@ -115,9 +97,6 @@ contract TreasuryInsurance is Treasury, ERC721 {
         return _insuranceConditions[id];
     }
 
-    /**
-     * @dev Returns insurance `id` requested compensation.
-     */
     function requestedCompensations(uint256 id)
         external
         view
@@ -127,9 +106,6 @@ contract TreasuryInsurance is Treasury, ERC721 {
         return _requestedCompensations[id];
     }
 
-    /**
-     * @dev Returns insurance `id` cost.
-     */
     function insuranceCosts(uint256 id)
         external
         view
@@ -139,9 +115,6 @@ contract TreasuryInsurance is Treasury, ERC721 {
         return _insuranceCosts[id];
     }
 
-    /**
-     * @dev Returns insurance `id` asset.
-     */
     function insuranceAssets(uint256 id)
         external
         view
@@ -151,16 +124,10 @@ contract TreasuryInsurance is Treasury, ERC721 {
         return address(_insuranceAssets[id]);
     }
 
-    /**
-     * @dev Returns insurance `id` last paid time.
-     */
     function paidTime(uint256 id) external view virtual returns (uint256) {
         return _paidTime[id];
     }
 
-    /**
-     * @dev Returns insurance `id` requested case.
-     */
     function requestedCases(uint256 id)
         external
         view

@@ -18,8 +18,6 @@ contract Rewards is GovernanceControl {
 
     /// Reward token, in which rewards are given.
     IERC20 private _rewardToken;
-    /// Treasury contract.
-    address private _treasury;
     /// Reward per vote made during successful governance proposal.
     uint256 private _rewardPerVote;
     /// Block number of voting start for proposals, which qualify for the rewards program.
@@ -28,6 +26,8 @@ contract Rewards is GovernanceControl {
     uint256 private _allocated;
     /// Returns true if claimed reward for an account by voting for a particular successful proposal.
     mapping(address => mapping(uint256 => bool)) private _claimed;
+    /// Treasury contract.
+    address private _treasury;
 
     event Deposited(address depositor, uint256 amount);
     event Withdrawn(address withdrawer, uint256 amount);
@@ -57,12 +57,6 @@ contract Rewards is GovernanceControl {
         _rewardPerVote = rewardPerVote_;
     }
 
-    /**
-     * @dev Sets reward per vote.
-     *
-     * Requirements:
-     * - caller must be governance executor.
-     */
     function setRewardPerVote(uint256 rewardPerVote_)
         external
         virtual
@@ -71,12 +65,6 @@ contract Rewards is GovernanceControl {
         _rewardPerVote = rewardPerVote_;
     }
 
-    /**
-     * @dev Sets reward token.
-     *
-     * Requirements:
-     * - caller must be governance executor.
-     */
     function setRewardToken(IERC20 rewardToken_)
         external
         virtual
@@ -85,12 +73,6 @@ contract Rewards is GovernanceControl {
         _rewardToken = rewardToken_;
     }
 
-    /**
-     * @dev Sets treasury.
-     *
-     * Requirements:
-     * - caller must be governance executor.
-     */
     function setTreasury(address treasury_) external virtual onlyGovernance {
         require(
             _treasury != address(0) && _treasury != treasury_,
@@ -99,44 +81,26 @@ contract Rewards is GovernanceControl {
         _treasury = treasury_;
     }
 
-    /**
-     * @dev Returns reward per vote.
-     */
     function rewardPetVote() external view virtual returns (uint256) {
         return _rewardPerVote;
     }
 
-    /**
-     * @dev Returns reward token.
-     */
     function rewardToken() external view virtual returns (address) {
         return address(_rewardToken);
     }
 
-    /**
-     * @dev Returns treasury.
-     */
     function treasury() external view virtual returns (address) {
         return _treasury;
     }
 
-    /**
-     * @dev Returns allocated rewards.
-     */
     function allocated() external view virtual returns (uint256) {
         return _allocated;
     }
 
-    /**
-     * @dev Returns rewardsStart.
-     */
     function rewardsStart() external view virtual returns (uint256) {
         return _rewardsStart;
     }
 
-    /**
-     * @dev Returns `true` if `account` claimed reward for `proposalId`
-     */
     function claimed(address account, uint256 proposalId)
         external
         view
@@ -168,7 +132,7 @@ contract Rewards is GovernanceControl {
     }
 
     /**
-     * @dev Claim voting reward for `proposalId`
+     * @dev Claim voting reward for `proposalId`.
      */
     function claimVotingReward(uint256 proposalId) external virtual {
         require(

@@ -11,17 +11,9 @@ import '@openzeppelin/contracts/access/Ownable.sol';
  * @dev VotesOracle contract used to set open and roles voting power for voters from snapshot strategies.
  */
 contract VotesOracle is Context, Ownable {
-    /// Open voting power mapping.
     mapping(address => uint256) private _openVotingPower;
-    /// Roles voting power mapping.
     mapping(address => mapping(bytes32 => uint256)) private _rolesVotingPower;
 
-    /**
-     * @dev Sets open voting power for an `account`
-     *
-     * Requirements:
-     * - caller must be the owner.
-     */
     function setOpenVotingPower(address account, uint256 votingPower)
         external
         virtual
@@ -30,12 +22,6 @@ contract VotesOracle is Context, Ownable {
         _openVotingPower[account] = votingPower;
     }
 
-    /**
-     * @dev Sets roles voting power for an `account`
-     *
-     * Requirements:
-     * - caller must be the owner.
-     */
     function setRolesVotingPower(
         address account,
         bytes32[] calldata roles,
@@ -46,16 +32,10 @@ contract VotesOracle is Context, Ownable {
         }
     }
 
-    /**
-     * @dev Open voting votes getter for an `account`
-     */
     function getVotes(address account) external view virtual returns (uint256) {
         return _openVotingPower[account];
     }
 
-    /**
-     * @dev Roles voting votes getter for an `account` with `role`
-     */
     function getVotes(address account, bytes32 role)
         external
         view

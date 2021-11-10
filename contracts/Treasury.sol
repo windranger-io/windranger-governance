@@ -26,12 +26,6 @@ contract Treasury is GovernanceControl {
         GovernanceControl(governance_, executor_)
     {}
 
-    /**
-     * @dev Increase allowance for `spender` of `asset` with `amount`
-     *
-     * Requirements:
-     * - caller must be a governance executor.
-     */
     function increaseAllowance(
         address spender,
         address asset,
@@ -41,12 +35,6 @@ contract Treasury is GovernanceControl {
         emit IncreasedAllowance(spender, asset, amount);
     }
 
-    /**
-     * @dev Decrease allowance for `spender` of `asset` with `amount`
-     *
-     * Requirements:
-     * - caller must be a governance executor.
-     */
     function decreaseAllowance(
         address spender,
         address asset,
@@ -56,12 +44,6 @@ contract Treasury is GovernanceControl {
         emit DecreasedAllowance(spender, asset, amount);
     }
 
-    /**
-     * @dev Transfer funds `to` for `asset` with `amount`
-     *
-     * Requirements:
-     * - caller must be a governance executor.
-     */
     function transfer(
         address to,
         address asset,
