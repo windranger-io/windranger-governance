@@ -16,34 +16,46 @@ import '@openzeppelin/contracts/governance/TimelockController.sol';
 import './interfaces/IOpenVoting.sol';
 import './interfaces/IRoleVoting.sol';
 
-// On-Chain snapshot voting
+/**
+ * @dev On-Chain snapshot voting
+ */
 interface ISnapshotVoting is IERC20 {
     function getCurrentVotes(address account) external view returns (uint256);
 }
 
-// Governance contract.
+/**
+ * @title Governance contact.
+ *
+ * @dev Governance contract allows to create, vote and execute on roles and protocol based proposals.
+ */
 contract Governance is Context, Ownable, ERC165, EIP712 {
     using SafeCast for uint256;
     using Counters for Counters.Counter;
     using Timers for Timers.BlockNumber;
 
-    bytes32 public constant BALLOT_TYPEHASH =
+    bytes32 private constant BALLOT_TYPEHASH =
         keccak256('Ballot(uint256 proposalId,uint8 support)');
 
-    bytes32 public constant EMPTY_ROLE = keccak256('EMPTY_ROLE');
-    bytes32 public constant DEVELOPER_ROLE = keccak256('DEVELOPER_ROLE');
-    bytes32 public constant LEGAL_ROLE = keccak256('LEGAL_ROLE');
-    bytes32 public constant TREASURY_ROLE = keccak256('TREASURY_ROLE');
+    bytes32 private constant EMPTY_ROLE = keccak256('EMPTY_ROLE');
+    bytes32 private constant DEVELOPER_ROLE = keccak256('DEVELOPER_ROLE');
+    bytes32 private constant LEGAL_ROLE = keccak256('LEGAL_ROLE');
+    bytes32 private constant TREASURY_ROLE = keccak256('TREASURY_ROLE');
 
-    uint256 public constant DEFAULT_PROPOSAL_THRESHOLD = 1e18;
-    uint256 public constant DEFAULT_ACTION_THRESHOLD = 1e18;
+    uint256 private constant DEFAULT_PROPOSAL_THRESHOLD = 1e18;
+    uint256 private constant DEFAULT_ACTION_THRESHOLD = 1e18;
 
+    /**
+     * @dev Vote type enum.
+     */
     enum VoteType {
         Against,
         For,
         Slashing
     }
 
+    /**
+     * @dev Proposal enum state.
+     */
     enum ProposalState {
         Pending,
         Active,
@@ -95,24 +107,36 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         uint256 quorum;
     }
 
-    IOpenVoting public openVotingOracle;
-    IRoleVoting public roleVotingOracle;
-    ISnapshotVoting public token;
+    /// Open voting oracle.
+    IOpenVoting private _openVotingOracle;
+    /// Role voting oracle.
+    IRoleVoting private _roleVotingOracle;
+    /// Snapshot token.
+    ISnapshotVoting private _token;
+    /// Timelock governance executor.
     TimelockController private _timelock;
-    address public treasury;
-    uint256 private _votingDelay = 1; // 1 block
-    uint256 private _votingPeriod = 5; // 5 blocks
-
-    bytes32[] public rolesList;
+    /// Treasury.
+    address private _treasury;
+    /// Voting delay. Initially 1 block.
+    uint256 private _votingDelay = 1;
+    /// Voting period. Initially 5 blocks.
+    uint256 private _votingPeriod = 5;
+    /// Roles list.
+    bytes32[] private _rolesList;
+    /// Timelock ids.
     mapping(uint256 => bytes32) private _timelockIds;
+    /// Roles indexes in _rolesList.
     mapping(bytes32 => uint256) private _roles;
-    mapping(bytes32 => mapping(address => bool)) public votersRoles;
-    mapping(bytes32 => uint256) public proposalThresholds;
-    mapping(address => mapping(string => VotingParams)) public actions;
-    mapping(address => VotingParams) public protocols;
-
+    /// Voters roles.
+    mapping(bytes32 => mapping(address => bool)) private _votersRoles;
+    /// Proposal roles thresholds.
+    mapping(bytes32 => uint256) private _proposalThresholds;
+    /// Actions roles and quorums.
+    mapping(address => mapping(string => VotingParams)) private _actions;
+    /// Protocols roles and quorums.
+    mapping(address => VotingParams) private _protocols;
+    /// Proposals mapping.
     mapping(uint256 => Proposal) private _proposals;
-    mapping(address => uint256) private _nonces;
 
     event ProposalCreated(
         uint256 proposalId,
@@ -146,18 +170,13 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         _;
     }
 
+    /**
+     * @dev Checks if the role exists.
+     */
     modifier roleExists(bytes32 role) {
         require(
             _roles[role] > 0,
             'Governance::roleExists: role does not exist'
-        );
-        _;
-    }
-
-    modifier hasRole(bytes32 role, address account) {
-        require(
-            votersRoles[role][account],
-            'Governance::hasRole: account does not have the role'
         );
         _;
     }
@@ -167,27 +186,32 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         TimelockController timelock_,
         address votesOracle_
     ) EIP712(name(), version()) {
-        token = token_;
-        openVotingOracle = IOpenVoting(votesOracle_);
-        roleVotingOracle = IRoleVoting(votesOracle_);
+        _token = token_;
+        _openVotingOracle = IOpenVoting(votesOracle_);
+        _roleVotingOracle = IRoleVoting(votesOracle_);
         _timelock = timelock_;
         _roles[TREASURY_ROLE] = 1;
         _roles[DEVELOPER_ROLE] = 2;
         _roles[LEGAL_ROLE] = 3;
-        rolesList.push(TREASURY_ROLE);
-        rolesList.push(DEVELOPER_ROLE);
-        rolesList.push(LEGAL_ROLE);
-        votersRoles[DEVELOPER_ROLE][_msgSender()] = true;
-        votersRoles[TREASURY_ROLE][_msgSender()] = true;
-        votersRoles[LEGAL_ROLE][_msgSender()] = true;
-        proposalThresholds[DEVELOPER_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
-        proposalThresholds[LEGAL_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
-        proposalThresholds[TREASURY_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
-        actions[address(this)]['setTreasury(address)'] = VotingParams(
+        _rolesList.push(TREASURY_ROLE);
+        _rolesList.push(DEVELOPER_ROLE);
+        _rolesList.push(LEGAL_ROLE);
+        _votersRoles[DEVELOPER_ROLE][_msgSender()] = true;
+        _votersRoles[TREASURY_ROLE][_msgSender()] = true;
+        _votersRoles[LEGAL_ROLE][_msgSender()] = true;
+        _proposalThresholds[DEVELOPER_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
+        _proposalThresholds[LEGAL_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
+        _proposalThresholds[TREASURY_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
+        _actions[address(this)]['setTreasury(address)'] = VotingParams(
             TREASURY_ROLE,
             DEFAULT_PROPOSAL_THRESHOLD
         );
     }
+
+    /**
+     * @dev Receive ETH fallback payable function.
+     */
+    receive() external payable virtual {}
 
     /**
      * @dev Address through which the governor executes action. Will be overloaded by module that execute actions
@@ -197,64 +221,210 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         return address(_timelock);
     }
 
-    receive() external payable virtual {}
-
+    /**
+     * @dev Returns version.
+     */
     function version() public pure virtual returns (string memory) {
         return '0.0.1';
     }
 
+    /**
+     * @dev Returns name.
+     */
     function name() public pure virtual returns (string memory) {
         return 'BitDAO';
     }
 
     /**
-     * @dev Public accessor to check the address of the timelock
+     * @dev Returns timelock address.
      */
-    function timelock() public view virtual returns (address) {
+    function timelock() external view virtual returns (address) {
         return address(_timelock);
     }
 
-    function votingDelay() public view virtual returns (uint256) {
+    /**
+     * @dev Returns voting delay
+     */
+    function votingDelay() external view virtual returns (uint256) {
         return _votingDelay;
     }
 
-    function votingPeriod() public view virtual returns (uint256) {
+    /**
+     * @dev Returns voting period.
+     */
+    function votingPeriod() external view virtual returns (uint256) {
         return _votingPeriod;
     }
 
+    /**
+     * @dev Returns treasury address.
+     */
+    function treasury() external view virtual returns (address) {
+        return _treasury;
+    }
+
+    /**
+     * @dev Returns snapshot token address.
+     */
+    function token() external view virtual returns (address) {
+        return address(_token);
+    }
+
+    /**
+     * @dev Returns open voting oracle address.
+     */
+    function openVotingOracle() external view virtual returns (address) {
+        return address(_openVotingOracle);
+    }
+
+    /**
+     * @dev Returns role voting oracle address.
+     */
+    function roleVotingOracle() external view virtual returns (address) {
+        return address(_roleVotingOracle);
+    }
+
+    /**
+     * @dev Returns action quorum.
+     */
+    function actionQuorum(address target, string calldata signature)
+        external
+        view
+        virtual
+        returns (uint256)
+    {
+        return _actions[target][signature].quorum;
+    }
+
+    /**
+     * @dev Returns action role.
+     */
+    function actionRole(address target, string calldata signature)
+        external
+        view
+        virtual
+        returns (bytes32)
+    {
+        return _actions[target][signature].role;
+    }
+
+    /**
+     * @dev Returns protocol quorum.
+     */
+    function protocolQuorum(address target)
+        external
+        view
+        virtual
+        returns (uint256)
+    {
+        return _protocols[target].quorum;
+    }
+
+    /**
+     * @dev Returns protocol role.
+     */
+    function protocolRole(address target)
+        external
+        view
+        virtual
+        returns (bytes32)
+    {
+        return _protocols[target].role;
+    }
+
+    /**
+     * @dev Returns `true` if `voter` has `role`.
+     */
+    function hasRole(bytes32 role, address voter)
+        public
+        view
+        virtual
+        returns (bool)
+    {
+        return _votersRoles[role][voter];
+    }
+
+    /**
+     * @dev Returns role in `_rolesList` at `roleIndex`.
+     */
+    function rolesList(uint256 roleIndex)
+        external
+        view
+        virtual
+        returns (bytes32)
+    {
+        return _rolesList[roleIndex];
+    }
+
+    /**
+     * @dev Returns `role` proposal threshold.
+     */
+    function proposalThresholds(bytes32 role)
+        external
+        view
+        virtual
+        returns (uint256)
+    {
+        return _proposalThresholds[role];
+    }
+
+    /**
+     * @dev Sets initial treasury.
+     *
+     * Requirements:
+     * - can be executed only by owner once.
+     */
     function setInitialTreasury(address treasury_) external virtual onlyOwner {
         require(
-            treasury == address(0),
-            'Governance::setInitialTreasury: treasury was set'
+            _treasury == address(0) && treasury_ != address(0),
+            'Governance::setInitialTreasury: treasury was set or new address is zero'
         );
-        treasury = treasury_;
-        protocols[treasury_] = VotingParams(
+        _treasury = treasury_;
+        _protocols[treasury_] = VotingParams(
             TREASURY_ROLE,
             DEFAULT_PROPOSAL_THRESHOLD
         );
     }
 
+    /**
+     * @dev Sets treasury.
+     *
+     * Requirements:
+     * - can be executed only by governance.
+     */
     function setTreasury(address treasury_) external virtual onlyGovernance {
         require(
-            treasury != address(0) && treasury != treasury_,
+            treasury_ != address(0) && _treasury != treasury_,
             "Governance::setTreasury: treasury wasn't set or the same"
         );
-        treasury = treasury_;
-        protocols[treasury_] = VotingParams(
+        _treasury = treasury_;
+        _protocols[treasury_] = VotingParams(
             TREASURY_ROLE,
             DEFAULT_PROPOSAL_THRESHOLD
         );
     }
 
+    /**
+     * @dev Sets voting oracles.
+     *
+     * Requirements:
+     * - can be executed only by governance.
+     */
     function setVotesOracle(address votesOracle_)
         external
         virtual
         onlyGovernance
     {
-        openVotingOracle = IOpenVoting(votesOracle_);
-        roleVotingOracle = IRoleVoting(votesOracle_);
+        _openVotingOracle = IOpenVoting(votesOracle_);
+        _roleVotingOracle = IRoleVoting(votesOracle_);
     }
 
+    /**
+     * @dev Sets voting delay.
+     *
+     * Requirements:
+     * - can be executed only by governance.
+     */
     function setVotingDelay(uint256 votingDelay_)
         external
         virtual
@@ -263,6 +433,12 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         _votingDelay = votingDelay_;
     }
 
+    /**
+     * @dev Sets voting period.
+     *
+     * Requirements:
+     * - can be executed only by governance.
+     */
     function setVotingPeriod(uint256 votingPeriod_)
         external
         virtual
@@ -271,93 +447,159 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         _votingPeriod = votingPeriod_;
     }
 
+    /**
+     * @dev Registers `protocol`.
+     *
+     * Requirements:
+     * - can be executed only by governance.
+     */
     function registerProtocol(
         address protocol,
         bytes32 role,
         uint256 quorum
     ) external virtual onlyGovernance {
-        protocols[protocol] = VotingParams(role, quorum);
+        _protocols[protocol] = VotingParams(role, quorum);
     }
 
+    /**
+     * @dev Unregisters `protocol`.
+     *
+     * Requirements:
+     * - can be executed only by governance.
+     */
     function unregisterProtocol(address protocol)
         external
         virtual
         onlyGovernance
     {
-        delete protocols[protocol];
+        delete _protocols[protocol];
     }
 
+    /**
+     * @dev Registers `role`.
+     *
+     * Requirements:
+     * - can be executed only by governance.
+     */
     function registerRole(bytes32 role) external virtual onlyGovernance {
         require(_roles[role] == 0, 'Governance::registerRole: role exists');
-        rolesList.push(role);
-        _roles[role] = rolesList.length;
+        _rolesList.push(role);
+        _roles[role] = _rolesList.length;
     }
 
+    /**
+     * @dev Unregisters `role`.
+     *
+     * Requirements:
+     * - `role` exists.
+     * - can be executed only by governance.
+     */
     function unregisterRole(bytes32 role)
         external
         virtual
         roleExists(role)
         onlyGovernance
     {
-        rolesList[_roles[role]] = rolesList[rolesList.length - 1];
-        _roles[rolesList[rolesList.length - 1]] = _roles[role];
-        rolesList.pop();
+        _rolesList[_roles[role]] = _rolesList[_rolesList.length - 1];
+        _roles[_rolesList[_rolesList.length - 1]] = _roles[role];
+        _rolesList.pop();
         delete _roles[role];
     }
 
+    /**
+     * @dev Registers `target` contract action `signature` with `role` and `quorum`.
+     *
+     * Requirements:
+     * - `role` exists.
+     * - can be executed only by governance.
+     */
     function registerAction(
         address target,
         string calldata signature,
         bytes32 role,
         uint256 quorum
     ) external virtual roleExists(role) onlyGovernance {
-        actions[target][signature] = VotingParams(role, quorum);
+        _actions[target][signature] = VotingParams(role, quorum);
     }
 
+    /**
+     * @dev Unregisters `target` contract action `signature` with `role`.
+     *
+     * Requirements:
+     * - `role` exists.
+     * - can be executed only by governance.
+     */
     function unregisterAction(
         address target,
         string calldata signature,
         bytes32 role
     ) external virtual roleExists(role) onlyGovernance {
-        delete actions[target][signature];
+        delete _actions[target][signature];
     }
 
+    /**
+     * @dev Adds `member` with `role`.
+     *
+     * Requirements:
+     * - `role` exists.
+     * - `proposer` must have `role`.
+     * - can be executed only by governance.
+     */
     function addRoleMember(
         bytes32 role,
         address member,
         address proposer
     ) external virtual roleExists(role) onlyGovernance {
         require(
-            votersRoles[role][proposer],
+            _votersRoles[role][proposer],
             'Governance::addRoleMember: proposer must have the same role'
         );
-        votersRoles[role][member] = true;
+        _votersRoles[role][member] = true;
     }
 
+    /**
+     * @dev Removes `member` with `role`.
+     *
+     * Requirements:
+     * - `role` exists.
+     * - `proposer` must have `role`.
+     * - can be executed only by governance.
+     */
     function removeRoleMember(
         bytes32 role,
         address member,
         address proposer
     ) external virtual roleExists(role) onlyGovernance {
         require(
-            votersRoles[role][proposer],
+            hasRole(role, proposer),
             'Governance::removeRoleMember: proposer must have the same role'
         );
-        votersRoles[role][member] = false;
+        _votersRoles[role][member] = false;
     }
 
+    /**
+     * @dev Sets proposal threshold for proposals with `role`.
+     *
+     * Requirements:
+     * - `role` exists.
+     * - `proposer` must have `role`.
+     * - can be executed only by governance.
+     */
     function setProposalThreshold(
         bytes32 role,
         uint256 threshold,
         address proposer
     ) external virtual roleExists(role) onlyGovernance {
         require(
-            votersRoles[role][proposer],
+            hasRole(role, proposer),
             'Governance::setProposalThreshold: proposer must have the same role'
         );
-        proposalThresholds[role] = threshold;
+        _proposalThresholds[role] = threshold;
     }
 
+    /**
+     * @dev Admin method to set voter roles.
+     */
     function setVoterRolesAdmin(address voter, bytes32[] calldata voterRoles)
         external
         virtual
@@ -369,10 +611,10 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
                 'Governance::setRoleMemberAdmin: role exists'
             );
             require(
-                !votersRoles[voterRoles[i]][voter],
+                !hasRole(voterRoles[i], voter),
                 'Governance::setVoterRolesAdmin: already set voter roles'
             );
-            votersRoles[voterRoles[i]][voter] = true;
+            _votersRoles[voterRoles[i]][voter] = true;
         }
     }
 
@@ -380,17 +622,17 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
      * @dev Public endpoint to update the underlying timelock instance. Restricted to the timelock itself, so updates
      * must be proposed, scheduled and executed using the {Governor} workflow.
      */
-    function updateTimelock(TimelockController newTimelock)
+    function setTimelock(TimelockController timelock_)
         external
         virtual
         onlyGovernance
     {
-        _updateTimelock(newTimelock);
-    }
-
-    function _updateTimelock(TimelockController newTimelock) private {
-        emit TimelockChange(address(_timelock), address(newTimelock));
-        _timelock = newTimelock;
+        require(
+            address(timelock_) != address(0) && _timelock != timelock_,
+            'Governance::setTimelock: cannot be same or zero address'
+        );
+        _timelock = timelock_;
+        emit TimelockChange(address(_timelock), address(timelock_));
     }
 
     /**
@@ -406,6 +648,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         return eta == 1 ? 0 : eta; // _DONE_TIMESTAMP (1) should be replaced with a 0 value
     }
 
+    /**
+     * @dev Returns proposal id as hash. Hashed from proposal targets, values, calldatas, descriptionHash.
+     */
     function hashProposal(
         address[] memory targets,
         uint256[] memory values,
@@ -420,6 +665,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
             );
     }
 
+    /**
+     * @dev Propose proposal with `targets`, `values`, `roles`, `signatures`, `calldatas`, `description`.
+     */
     function propose(
         address[] memory targets,
         uint256[] memory values,
@@ -431,7 +679,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         for (uint256 i = 0; i < roles.length; ++i) {
             require(roles[i] > 0, 'Governance::propose: role does not exist');
             require(
-                votersRoles[roles[i]][_msgSender()],
+                hasRole(roles[i], _msgSender()),
                 'Governance::propose: proposer must have proposal roles'
             );
         }
@@ -451,10 +699,10 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
 
         for (uint256 i = 0; i < targets.length; ++i) {
             if (targets[i] != address(this)) {
-                bool registeredAction = (protocols[targets[i]].role ==
+                bool registeredAction = (_protocols[targets[i]].role ==
                     roles[i]);
                 for (uint256 j = 0; j < roles.length; ++j) {
-                    if (actions[targets[i]][signatures[i]].role == roles[i]) {
+                    if (_actions[targets[i]][signatures[i]].role == roles[i]) {
                         registeredAction = true;
                     }
                 }
@@ -515,8 +763,8 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         proposal.signatures = signatures;
         proposal.descriptionHash = descriptionHash;
 
-        uint64 snapshot = block.number.toUint64() + votingDelay().toUint64();
-        uint64 deadline = snapshot + votingPeriod().toUint64();
+        uint64 snapshot = block.number.toUint64() + _votingDelay.toUint64();
+        uint64 deadline = snapshot + _votingPeriod.toUint64();
 
         proposal.againstVotes = new uint96[](roles.length);
         proposal.forVotes = new uint96[](roles.length);
@@ -529,11 +777,11 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     function getTokenVotingPower() external virtual returns (uint256) {
-        return token.getCurrentVotes(_msgSender());
+        return _token.getCurrentVotes(_msgSender());
     }
 
     function getVotes(address account) public view virtual returns (uint256) {
-        return openVotingOracle.getVotes(account);
+        return _openVotingOracle.getVotes(account);
     }
 
     function getVotes(address account, bytes32 role)
@@ -545,7 +793,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         if (role == EMPTY_ROLE) {
             return getVotes(account);
         }
-        return roleVotingOracle.getVotes(account, role);
+        return _roleVotingOracle.getVotes(account, role);
     }
 
     /**
@@ -592,7 +840,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     /**
-     * @dev See {IGovernor-execute}.
+     * @dev Function to execute a proposal in the timelock.
      */
     function execute(
         address[] memory targets,
@@ -641,7 +889,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     /**
-     * @dev See {IGovernorCompatibilityBravo-cancel}.
+     * @dev Cancel proposal from the timelock.
      */
     function cancel(uint256 proposalId) public virtual {
         Proposal storage proposal = _proposals[proposalId];
@@ -653,7 +901,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         for (uint256 i = 0; i < proposal.roles.length; ++i) {
             require(
                 getVotes(proposal.proposer, proposal.roles[i]) <
-                    proposalThresholds[proposal.roles[i]],
+                    _proposalThresholds[proposal.roles[i]],
                 'Governance::cancel: proposer above threshold'
             );
         }
@@ -705,7 +953,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     /**
-     * @dev See {IGovernor-state}.
+     * @dev Returns proposal state of enum State types.
      */
     function state(uint256 proposalId)
         public
@@ -741,6 +989,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         }
     }
 
+    /**
+     * @dev Returns `true` if proposal has succeeded.
+     */
     function isProposalSuccessful(uint256 proposalId)
         public
         view
@@ -755,7 +1006,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     /**
-     * @dev See {IGovernor-proposalSnapshot}.
+     * @dev Returns proposal snapshot.
      */
     function proposalSnapshot(uint256 proposalId)
         public
@@ -767,7 +1018,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     /**
-     * @dev See {IGovernor-proposalDeadline}.
+     * @dev Returns proposal deadline.
      */
     function proposalDeadline(uint256 proposalId)
         public
@@ -779,7 +1030,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     /**
-     * @dev See {IGovernorCompatibilityBravo-proposals}.
+     * @dev Returns proposal params and current state.
      */
     function proposals(uint256 proposalId)
         public
@@ -814,6 +1065,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         executed = status == ProposalState.Executed;
     }
 
+    /**
+     * @dev Returns proposal targets, values, roles, signatures, calldatats.
+     */
     function getActions(uint256 proposalId)
         public
         view
@@ -836,6 +1090,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         );
     }
 
+    /**
+     * @dev Returns proposal `proposalId` receipt for `voter`.
+     */
     function getReceipt(uint256 proposalId, address voter)
         public
         view
@@ -853,8 +1110,11 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
 
     // ==================================================== Voting ====================================================
 
+    /**
+     * @dev Returns `true` if `account` has voted on `proposalId`.
+     */
     function hasVoted(uint256 proposalId, address account)
-        public
+        external
         view
         virtual
         returns (bool)
@@ -862,6 +1122,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         return _proposals[proposalId].receipts[account].hasVoted;
     }
 
+    /**
+     * @dev Returns `true` if quorum for `proposalId` was reached.
+     */
     function _quorumReached(uint256 proposalId)
         internal
         view
@@ -873,13 +1136,14 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         for (uint256 i = 0; i < proposal.signatures.length; ++i) {
             uint256 quorum = 0;
             if (
-                actions[proposal.targets[i]][proposal.signatures[i]].quorum != 0
+                _actions[proposal.targets[i]][proposal.signatures[i]].quorum !=
+                0
             ) {
-                quorum = actions[proposal.targets[i]][proposal.signatures[i]]
+                quorum = _actions[proposal.targets[i]][proposal.signatures[i]]
                     .quorum;
             }
-            if (quorum == 0 && protocols[proposal.targets[i]].quorum != 0) {
-                quorum = protocols[proposal.targets[i]].quorum;
+            if (quorum == 0 && _protocols[proposal.targets[i]].quorum != 0) {
+                quorum = _protocols[proposal.targets[i]].quorum;
             }
             if (quorum == 0) {
                 quorum = DEFAULT_PROPOSAL_THRESHOLD;
@@ -891,6 +1155,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         return reached;
     }
 
+    /**
+     * @dev Returns `true` if `forVotes` won for `proposalId`
+     */
     function _voteSucceeded(uint256 proposalId)
         internal
         view
@@ -911,27 +1178,27 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     /**
-     * @dev See {IGovernor-castVote}.
+     * @dev Cast vote for `proposalId` with `support` of 3 types: against, for, slash.
      */
-    function castVote(uint256 proposalId, uint8 support) public virtual {
+    function castVote(uint256 proposalId, uint8 support) external virtual {
         address voter = _msgSender();
         _castVote(proposalId, voter, support, '');
     }
 
     /**
-     * @dev See {IGovernor-castVoteWithReason}.
+     * @dev Cast vote for `proposalId` with `support` of 3 types: against, for, slash with `reason`.
      */
     function castVoteWithReason(
         uint256 proposalId,
         uint8 support,
         string calldata reason
-    ) public virtual {
+    ) external virtual {
         address voter = _msgSender();
         _castVote(proposalId, voter, support, reason);
     }
 
     /**
-     * @dev See {IGovernor-castVoteBySig}.
+     * @dev Cast vote by sig `v`, `r`, `s` for `proposalId` with `support` of 3 types: against, for, slash.
      */
     function castVoteBySig(
         uint256 proposalId,
@@ -939,7 +1206,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         uint8 v,
         bytes32 r,
         bytes32 s
-    ) public virtual {
+    ) external virtual {
         address voter = ECDSA.recover(
             _hashTypedDataV4(
                 keccak256(abi.encode(BALLOT_TYPEHASH, proposalId, support))
@@ -953,9 +1220,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
 
     /**
      * @dev Internal vote casting mechanism: Check that the vote is pending, that it has not been cast yet, retrieve
-     * voting weight using {IGovernor-getVotes} and call the {_countVote} internal function.
+     * voting weight using {getVotes} and call the {_countVote} internal function.
      *
-     * Emits a {IGovernor-VoteCast} event.
+     * Emits a {VoteCast} event.
      */
     function _castVote(
         uint256 proposalId,
@@ -973,6 +1240,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         emit VoteCast(account, proposalId, support, reason);
     }
 
+    /**
+     * @dev Internal count vote. Creates voting receipt. Calculates votes based on voter roles and proposal roles.
+     */
     function _countVote(
         uint256 proposalId,
         address account,
@@ -990,7 +1260,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
             if (
                 (proposal.roles.length == 1 &&
                     proposal.roles[0] == EMPTY_ROLE) ||
-                votersRoles[proposal.roles[i]][account]
+                hasRole(proposal.roles[i], account)
             ) {
                 uint256 weight = getVotes(account, proposal.roles[i]);
                 receipt.votes[i] = SafeCast.toUint96(weight);

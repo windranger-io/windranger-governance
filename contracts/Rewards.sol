@@ -8,30 +8,40 @@ import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import './utils/GovernanceControl.sol';
 
-// Rewards contract.
+/**
+ * @title Rewards contact.
+ *
+ * @dev Rewards contract allows to make and allocate rewards programs for voters.
+ */
 contract Rewards is GovernanceControl {
     using SafeERC20 for IERC20;
 
-    // Reward token, in which rewards are given.
-    IERC20 public rewardToken;
-    // Treasury contract.
-    address public treasury;
-    // Reward per vote made during successful governance proposal.
-    uint256 public rewardPerVote;
-    // Block number of voting start for proposals, which qualify for the rewards program.
-    uint256 public rewardsStart;
-    // Total rewards allocated for stimulating voting.
-    uint256 public allocated;
-    // Returns true if claimed reward for an account by voting for a particular successful proposal.
-    mapping(address => mapping(uint256 => bool)) public claimed;
+    /// Reward token, in which rewards are given.
+    IERC20 private _rewardToken;
+    /// Treasury contract.
+    address private _treasury;
+    /// Reward per vote made during successful governance proposal.
+    uint256 private _rewardPerVote;
+    /// Block number of voting start for proposals, which qualify for the rewards program.
+    uint256 private _rewardsStart;
+    /// Total rewards allocated for stimulating voting.
+    uint256 private _allocated;
+    /// Returns true if claimed reward for an account by voting for a particular successful proposal.
+    mapping(address => mapping(uint256 => bool)) private _claimed;
 
     event Deposited(address depositor, uint256 amount);
     event Withdrawn(address withdrawer, uint256 amount);
     event Claim(address claimer, uint256 proposalId, uint256 reward);
     event Allocated(uint256 rewards);
 
+    /**
+     * @dev Only treausry modifier.
+     *
+     * Requirements:
+     * - caller must be the treasury.
+     */
     modifier onlyTreasury() {
-        require(_msgSender() == treasury, 'Rewards:: onlyTreasury');
+        require(_msgSender() == _treasury, 'Rewards:: onlyTreasury');
         _;
     }
 
@@ -42,60 +52,146 @@ contract Rewards is GovernanceControl {
         IERC20 rewardToken_,
         uint256 rewardPerVote_
     ) GovernanceControl(governance_, executor_) {
-        treasury = treasury_;
-        rewardToken = rewardToken_;
-        rewardPerVote = rewardPerVote_;
+        _treasury = treasury_;
+        _rewardToken = rewardToken_;
+        _rewardPerVote = rewardPerVote_;
     }
 
-    function setRewardPerVote(uint256 rewardPerVote_) external onlyGovernance {
-        rewardPerVote = rewardPerVote_;
+    /**
+     * @dev Sets reward per vote.
+     *
+     * Requirements:
+     * - caller must be governance executor.
+     */
+    function setRewardPerVote(uint256 rewardPerVote_)
+        external
+        virtual
+        onlyGovernance
+    {
+        _rewardPerVote = rewardPerVote_;
     }
 
-    function setRewardToken(IERC20 rewardToken_) external onlyGovernance {
-        rewardToken = rewardToken_;
+    /**
+     * @dev Sets reward token.
+     *
+     * Requirements:
+     * - caller must be governance executor.
+     */
+    function setRewardToken(IERC20 rewardToken_)
+        external
+        virtual
+        onlyGovernance
+    {
+        _rewardToken = rewardToken_;
     }
 
-    function setTreasury(address treasury_) external onlyGovernance {
-        treasury = treasury_;
+    /**
+     * @dev Sets treasury.
+     *
+     * Requirements:
+     * - caller must be governance executor.
+     */
+    function setTreasury(address treasury_) external virtual onlyGovernance {
+        require(
+            _treasury != address(0) && _treasury != treasury_,
+            "Rewards::setTreasury: treasury wasn't set or the same"
+        );
+        _treasury = treasury_;
     }
 
+    /**
+     * @dev Returns reward per vote.
+     */
+    function rewardPetVote() external view virtual returns (uint256) {
+        return _rewardPerVote;
+    }
+
+    /**
+     * @dev Returns reward token.
+     */
+    function rewardToken() external view virtual returns (address) {
+        return address(_rewardToken);
+    }
+
+    /**
+     * @dev Returns treasury.
+     */
+    function treasury() external view virtual returns (address) {
+        return _treasury;
+    }
+
+    /**
+     * @dev Returns allocated rewards.
+     */
+    function allocated() external view virtual returns (uint256) {
+        return _allocated;
+    }
+
+    /**
+     * @dev Returns rewardsStart.
+     */
+    function rewardsStart() external view virtual returns (uint256) {
+        return _rewardsStart;
+    }
+
+    /**
+     * @dev Returns `true` if `account` claimed reward for `proposalId`
+     */
+    function claimed(address account, uint256 proposalId)
+        external
+        view
+        virtual
+        returns (bool)
+    {
+        return _claimed[account][proposalId];
+    }
+
+    /**
+     * @dev Allocate `rewards` with `rewardsStart_` for rewards program
+     *
+     * Requirements:
+     * - can only be called from the treasury.
+     */
     function allocate(uint256 rewards, uint256 rewardsStart_)
         external
         virtual
         onlyTreasury
     {
         require(
-            rewards > 0 && rewardsStart_ > rewardsStart,
+            rewards > 0 && rewardsStart_ > _rewardsStart,
             'Rewards::allocate: allocate params are invalid'
         );
-        allocated += rewards;
-        rewardsStart = rewardsStart_;
-        rewardToken.safeTransferFrom(_msgSender(), address(this), rewards);
+        _allocated += rewards;
+        _rewardsStart = rewardsStart_;
+        _rewardToken.safeTransferFrom(_msgSender(), address(this), rewards);
         emit Allocated(rewards);
     }
 
+    /**
+     * @dev Claim voting reward for `proposalId`
+     */
     function claimVotingReward(uint256 proposalId) external virtual {
         require(
-            !claimed[_msgSender()][proposalId],
+            !_claimed[_msgSender()][proposalId],
             'Rewards::claimVotingReward: already claimed'
         );
         require(
-            rewardsStart <= governance.proposalSnapshot(proposalId),
+            _rewardsStart <= _governance.proposalSnapshot(proposalId),
             'Rewards::claimVotingReward: proposal does not qualify for rewards'
         );
-        (uint256 votes, uint8 support) = governance.getReceipt(
+        (uint256 votes, uint8 support) = _governance.getReceipt(
             proposalId,
             _msgSender()
         );
-        if (support == 1 && governance.isProposalSuccessful(proposalId)) {
+        if (support == 1 && _governance.isProposalSuccessful(proposalId)) {
             require(
-                allocated >= votes * rewardPerVote,
+                _allocated >= votes * _rewardPerVote,
                 'Rewards::claimVotingReward: must have enough allocation to give rewards'
             );
-            claimed[_msgSender()][proposalId] = true;
-            allocated -= votes * rewardPerVote;
-            rewardToken.safeTransfer(_msgSender(), votes * rewardPerVote);
+            _claimed[_msgSender()][proposalId] = true;
+            _allocated -= votes * _rewardPerVote;
+            _rewardToken.safeTransfer(_msgSender(), votes * _rewardPerVote);
         }
-        emit Claim(_msgSender(), proposalId, votes * rewardPerVote);
+        emit Claim(_msgSender(), proposalId, votes * _rewardPerVote);
     }
 }
