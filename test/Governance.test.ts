@@ -15,7 +15,8 @@ import {
 
 const SUPPLY = '1000000000000000000000000000000'
 const TREASURY_FUNDS = '500000000000000000000000000000'
-const VOTING_POWER = '500000000000000000'
+const BASE_VOTING_POWER = '500000000000000000'
+const ROLE_VOTING_POWER = '1000000000000000000'
 const REWARD_PER_VOTE = '10'
 const REWARDS_ALLOCATION = '10000000000000000000'
 const INSURANCE_COMPENSATION = '10000000000000000000'
@@ -94,94 +95,53 @@ describe('Governance', function () {
     await this.rewards.deployed()
     await this.governance.setInitialTreasury(this.treasury.address)
 
-    this.votingPower = BN.from(VOTING_POWER)
     await this.governance.setVoterRolesAdmin(this.delegatee1.address, [
       DEVELOPER_ROLE
     ])
-    expect(
-      await this.governance.votersRoles(DEVELOPER_ROLE, this.delegatee1.address)
-    ).to.equal(true)
     await this.governance.setVoterRolesAdmin(this.delegatee2.address, [
       LEGAL_ROLE
     ])
-    expect(
-      await this.governance.votersRoles(LEGAL_ROLE, this.delegatee2.address)
-    ).to.equal(true)
     await this.governance.setVoterRolesAdmin(this.delegatee3.address, [
       TREASURY_ROLE
     ])
-    expect(
-      await this.governance.votersRoles(TREASURY_ROLE, this.delegatee3.address)
-    ).to.equal(true)
 
+    this.baseVotingPower = BN.from(BASE_VOTING_POWER)
+    this.roleVotingPower = BN.from(ROLE_VOTING_POWER)
     await this.votesOracle.setOpenVotingPower(
       this.voter.address,
-      this.votingPower
+      this.baseVotingPower
     )
-    expect(
-      await this.governance['getVotes(address)'](this.voter.address)
-    ).to.equal(this.votingPower)
     await this.votesOracle.setOpenVotingPower(
       this.delegatee1.address,
-      this.votingPower
+      this.baseVotingPower
     )
-    expect(
-      await this.governance['getVotes(address)'](this.delegatee1.address)
-    ).to.equal(this.votingPower)
     await this.votesOracle.setOpenVotingPower(
       this.delegatee2.address,
-      this.votingPower
+      this.baseVotingPower
     )
-    expect(
-      await this.governance['getVotes(address)'](this.delegatee2.address)
-    ).to.equal(this.votingPower)
     await this.votesOracle.setOpenVotingPower(
       this.delegatee3.address,
-      this.votingPower
+      this.baseVotingPower
     )
-    expect(
-      await this.governance['getVotes(address)'](this.delegatee3.address)
-    ).to.equal(this.votingPower)
     await this.votesOracle.setOpenVotingPower(
       this.newDelegatee.address,
-      this.votingPower
+      this.baseVotingPower
     )
-    expect(
-      await this.governance['getVotes(address)'](this.newDelegatee.address)
-    ).to.equal(this.votingPower)
     await this.votesOracle.setRolesVotingPower(
       this.delegatee1.address,
       [DEVELOPER_ROLE],
-      [this.votingPower.mul(2)]
+      [this.roleVotingPower]
     )
-    expect(
-      await this.governance['getVotes(address,bytes32)'](
-        this.delegatee1.address,
-        DEVELOPER_ROLE
-      )
-    ).to.equal(this.votingPower.mul(2))
     await this.votesOracle.setRolesVotingPower(
       this.delegatee2.address,
       [LEGAL_ROLE],
-      [this.votingPower.mul(2)]
+      [this.roleVotingPower]
     )
-    expect(
-      await this.governance['getVotes(address,bytes32)'](
-        this.delegatee2.address,
-        LEGAL_ROLE
-      )
-    ).to.equal(this.votingPower.mul(2))
     await this.votesOracle.setRolesVotingPower(
       this.delegatee3.address,
       [TREASURY_ROLE],
-      [this.votingPower.mul(2)]
+      [this.roleVotingPower]
     )
-    expect(
-      await this.governance['getVotes(address,bytes32)'](
-        this.delegatee3.address,
-        TREASURY_ROLE
-      )
-    ).to.equal(this.votingPower.mul(2))
 
     await this.timelock.grantRole(PROPOSER_ROLE, this.governance.address)
     await this.timelock.grantRole(EXECUTOR_ROLE, this.governance.address)
@@ -228,13 +188,13 @@ describe('Governance', function () {
           voter.address
         )
         if (proposalRoles.length === 0) {
-          expect(receipt.votes).to.equal(this.votingPower)
+          expect(receipt.votes).to.equal(this.baseVotingPower)
           expect(receipt.support).to.equal(1)
         } else {
           let hasRole = false
           for (const proposalRole of proposalRoles) {
             if (proposalRole === role) {
-              expect(receipt.votes).to.equal(this.votingPower.mul(2))
+              expect(receipt.votes).to.equal(this.roleVotingPower)
               expect(receipt.support).to.equal(1)
               hasRole = true
             }
@@ -290,6 +250,51 @@ describe('Governance', function () {
       expect(await this.governance.state(proposalId)).to.equal(7)
       return proposalId
     }
+  })
+
+  it('Verify initial governance state', async function () {
+    expect(
+      await this.governance.votersRoles(DEVELOPER_ROLE, this.delegatee1.address)
+    ).to.equal(true)
+    expect(
+      await this.governance.votersRoles(LEGAL_ROLE, this.delegatee2.address)
+    ).to.equal(true)
+    expect(
+      await this.governance.votersRoles(TREASURY_ROLE, this.delegatee3.address)
+    ).to.equal(true)
+    expect(
+      await this.governance['getVotes(address)'](this.voter.address)
+    ).to.equal(this.baseVotingPower)
+    expect(
+      await this.governance['getVotes(address)'](this.delegatee1.address)
+    ).to.equal(this.baseVotingPower)
+    expect(
+      await this.governance['getVotes(address)'](this.delegatee2.address)
+    ).to.equal(this.baseVotingPower)
+    expect(
+      await this.governance['getVotes(address)'](this.delegatee3.address)
+    ).to.equal(this.baseVotingPower)
+    expect(
+      await this.governance['getVotes(address)'](this.newDelegatee.address)
+    ).to.equal(this.baseVotingPower)
+    expect(
+      await this.governance['getVotes(address,bytes32)'](
+        this.delegatee1.address,
+        DEVELOPER_ROLE
+      )
+    ).to.equal(this.roleVotingPower)
+    expect(
+      await this.governance['getVotes(address,bytes32)'](
+        this.delegatee2.address,
+        LEGAL_ROLE
+      )
+    ).to.equal(this.roleVotingPower)
+    expect(
+      await this.governance['getVotes(address,bytes32)'](
+        this.delegatee3.address,
+        TREASURY_ROLE
+      )
+    ).to.equal(this.roleVotingPower)
   })
 
   it('Run DEVELOPER proposal', async function () {
@@ -454,6 +459,9 @@ describe('Governance', function () {
         [this.voter.address, this.bit.address, TREASURY_FUNDS]
       )
     ]
+
+    expect(await this.bit.balanceOf(this.voter.address)).to.equal(0)
+    expect(await this.bit.balanceOf(this.treasury.address)).to.equal(SUPPLY)
     await this.runProposal(
       this.delegatee3,
       proposalTargets,
@@ -464,6 +472,9 @@ describe('Governance', function () {
       description
     )
     expect(await this.bit.balanceOf(this.voter.address)).to.equal(
+      TREASURY_FUNDS
+    )
+    expect(await this.bit.balanceOf(this.treasury.address)).to.equal(
       TREASURY_FUNDS
     )
   })
@@ -595,9 +606,9 @@ describe('Governance', function () {
     )
 
     await this.rewards.connect(this.delegatee3).claimVotingReward(proposalId)
-    const expectedBalance: BN = this.votingPower
-      .mul(2)
-      .mul(BN.from(REWARD_PER_VOTE))
+    const expectedBalance: BN = this.roleVotingPower.mul(
+      BN.from(REWARD_PER_VOTE)
+    )
     expect(await this.bit.balanceOf(this.delegatee3.address)).to.equal(
       expectedBalance
     )
