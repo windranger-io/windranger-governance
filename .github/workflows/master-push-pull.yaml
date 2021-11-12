@@ -1,0 +1,92 @@
+name: Run tests
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+
+
+jobs:
+  Unit-Tests:
+    runs-on: ubuntu-latest
+    name: Tests
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        name: Setup cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set up node
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+
+  TypeScript-Static-Analyis:
+    runs-on: ubuntu-latest
+    name: TypeScript static analysis
+    needs: Unit-Tests
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        name: Setup cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set up node
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+
+
+  Solidity-Static-Analysis:
+    runs-on: ubuntu-latest
+    name: Solidity static analysis
+    needs: TypeScript-Static-Analyis
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        name: Setup cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Slither Static Analysis
+        uses: luisfontes19/slither-static-analysis-action@v0.3.4
+        with:
+          slither-params: '--filter-paths "contracts|node_modules"'
