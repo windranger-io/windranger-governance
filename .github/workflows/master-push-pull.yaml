@@ -32,11 +32,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Export NODE_API_KEY
-        run: export NODE_API_KEY=https://eth-mainnet.alchemyapi.io/v2/_FhcEg_5DvMaewwIWP-3ZsH7HuwejLTP
-
-      - name: Export MNEMONIC
-        run: export MNEMONIC=76e84d048ab2f7e50865817dda3eef706aaeeeb592c1e0a2d677e914bda4e9d6
+      - name: Set ENV
+        run: mv .env.example .env
 
       - name: Build application
         run: npm run build
@@ -69,11 +66,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Export NODE_API_KEY
-        run: export NODE_API_KEY=https://eth-mainnet.alchemyapi.io/v2/_FhcEg_5DvMaewwIWP-3ZsH7HuwejLTP
-
-      - name: Export MNEMONIC
-        run: export MNEMONIC=76e84d048ab2f7e50865817dda3eef706aaeeeb592c1e0a2d677e914bda4e9d6
+      - name: Set ENV
+        run: mv .env.example .env
 
       - name: Build application
         run: npm run build
