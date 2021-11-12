@@ -1,7 +1,14 @@
-import {ethers, waffle} from 'hardhat'
+// Start - Support direct Mocha run & debug
+import 'hardhat'
+import '@nomiclabs/hardhat-ethers'
+// End - Support direct Mocha run & debug
+
+import chai, {expect} from 'chai'
+import {ethers} from 'hardhat'
 import Web3 from 'web3'
+import {before} from 'mocha'
+import {solidity} from 'ethereum-waffle'
 import {BigNumber as BN} from 'ethers'
-import {expect} from 'chai'
 import {SignerWithAddress} from '@nomiclabs/hardhat-ethers/signers'
 import {advanceBlockTo} from './utils/index'
 import {
@@ -13,6 +20,9 @@ import {
   MockERC20
 } from '../typechain'
 
+// Wires up Waffle with Chai
+chai.use(solidity)
+
 const SUPPLY = '1000000000000000000000000000000'
 const TREASURY_FUNDS = '500000000000000000000000000000'
 const VOTING_POWER = '500000000000000000'
@@ -20,7 +30,6 @@ const REWARD_PER_VOTE = '10'
 const REWARDS_ALLOCATION = '10000000000000000000'
 const INSURANCE_COMPENSATION = '10000000000000000000'
 const INSURANCE_COST = '1000000000'
-const provider = waffle.provider
 const PROPOSER_ROLE = ethers.utils.keccak256(
   ethers.utils.toUtf8Bytes('PROPOSER_ROLE')
 )
@@ -39,6 +48,7 @@ const TREASURY_ROLE = ethers.utils.keccak256(
 const COMMUNITY_ROLE = ethers.utils.keccak256(
   ethers.utils.toUtf8Bytes('COMMUNITY_ROLE')
 )
+const provider = ethers.provider
 const PROPOSAL_SPAN = 5
 
 describe('Governance', function () {
@@ -66,6 +76,7 @@ describe('Governance', function () {
       )
     )
     await this.timelock.deployed()
+
     this.votesOracle = <VotesOracle>await this.VotesOracle.deploy()
     await this.votesOracle.deployed()
     this.bit = <MockERC20>await this.ERC20.deploy('BIT', 'BIT', SUPPLY)
@@ -91,7 +102,7 @@ describe('Governance', function () {
         REWARD_PER_VOTE
       )
     )
-    await this.rewards.deployed()
+    await this.rewards.deployed()    
     await this.governance.setInitialTreasury(this.treasury.address)
     this.votingPower = BN.from(VOTING_POWER)
     await this.governance.setVoterRolesAdmin(this.delegatee1.address, [
@@ -201,7 +212,7 @@ describe('Governance', function () {
     const proposalRoles: string[] = [DEVELOPER_ROLE]
     const proposalTargets: string[] = [this.governance.address]
     const description = 'Give voter DEVELOPER role'
-    const web3 = new Web3()
+    const web3 = new Web3()    
     const proposalCalldatas: string[] = [
       web3.eth.abi.encodeFunctionCall(
         {
@@ -224,7 +235,7 @@ describe('Governance', function () {
         },
         [DEVELOPER_ROLE, this.voter.address, this.delegatee1.address]
       )
-    ]
+    ]    
     await this.runProposal(
       this.delegatee1,
       proposalTargets,
@@ -233,7 +244,7 @@ describe('Governance', function () {
       proposalSignatures,
       proposalCalldatas,
       description
-    )
+    )    
   })
 
   it('Run LEGAL proposal', async function () {
