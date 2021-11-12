@@ -95,4 +95,4 @@ jobs:
       - name: Slither Static Analysis
         uses: luisfontes19/slither-static-analysis-action@v0.3.4
         with:
-          slither-params: '--filter-paths "contracts|node_modules"'
+          slither-params: '--filter-paths "node_modules"'
