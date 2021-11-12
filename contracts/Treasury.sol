@@ -9,7 +9,11 @@ import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import './interfaces/IRewards.sol';
 import './utils/GovernanceControl.sol';
 
-/// @title Treasury contract.
+/**
+ * @title Treasury contact.
+ *
+ * @dev Treasury contract allows to hold, receive and use ERC20 funds.
+ */
 contract Treasury is GovernanceControl {
     using SafeERC20 for IERC20;
 
@@ -53,6 +57,12 @@ contract Treasury is GovernanceControl {
         emit Sent(to, asset, amount);
     }
 
+    /**
+     * @dev Allocate `rewards` to `rewardsContract` with `rewardsStart` timestamp.
+     *
+     * Requirements:
+     * - caller must be a governance executor.
+     */
     function allocateRewards(
         IRewards rewardsContract,
         uint256 rewards,
@@ -67,5 +77,8 @@ contract Treasury is GovernanceControl {
         rewardsContract.allocate(rewards, rewardsStart);
     }
 
+    /**
+     * @dev Receive ETH fallback payable function.
+     */
     receive() external payable virtual {}
 }

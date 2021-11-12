@@ -5,7 +5,11 @@ pragma solidity ^0.8.0;
 import '@openzeppelin/contracts/utils/Context.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 
-// VotesOracle contract.
+/**
+ * @title VotesOracle contract.
+ *
+ * @dev VotesOracle contract used to set open and roles voting power for voters from snapshot strategies.
+ */
 contract VotesOracle is Context, Ownable {
     mapping(address => uint256) private _openVotingPower;
     mapping(address => mapping(bytes32 => uint256)) private _rolesVotingPower;
@@ -28,12 +32,12 @@ contract VotesOracle is Context, Ownable {
         }
     }
 
-    function getVotes(address account) public view virtual returns (uint256) {
+    function getVotes(address account) external view virtual returns (uint256) {
         return _openVotingPower[account];
     }
 
     function getVotes(address account, bytes32 role)
-        public
+        external
         view
         virtual
         returns (uint256)
