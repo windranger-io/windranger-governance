@@ -74,25 +74,3 @@ jobs:
 
       - name: Lint
         run: npm run lint
-
-
-  Solidity-Static-Analysis:
-    runs-on: ubuntu-latest
-    name: Solidity static analysis
-    needs: TypeScript-Static-Analyis
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - uses: actions/cache@v2
-        name: Setup cache
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Slither Static Analysis
-        uses: luisfontes19/slither-static-analysis-action@v0.3.4
-        with:
-          slither-params: '--filter-paths "node_modules"'
