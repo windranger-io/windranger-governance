@@ -102,7 +102,7 @@ describe('Governance', function () {
         REWARD_PER_VOTE
       )
     )
-    await this.rewards.deployed()    
+    await this.rewards.deployed()
     await this.governance.setInitialTreasury(this.treasury.address)
     this.votingPower = BN.from(VOTING_POWER)
     await this.governance.setVoterRolesAdmin(this.delegatee1.address, [
@@ -212,7 +212,7 @@ describe('Governance', function () {
     const proposalRoles: string[] = [DEVELOPER_ROLE]
     const proposalTargets: string[] = [this.governance.address]
     const description = 'Give voter DEVELOPER role'
-    const web3 = new Web3()    
+    const web3 = new Web3()
     const proposalCalldatas: string[] = [
       web3.eth.abi.encodeFunctionCall(
         {
@@ -235,7 +235,7 @@ describe('Governance', function () {
         },
         [DEVELOPER_ROLE, this.voter.address, this.delegatee1.address]
       )
-    ]    
+    ]
     await this.runProposal(
       this.delegatee1,
       proposalTargets,
@@ -244,7 +244,7 @@ describe('Governance', function () {
       proposalSignatures,
       proposalCalldatas,
       description
-    )    
+    )
   })
 
   it('Run LEGAL proposal', async function () {
