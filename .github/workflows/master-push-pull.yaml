@@ -33,7 +33,7 @@ jobs:
         run: npm ci
 
       - name: Set ENV
-        run: mv .env.example .env
+        run: mv .env.ci .env
 
       - name: Build application
         run: npm run build
@@ -67,7 +67,7 @@ jobs:
         run: npm ci
 
       - name: Set ENV
-        run: mv .env.example .env
+        run: mv .env.ci .env
 
       - name: Build application
         run: npm run build
