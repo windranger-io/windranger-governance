@@ -41,6 +41,17 @@ const COMMUNITY_ROLE = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes('COMMUNITY_ROLE')
 )
 const PROPOSAL_SPAN = 5
+// Governance.ProposalState in contracts/Governance.sol.
+enum ProposalState {
+    Pending,
+    Active,
+    Canceled,
+    Defeated,
+    Succeeded,
+    Queued,
+    Expired,
+    Executed
+}
 
 describe('Governance', function () {
     before(async function () {
@@ -178,8 +189,7 @@ describe('Governance', function () {
                 descriptionHash
             )
             let state = await this.governance.state(proposalId)
-            // state is Governance.ProposalState enum, state must be at Pending(0) stage here.
-            expect(state).to.equal(0)
+            expect(state).to.equal(ProposalState.Pending)
 
             this.castVoteAndCheck = async function (
                 proposalId: string,
@@ -245,27 +255,24 @@ describe('Governance', function () {
             await advanceBlockTo(
                 (await provider.getBlockNumber()) + PROPOSAL_SPAN
             )
-            // state is Governance.ProposalState enum, state must be at Succeeded(4) stage here.
             state = await this.governance.state(proposalId)
-            expect(state).to.equal(4)
+            expect(state).to.equal(ProposalState.Succeeded)
             await this.governance.queue(
                 proposalTargets,
                 proposalValues,
                 proposalCalldatas,
                 descriptionHash
             )
-            // state is Governance.ProposalState enum, state must be at Queued(5) stage here.
             state = await this.governance.state(proposalId)
-            expect(state).to.equal(5)
+            expect(state).to.equal(ProposalState.Queued)
             await this.governance.execute(
                 proposalTargets,
                 proposalValues,
                 proposalCalldatas,
                 descriptionHash
             )
-            // state is Governance.ProposalState enum, state must be at Executed(7) stage here.
             state = await this.governance.state(proposalId)
-            expect(state).to.equal(7)
+            expect(state).to.equal(ProposalState.Executed)
             return proposalId
         }
     })
