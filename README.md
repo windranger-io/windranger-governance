@@ -55,6 +55,8 @@ Do the following in a different terminal window:
 
 `yarn test`
 
+`npx hardhat test`
+
 ## NodeJS approach
 
 ### Build
@@ -82,6 +84,8 @@ Do the following in a different terminal window:
 #### Run Tests
 
 `npm run test`
+
+`npx hardhat test`
 
 ## Sequence Diagram Rendering
 
