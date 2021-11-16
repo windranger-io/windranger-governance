@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/utils/Address.sol';
-import '@openzeppelin/contracts/utils/Context.sol';
-import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
-import './Treasury.sol';
+import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "./Treasury.sol";
 
 /**
  * @title TreasuryInsurance contract.
@@ -50,7 +50,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
 
     constructor(address governance_, address executor_)
         Treasury(governance_, executor_)
-        ERC721('BITDAO_TREASURY_INSURANCE', 'BITTI')
+        ERC721("BITDAO_TREASURY_INSURANCE", "BITTI")
     {}
 
     function setMaxDebtThreshold(uint256 maxDebtThreshold_)
@@ -59,7 +59,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
     {
         require(
             maxDebtThreshold_ > 0,
-            'Rewards::setMaxDebtThreshold: cannot be zero'
+            "Rewards::setMaxDebtThreshold: cannot be zero"
         );
         _maxDebtThreshold = maxDebtThreshold_;
     }
@@ -190,15 +190,15 @@ contract TreasuryInsurance is Treasury, ERC721 {
     ) external virtual {
         require(
             ownerOf(id) == _msgSender(),
-            'Insurance::request: requester must be owner'
+            "Insurance::request: requester must be owner"
         );
         require(
             isValid(id),
-            'Insurance::requestInsurance: insurance is not valid'
+            "Insurance::requestInsurance: insurance is not valid"
         );
         require(
             compensation <= _compensationLimits[id],
-            'Insurance::request: requested compensation is more than the limit'
+            "Insurance::request: requested compensation is more than the limit"
         );
         require(
             _paidTime[id] >= block.timestamp,
@@ -215,12 +215,12 @@ contract TreasuryInsurance is Treasury, ERC721 {
     function compensate(uint256 id) external virtual onlyGovernance {
         require(
             _requestedCompensations[id] > 0,
-            'Insurance::compensate: no compensation request'
+            "Insurance::compensate: no compensation request"
         );
         uint256 compensation = _requestedCompensations[id];
         require(
             _insuranceAssets[id].balanceOf(address(this)) >= compensation,
-            'Insurance::compensate: not enough balance for compensation'
+            "Insurance::compensate: not enough balance for compensation"
         );
         _compensationLimits[id] -= compensation;
         _requestedCompensations[id] = 0;

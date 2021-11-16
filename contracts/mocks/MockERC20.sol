@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/token/ERC20/presets/ERC20PresetFixedSupply.sol';
+import "@openzeppelin/contracts/token/ERC20/presets/ERC20PresetFixedSupply.sol";
 
 contract MockERC20 is ERC20PresetFixedSupply {
     constructor(

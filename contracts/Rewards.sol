@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/utils/Address.sol';
-import '@openzeppelin/contracts/utils/Context.sol';
-import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import './utils/GovernanceControl.sol';
+import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "./utils/GovernanceControl.sol";
 
 /**
  * @title Rewards contact.
@@ -41,7 +41,7 @@ contract Rewards is GovernanceControl {
      * - caller must be the treasury.
      */
     modifier onlyTreasury() {
-        require(_msgSender() == _treasury, 'Rewards:: onlyTreasury');
+        require(_msgSender() == _treasury, "Rewards:: onlyTreasury");
         _;
     }
 
@@ -123,7 +123,7 @@ contract Rewards is GovernanceControl {
     {
         require(
             rewards > 0 && rewardsStart_ > _rewardsStart,
-            'Rewards::allocate: allocate params are invalid'
+            "Rewards::allocate: allocate params are invalid"
         );
         _allocated += rewards;
         _rewardsStart = rewardsStart_;
@@ -137,11 +137,11 @@ contract Rewards is GovernanceControl {
     function claimVotingReward(uint256 proposalId) external virtual {
         require(
             !_claimed[_msgSender()][proposalId],
-            'Rewards::claimVotingReward: already claimed'
+            "Rewards::claimVotingReward: already claimed"
         );
         require(
             _rewardsStart <= _governance.proposalSnapshot(proposalId),
-            'Rewards::claimVotingReward: proposal does not qualify for rewards'
+            "Rewards::claimVotingReward: proposal does not qualify for rewards"
         );
         (uint256 votes, uint8 support) = _governance.getReceipt(
             proposalId,
@@ -150,7 +150,7 @@ contract Rewards is GovernanceControl {
         if (support == 1 && _governance.isProposalSuccessful(proposalId)) {
             require(
                 _allocated >= votes * _rewardPerVote,
-                'Rewards::claimVotingReward: must have enough allocation to give rewards'
+                "Rewards::claimVotingReward: must have enough allocation to give rewards"
             );
             _claimed[_msgSender()][proposalId] = true;
             _allocated -= votes * _rewardPerVote;

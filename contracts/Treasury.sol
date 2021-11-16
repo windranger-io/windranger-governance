@@ -2,12 +2,12 @@
 
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/utils/Address.sol';
-import '@openzeppelin/contracts/utils/Context.sol';
-import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import './interfaces/IRewards.sol';
-import './utils/GovernanceControl.sol';
+import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "./interfaces/IRewards.sol";
+import "./utils/GovernanceControl.sol";
 
 /**
  * @title Treasury contact.
@@ -71,7 +71,7 @@ contract Treasury is GovernanceControl {
         IERC20 rewardToken = rewardsContract.rewardToken();
         require(
             rewardToken.balanceOf(address(this)) >= rewards,
-            'Treasry::allocateRewards: not enough reward token balance'
+            "Treasry::allocateRewards: not enough reward token balance"
         );
         rewardToken.safeIncreaseAllowance(address(rewardsContract), rewards);
         rewardsContract.allocate(rewards, rewardsStart);
