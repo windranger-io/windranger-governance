@@ -1,14 +1,14 @@
 {
-  "name": "bitdao-governance",
+  "name": "windranger-governance",
   "version": "1.0.0",
-  "description": "BitDAO Governance framework contracts",
+  "description": "WindRanger Governance framework contracts",
   "private": true,
   "directories": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/windranger-io/governance.git"
+    "url": "git+https://github.com/windranger-io/windranger-governance.git"
   },
   "keywords": [],
   "author": "",
@@ -16,8 +16,8 @@
   "scripts": {
     "compile": "npx hardhat compile",
     "build": "npx hardhat compile",
-    "clean": "npx hardhat clean",
-    "test": "npx hardhat test",
+    "clean": "npx hardhat clean",    
+    "test": "mocha --timeout 10000 --exit --recursive --require ts-node/register 'test/**/*.test.ts'",
     "format": "prettier ./**/*.ts --write && prettier --write 'contracts/**/*.sol'",
     "lint": "eslint . --ext .ts",
     "plant": "npx node-plantuml ./docs/specs",
