@@ -43,7 +43,7 @@
     "ethers": "^5.4.6",
     "hardhat": "^2.6.2",
     "husky": "^7.0.2",
-    "lint-staged": "^11.1.2",
+    "lint-staged": "^12.0.2",
     "node-plantuml": "windranger-io/node-plantuml#fcfc730",
     "prettier": "^2.4.1",
     "ts-node": "^10.2.1",
