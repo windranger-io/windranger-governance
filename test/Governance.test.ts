@@ -31,6 +31,7 @@ const REWARD_PER_VOTE = '10'
 const REWARDS_ALLOCATION = '10000000000000000000'
 const INSURANCE_COMPENSATION = '10000000000000000000'
 const INSURANCE_COST = '1000000000'
+const BLOCK_TIME = '15'
 const PROPOSER_ROLE = ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes('PROPOSER_ROLE')
 )
@@ -776,7 +777,13 @@ describe('Governance', function () {
                 BN.from(INSURANCE_COST).mul(BN.from(300))
             )
         await this.treasury.connect(this.voter).payInsurance(insuranceID, 300)
-        expect(await this.treasury.paidTime(insuranceID)).to.equal('1612578696')
+        // Block time difference between different machines can be up to the block time (15 secs).
+        const LOCAL_TIME = '1612578696'
+        expect(
+            BN.from(LOCAL_TIME)
+                .sub(BN.from(await this.treasury.paidTime(insuranceID)))
+                .abs()
+        ).to.be.lt(BLOCK_TIME)
         // Request insurance
         const requestedCase =
             'Unknown hacker stole funds from the smart contract'
