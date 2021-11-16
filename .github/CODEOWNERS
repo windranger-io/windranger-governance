@@ -1,0 +1,15 @@
+# Each line is a file pattern followed by one or more owners.
+
+# These owners will be the default owners for everything in
+# the repo, unless a later match takes precedence.
+
+# Order is important; the last matching pattern takes the most
+# precedence. When someone opens a pull request that only
+# modifies JS files, only the *.js file owner of review is requested
+
+
+# Global code owner (WindRanger core team)
+*           @windranger-io/windranger-core
+
+# GitHub Actions owners
+/.github/   @windranger-io/windranger-devops
