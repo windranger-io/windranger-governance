@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import '@openzeppelin/contracts/utils/Context.sol';
-import '../interfaces/IGovernance.sol';
+import "@openzeppelin/contracts/utils/Context.sol";
+import "../interfaces/IGovernance.sol";
 
 /**
  * @title GovernanceControl contact.
@@ -20,7 +20,7 @@ abstract contract GovernanceControl is Context {
     constructor(address governance_, address executor_) {
         require(
             governance_ != address(0) && executor_ != address(0),
-            'GovernanceControl: cannot init with zero addresses'
+            "GovernanceControl: cannot init with zero addresses"
         );
         _governance = IGovernance(governance_);
         _executor = executor_;
@@ -35,7 +35,7 @@ abstract contract GovernanceControl is Context {
     modifier onlyGovernance() {
         require(
             _executor == _msgSender(),
-            'GovernanceControl: caller is not the governance executor'
+            "GovernanceControl: caller is not the governance executor"
         );
         _;
     }
@@ -55,7 +55,7 @@ abstract contract GovernanceControl is Context {
     {
         require(
             governance_ != address(0) && address(_governance) != governance_,
-            'GovernanceControl: same or zero governance address'
+            "GovernanceControl: same or zero governance address"
         );
         _governance = IGovernance(governance_);
     }
@@ -63,7 +63,7 @@ abstract contract GovernanceControl is Context {
     function setExecutor(address executor_) external virtual onlyGovernance {
         require(
             executor_ != address(0) && _executor != executor_,
-            'GovernanceControl: same or zero executor address'
+            "GovernanceControl: same or zero executor address"
         );
         _executor = executor_;
     }
