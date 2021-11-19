@@ -3,6 +3,16 @@
 pragma solidity ^0.8.0;
 
 contract Timelock {
+    uint256 public constant GRACE_PERIOD = 14 days;
+    uint256 public constant MINIMUM_DELAY = 1 seconds;
+    uint256 public constant MAXIMUM_DELAY = 30 days;
+
+    address public admin;
+    address public pendingAdmin;
+    uint256 public delay;
+
+    mapping(bytes32 => bool) public queuedTransactions;
+
     event NewAdmin(address indexed newAdmin);
     event NewPendingAdmin(address indexed newPendingAdmin);
     event NewDelay(uint256 indexed newDelay);
@@ -30,16 +40,6 @@ contract Timelock {
         bytes data,
         uint256 eta
     );
-
-    uint256 public constant GRACE_PERIOD = 14 days;
-    uint256 public constant MINIMUM_DELAY = 1 seconds;
-    uint256 public constant MAXIMUM_DELAY = 30 days;
-
-    address public admin;
-    address public pendingAdmin;
-    uint256 public delay;
-
-    mapping(bytes32 => bool) public queuedTransactions;
 
     constructor(address admin_, uint256 delay_) {
         require(
