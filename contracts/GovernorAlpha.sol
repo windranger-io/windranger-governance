@@ -3,8 +3,6 @@
 
 pragma solidity ^0.8.0;
 
-import "hardhat/console.sol";
-
 contract GovernorAlpha {
     /// @notice The name of this contract
     string public constant name = "WindRanger Governor Alpha";
