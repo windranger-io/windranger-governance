@@ -2,7 +2,8 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "../interfaces/IGovernance.sol";
 
 /**
@@ -11,19 +12,30 @@ import "../interfaces/IGovernance.sol";
  * @dev Contract module which provides a basic access control mechanism, where
  * contract methods can be restricted to execution to only by governance executor
  */
-abstract contract GovernanceControl is Context {
+abstract contract GovernanceControl is Initializable, ContextUpgradeable {
     /// Governance that controls inherited contract.
     IGovernance internal _governance;
     /// Governance executor.
     address private _executor;
 
-    constructor(address governance_, address executor_) {
+    function __GovernanceControl_init_unchained(
+        address governance_,
+        address executor_
+    ) internal initializer {
         require(
             governance_ != address(0) && executor_ != address(0),
             "GovernanceControl: cannot init with zero addresses"
         );
         _governance = IGovernance(governance_);
         _executor = executor_;
+    }
+
+    function __GovernanceControl_init(address governance_, address executor_)
+        internal
+        initializer
+    {
+        __Context_init_unchained();
+        __GovernanceControl_init_unchained(governance_, executor_);
     }
 
     /**

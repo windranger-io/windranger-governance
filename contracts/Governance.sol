@@ -2,24 +2,23 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
-import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Timers.sol";
-import "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/governance/TimelockController.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/TimersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./interfaces/IOpenVoting.sol";
 import "./interfaces/IRoleVoting.sol";
+import "./utils/TimelockController.sol";
 
 /**
  * @dev On-Chain snapshot voting
  */
-interface ISnapshotVoting is IERC20 {
+interface ISnapshotVoting is IERC20Upgradeable {
     function getCurrentVotes(address account) external view returns (uint256);
 }
 
@@ -28,10 +27,15 @@ interface ISnapshotVoting is IERC20 {
  *
  * @dev Governance contract allows to create, vote and execute on roles and protocol based proposals.
  */
-contract Governance is Context, Ownable, ERC165, EIP712 {
-    using SafeCast for uint256;
-    using Counters for Counters.Counter;
-    using Timers for Timers.BlockNumber;
+contract Governance is
+    Initializable,
+    OwnableUpgradeable,
+    ERC165Upgradeable,
+    EIP712Upgradeable
+{
+    using SafeCastUpgradeable for uint256;
+    using CountersUpgradeable for CountersUpgradeable.Counter;
+    using TimersUpgradeable for TimersUpgradeable.BlockNumber;
 
     bytes32 private constant BALLOT_TYPEHASH =
         keccak256("Ballot(uint256 proposalId,uint8 support)");
@@ -70,8 +74,8 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         uint256[] slashingVotes;
         bytes32[] roles;
         bytes32 descriptionHash;
-        Timers.BlockNumber voteStart;
-        Timers.BlockNumber voteEnd;
+        TimersUpgradeable.BlockNumber voteStart;
+        TimersUpgradeable.BlockNumber voteEnd;
         address[] targets;
         address proposer;
         bytes[] calldatas;
@@ -159,11 +163,24 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         _;
     }
 
-    constructor(
+    function initialize(
         ISnapshotVoting token_,
         TimelockController timelock_,
-        address votesOracle_
-    ) EIP712(name(), version()) {
+        address votesOracle_,
+        address treasury_
+    ) external initializer {
+        require(
+            _treasury == address(0) && treasury_ != address(0),
+            "Governance::setInitialTreasury: treasury was set or new address is zero"
+        );
+        __Ownable_init();
+        __ERC165_init_unchained();
+        __EIP712_init_unchained(name(), version());
+        _treasury = treasury_;
+        _protocols[treasury_] = VotingParams(
+            TREASURY_ROLE,
+            DEFAULT_PROPOSAL_THRESHOLD
+        );
         _token = token_;
         _openVotingOracle = IOpenVoting(votesOracle_);
         _roleVotingOracle = IRoleVoting(votesOracle_);
@@ -296,24 +313,6 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         returns (uint256)
     {
         return _proposalThresholds[role];
-    }
-
-    /**
-     * @dev Sets initial treasury.
-     *
-     * Requirements:
-     * - can be executed only by owner once.
-     */
-    function setInitialTreasury(address treasury_) external virtual onlyOwner {
-        require(
-            _treasury == address(0) && treasury_ != address(0),
-            "Governance::setInitialTreasury: treasury was set or new address is zero"
-        );
-        _treasury = treasury_;
-        _protocols[treasury_] = VotingParams(
-            TREASURY_ROLE,
-            DEFAULT_PROPOSAL_THRESHOLD
-        );
     }
 
     function setTreasury(address treasury_) external virtual onlyGovernance {
@@ -1050,7 +1049,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         bytes32 r,
         bytes32 s
     ) external virtual {
-        address voter = ECDSA.recover(
+        address voter = ECDSAUpgradeable.recover(
             _hashTypedDataV4(
                 keccak256(abi.encode(BALLOT_TYPEHASH, proposalId, support))
             ),
@@ -1106,7 +1105,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
                 hasRole(proposal.roles[i], account)
             ) {
                 uint256 weight = getVotes(account, proposal.roles[i]);
-                receipt.votes[i] = SafeCast.toUint96(weight);
+                receipt.votes[i] = SafeCastUpgradeable.toUint96(weight);
                 if (support == uint8(VoteType.Against)) {
                     proposal.againstVotes[i] += weight;
                 } else if (support == uint8(VoteType.For)) {

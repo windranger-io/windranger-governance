@@ -2,11 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./Treasury.sol";
 
 /**
@@ -15,8 +14,8 @@ import "./Treasury.sol";
  * @dev Treasury contract with insurance functionality, inherited from Treasury and ERC721 allows to create NFT insurances
  * and claim compensation by governance from treasury.
  */
-contract TreasuryInsurance is Treasury, ERC721 {
-    using SafeERC20 for IERC20;
+contract TreasuryInsurance is Initializable, ERC721Upgradeable, Treasury {
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /// Compensations limits for insurances.
     mapping(uint256 => uint256) private _compensationLimits;
@@ -25,7 +24,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
     /// Insurances costs per second.
     mapping(uint256 => uint256) private _insuranceCosts;
     /// Insurances assets, with which to pay for insurance and ask compensation.
-    mapping(uint256 => IERC20) private _insuranceAssets;
+    mapping(uint256 => IERC20Upgradeable) private _insuranceAssets;
     /// Insurance paid until this timestamp in seconds.
     mapping(uint256 => uint256) private _paidTime;
     /// Current requested compensation for insurance.
@@ -40,7 +39,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
     event Insured(
         uint256 id,
         address insured,
-        IERC20 asset,
+        IERC20Upgradeable asset,
         uint256 cost,
         uint256 compensationLimit
     );
@@ -48,10 +47,14 @@ contract TreasuryInsurance is Treasury, ERC721 {
     event PaidInsurance(uint256 id, uint256 payment);
     event Compensated(uint256 id, uint256 compensation);
 
-    constructor(address governance_, address executor_)
-        Treasury(governance_, executor_)
-        ERC721("BITDAO_TREASURY_INSURANCE", "BITTI")
-    {}
+    function initialize(address governance_, address executor_)
+        external
+        override
+        initializer
+    {
+        __ERC721_init("BITDAO_TREASURY_INSURANCE", "BITTI");
+        __Treasury_init(governance_, executor_);
+    }
 
     function setMaxDebtThreshold(uint256 maxDebtThreshold_)
         external
@@ -150,7 +153,7 @@ contract TreasuryInsurance is Treasury, ERC721 {
      */
     function insure(
         address to,
-        IERC20 asset,
+        IERC20Upgradeable asset,
         uint256 cost,
         uint256 compensationLimit,
         string calldata condition
@@ -224,7 +227,10 @@ contract TreasuryInsurance is Treasury, ERC721 {
         );
         _compensationLimits[id] -= compensation;
         _requestedCompensations[id] = 0;
-        IERC20(_insuranceAssets[id]).safeTransfer(ownerOf(id), compensation);
+        IERC20Upgradeable(_insuranceAssets[id]).safeTransfer(
+            ownerOf(id),
+            compensation
+        );
         if (_compensationLimits[id] == 0) {
             _burn(id);
         }

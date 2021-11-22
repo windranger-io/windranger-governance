@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 /**
  * @title Rewards interface.
@@ -10,5 +10,5 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 interface IRewards {
     function allocate(uint256 rewards, uint256 rewardsStart) external;
 
-    function rewardToken() external returns (IERC20);
+    function rewardToken() external returns (IERC20Upgradeable);
 }
