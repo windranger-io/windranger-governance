@@ -2,7 +2,7 @@
 // Compound Timelock https://github.com/compound-finance/compound-protocol/blob/master/contracts/Timelock.sol.
 pragma solidity ^0.8.0;
 
-contract Timelock {
+contract TimelockV8 {
     uint256 public constant GRACE_PERIOD = 14 days;
     uint256 public constant MINIMUM_DELAY = 1 seconds;
     uint256 public constant MAXIMUM_DELAY = 30 days;
