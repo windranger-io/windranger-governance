@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Compound Timelock https://github.com/compound-finance/compound-protocol/blob/master/contracts/Timelock.sol.
-pragma solidity 0.7.6;
+pragma solidity ^0.5.16;
 
 contract Timelock {
     uint256 public constant GRACE_PERIOD = 14 days;
@@ -41,7 +41,7 @@ contract Timelock {
         uint256 eta
     );
 
-    constructor(address admin_, uint256 delay_) {
+    constructor(address admin_, uint256 delay_) public {
         require(
             delay_ >= MINIMUM_DELAY,
             "Timelock::constructor: Delay must exceed minimum delay."
@@ -55,7 +55,7 @@ contract Timelock {
         delay = delay_;
     }
 
-    receive() external payable {}
+    function() external payable {}
 
     function setDelay(uint256 delay_) external {
         require(
@@ -99,8 +99,8 @@ contract Timelock {
     function queueTransaction(
         address target,
         uint256 value,
-        string memory signature,
-        bytes memory data,
+        string calldata signature,
+        bytes calldata data,
         uint256 eta
     ) external returns (bytes32) {
         require(
@@ -124,8 +124,8 @@ contract Timelock {
     function cancelTransaction(
         address target,
         uint256 value,
-        string memory signature,
-        bytes memory data,
+        string calldata signature,
+        bytes calldata data,
         uint256 eta
     ) external {
         require(
@@ -144,8 +144,8 @@ contract Timelock {
     function executeTransaction(
         address target,
         uint256 value,
-        string memory signature,
-        bytes memory data,
+        string calldata signature,
+        bytes calldata data,
         uint256 eta
     ) external payable returns (bytes memory) {
         require(
@@ -183,7 +183,7 @@ contract Timelock {
         }
 
         // solium-disable-next-line security/no-call-value
-        (bool success, bytes memory returnData) = target.call{value: value}(
+        (bool success, bytes memory returnData) = target.call.value(value)(
             callData
         );
         require(

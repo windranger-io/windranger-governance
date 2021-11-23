@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 // Compound GovernorAlpha https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/GovernorAlpha.sol.
 
-pragma solidity 0.7.6;
+pragma solidity ^0.5.16;
 pragma experimental ABIEncoderV2;
+
+import "hardhat/console.sol";
 
 contract GovernorAlpha {
     /// @notice The name of this contract
@@ -132,7 +134,7 @@ contract GovernorAlpha {
         address timelock_,
         address bit_,
         address guardian_
-    ) {
+    ) public {
         timelock = TimelockInterface(timelock_);
         bit = BitInterface(bit_);
         guardian = guardian_;
@@ -146,7 +148,7 @@ contract GovernorAlpha {
         string memory description
     ) public returns (uint256) {
         require(
-            bit.getPriorVotes(msg.sender, block.number - 1) >=
+            bit.getPriorVotes(msg.sender, sub256(block.number, 1)) >=
                 proposalThreshold(),
             "GovernorAlpha::propose: proposer votes below proposal threshold"
         );
@@ -165,17 +167,42 @@ contract GovernorAlpha {
             "GovernorAlpha::propose: too many actions"
         );
 
-        proposalCount++;
-        Proposal storage newProposal = proposals[proposalCount];
+        uint256 latestProposalId = latestProposalIds[msg.sender];
+        if (latestProposalId != 0) {
+            ProposalState proposersLatestProposalState = state(
+                latestProposalId
+            );
+            require(
+                proposersLatestProposalState != ProposalState.Active,
+                "GovernorAlpha::propose: one live proposal per proposer, found an already active proposal"
+            );
+            require(
+                proposersLatestProposalState != ProposalState.Pending,
+                "GovernorAlpha::propose: one live proposal per proposer, found an already pending proposal"
+            );
+        }
 
-        newProposal.id = proposalCount;
-        newProposal.proposer = msg.sender;
-        newProposal.targets = targets;
-        newProposal.values = values;
-        newProposal.signatures = signatures;
-        newProposal.calldatas = calldatas;
-        newProposal.startBlock = add256(block.number, votingDelay());
-        newProposal.endBlock = add256(newProposal.startBlock, votingPeriod());
+        uint256 startBlock = add256(block.number, votingDelay());
+        uint256 endBlock = add256(startBlock, votingPeriod());
+
+        proposalCount++;
+        Proposal memory newProposal = Proposal({
+            id: proposalCount,
+            proposer: msg.sender,
+            eta: 0,
+            targets: targets,
+            values: values,
+            signatures: signatures,
+            calldatas: calldatas,
+            startBlock: startBlock,
+            endBlock: endBlock,
+            forVotes: 0,
+            againstVotes: 0,
+            canceled: false,
+            executed: false
+        });
+
+        proposals[newProposal.id] = newProposal;
         latestProposalIds[newProposal.proposer] = newProposal.id;
 
         emit ProposalCreated(
@@ -185,8 +212,8 @@ contract GovernorAlpha {
             values,
             signatures,
             calldatas,
-            newProposal.startBlock,
-            newProposal.endBlock,
+            startBlock,
+            endBlock,
             description
         );
         return newProposal.id;
@@ -236,7 +263,7 @@ contract GovernorAlpha {
         Proposal storage proposal = proposals[proposalId];
         proposal.executed = true;
         for (uint256 i = 0; i < proposal.targets.length; i++) {
-            timelock.executeTransaction{value: proposal.values[i]}(
+            timelock.executeTransaction.value(proposal.values[i])(
                 proposal.targets[i],
                 proposal.values[i],
                 proposal.signatures[i],
