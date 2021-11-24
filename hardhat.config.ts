@@ -1,12 +1,7 @@
 import '@typechain/hardhat'
 import '@nomiclabs/hardhat-waffle'
-import '@nomiclabs/hardhat-web3'
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-etherscan'
-import '@nomiclabs/hardhat-truffle5'
-import '@nomiclabs/hardhat-ganache'
-
-import 'hardhat-gas-reporter'
 
 import {config as dotEnvConfig} from 'dotenv'
 dotEnvConfig()
@@ -19,10 +14,6 @@ const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 
 const config: HardhatUserConfig = {
     defaultNetwork: 'hardhat',
-    gasReporter: {
-        currency: 'USD',
-        gasPrice: 100
-    },
     paths: {
         sources: './contracts',
         tests: './test',
