@@ -34,7 +34,7 @@ abstract contract GovernanceControl is Initializable, ContextUpgradeable {
         internal
         initializer
     {
-        __Context_init_unchained();
+        __Context_init();
         __GovernanceControl_init_unchained(governance_, executor_);
     }
 

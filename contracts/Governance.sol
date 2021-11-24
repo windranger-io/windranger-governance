@@ -174,8 +174,8 @@ contract Governance is
             "Governance::setInitialTreasury: treasury was set or new address is zero"
         );
         __Ownable_init();
-        __ERC165_init_unchained();
-        __EIP712_init_unchained(name(), version());
+        __ERC165_init();
+        __EIP712_init(name(), version());
         _treasury = treasury_;
         _protocols[treasury_] = VotingParams(
             TREASURY_ROLE,
