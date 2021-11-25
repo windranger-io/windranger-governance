@@ -156,10 +156,7 @@ contract Governance is
     }
 
     modifier roleExists(bytes32 role) {
-        require(
-            _roles[role] > 0,
-            "Governance::roleExists: role does not exist"
-        );
+        require(_roles[role] > 0, "Governance::roleExists: role doesn't exist");
         _;
     }
 
@@ -171,7 +168,7 @@ contract Governance is
     ) external initializer {
         require(
             _treasury == address(0) && treasury_ != address(0),
-            "Governance::setInitialTreasury: treasury was set or new address is zero"
+            "Governance::setInitialTreasury: invalid treasury_"
         );
         __Ownable_init();
         __ERC165_init();
@@ -318,7 +315,7 @@ contract Governance is
     function setTreasury(address treasury_) external virtual onlyGovernance {
         require(
             treasury_ != address(0) && _treasury != treasury_,
-            "Governance::setTreasury: treasury wasn't set or the same"
+            "Governance::setTreasury: invalid treasury_"
         );
         _treasury = treasury_;
         _protocols[treasury_] = VotingParams(
@@ -334,7 +331,7 @@ contract Governance is
     {
         require(
             votesOracle_ != address(0),
-            "Governance::setVotesOracle: cannot be zero address"
+            "Governance::setVotesOracle: zero address"
         );
         _openVotingOracle = IOpenVoting(votesOracle_);
         _roleVotingOracle = IRoleVoting(votesOracle_);
@@ -436,7 +433,7 @@ contract Governance is
     ) external virtual roleExists(role) onlyGovernance {
         require(
             _votersRoles[role][proposer],
-            "Governance::addRoleMember: proposer must have the same role"
+            "Governance::addRoleMember: different proposer role"
         );
         _votersRoles[role][member] = true;
     }
@@ -456,7 +453,7 @@ contract Governance is
     ) external virtual roleExists(role) onlyGovernance {
         require(
             hasRole(role, proposer),
-            "Governance::removeRoleMember: proposer must have the same role"
+            "Governance::removeRoleMember: different proposer role"
         );
         _votersRoles[role][member] = false;
     }
@@ -476,7 +473,7 @@ contract Governance is
     ) external virtual roleExists(role) onlyGovernance {
         require(
             hasRole(role, proposer),
-            "Governance::setProposalThreshold: proposer must have the same role"
+            "Governance::setProposalThreshold: different proposer role"
         );
         _proposalThresholds[role] = threshold;
     }
@@ -496,7 +493,7 @@ contract Governance is
             );
             require(
                 !hasRole(voterRoles[i], voter),
-                "Governance::setVoterRolesAdmin: already set voter roles"
+                "Governance::setVoterRolesAdmin: already set"
             );
             _votersRoles[voterRoles[i]][voter] = true;
         }
@@ -513,7 +510,7 @@ contract Governance is
     {
         require(
             address(timelock_) != address(0) && _timelock != timelock_,
-            "Governance::setTimelock: cannot be same or zero address"
+            "Governance::setTimelock: invalid timelock_"
         );
         _timelock = timelock_;
         emit TimelockChange(address(_timelock), address(timelock_));
@@ -558,7 +555,7 @@ contract Governance is
         string memory description
     ) public virtual returns (uint256) {
         for (uint256 i = 0; i < roles.length; ++i) {
-            require(roles[i] > 0, "Governance::propose: role does not exist");
+            require(roles[i] > 0, "Governance::propose: role doesn't exist");
             require(
                 hasRole(roles[i], _msgSender()),
                 "Governance::propose: proposer must have proposal roles"
@@ -589,7 +586,7 @@ contract Governance is
                 }
                 require(
                     registeredAction,
-                    "Governance::propose: action is not registered"
+                    "Governance::propose: action isn't registered"
                 );
             }
         }
@@ -609,14 +606,14 @@ contract Governance is
             uint256 methodID = 0;
             require(
                 calldatas[i].length >= 4,
-                "Governance::propose: calldatas length must be at least 4"
+                "Governance::propose: calldatas length less than 4"
             );
             for (uint256 j = 0; j < 4; ++j) {
                 methodID = 256 * methodID + uint8(calldatas[i][j]);
             }
             require(
                 sigID == methodID,
-                "Governance::propose: signature does not matches calldata sig"
+                "Governance::propose: signatures don't match"
             );
         }
 
@@ -777,7 +774,7 @@ contract Governance is
 
         require(
             _msgSender() == proposal.proposer,
-            "Governance::cancel: sender must be the proposer"
+            "Governance::cancel: not a proposer"
         );
         for (uint256 i = 0; i < proposal.roles.length; ++i) {
             require(
