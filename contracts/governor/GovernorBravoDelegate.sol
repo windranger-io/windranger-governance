@@ -8,40 +8,40 @@ contract GovernorBravoDelegate is
     GovernorBravoDelegateStorageV2,
     GovernorBravoEvents
 {
-    /// @notice The name of this contract
+    /// The name of this contract
     string public constant name = "BitDAO Governor Bravo";
 
-    /// @notice The minimum setable proposal threshold
+    /// The minimum setable proposal threshold
     uint256 public constant MIN_PROPOSAL_THRESHOLD = 50000000e18; // 50,000,000 Bit
 
-    /// @notice The maximum setable proposal threshold
+    /// The maximum setable proposal threshold
     uint256 public constant MAX_PROPOSAL_THRESHOLD = 100000000e18; //100,000,000 Bit
 
-    /// @notice The minimum setable voting period
+    /// The minimum setable voting period
     uint256 public constant MIN_VOTING_PERIOD = 1; // About 24 hours
 
-    /// @notice The max setable voting period
+    /// The max setable voting period
     uint256 public constant MAX_VOTING_PERIOD = 80640; // About 2 weeks
 
-    /// @notice The min setable voting delay
+    /// The min setable voting delay
     uint256 public constant MIN_VOTING_DELAY = 0;
 
-    /// @notice The max setable voting delay
+    /// The max setable voting delay
     uint256 public constant MAX_VOTING_DELAY = 40320; // About 1 week
 
-    /// @notice The number of votes in support of a proposal required in order for a quorum to be reached and for a vote to succeed
+    /// The number of votes in support of a proposal required in order for a quorum to be reached and for a vote to succeed
     uint256 public constant quorumVotes = 300000000e18; // 300,000,000 = 3% of bit
 
-    /// @notice The maximum number of actions that can be included in a proposal
+    /// The maximum number of actions that can be included in a proposal
     uint256 public constant proposalMaxOperations = 10; // 10 actions
 
-    /// @notice The EIP-712 typehash for the contract's domain
+    /// The EIP-712 typehash for the contract's domain
     bytes32 public constant DOMAIN_TYPEHASH =
         keccak256(
             "EIP712Domain(string name,uint256 chainId,address verifyingContract)"
         );
 
-    /// @notice The EIP-712 typehash for the ballot struct used by the contract
+    /// The EIP-712 typehash for the ballot struct used by the contract
     bytes32 public constant BALLOT_TYPEHASH =
         keccak256("Ballot(uint256 proposalId,uint8 support)");
 

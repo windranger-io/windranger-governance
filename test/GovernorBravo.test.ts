@@ -91,7 +91,6 @@ describe('GovernorBravoDelegate', function () {
             )
         )
         await this.governorDelegator.deployed()
-        // Attach implementation.
         this.governor = <GovernorBravoDelegate>(
             await this.GovernorBravoDelegate.attach(
                 this.governorDelegator.address
