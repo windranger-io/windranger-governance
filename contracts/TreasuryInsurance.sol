@@ -17,6 +17,9 @@ import "./Treasury.sol";
 contract TreasuryInsurance is Initializable, ERC721Upgradeable, Treasury {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
+    /// Default max debt threshold.
+    uint256 private constant DEFAULT_DEBT_THRESHOLD = 1e22;
+
     /// Compensations limits for insurances.
     mapping(uint256 => uint256) private _compensationLimits;
     /// Insurances conditions.
@@ -32,7 +35,7 @@ contract TreasuryInsurance is Initializable, ERC721Upgradeable, Treasury {
     /// Current insurance case explained for requested compensation.
     mapping(uint256 => string) private _requestedCases;
     /// Maximum debt is possible to carry for insurance to be valid.
-    uint256 private _maxDebtThreshold = 1e22;
+    uint256 private _maxDebtThreshold;
     /// Number of minted insurance nfts.
     uint256 private _minted;
 
@@ -54,6 +57,7 @@ contract TreasuryInsurance is Initializable, ERC721Upgradeable, Treasury {
     {
         __ERC721_init("BITDAO_TREASURY_INSURANCE", "BITTI");
         __Treasury_init(governance_, executor_);
+        _maxDebtThreshold = DEFAULT_DEBT_THRESHOLD;
     }
 
     function setMaxDebtThreshold(uint256 maxDebtThreshold_)

@@ -2,6 +2,7 @@ import '@typechain/hardhat'
 import '@nomiclabs/hardhat-waffle'
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-etherscan'
+import '@openzeppelin/hardhat-upgrades'
 
 import {config as dotEnvConfig} from 'dotenv'
 dotEnvConfig()

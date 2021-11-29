@@ -107,9 +107,9 @@ contract Governance is
     TimelockController private _timelock;
     address private _treasury;
     /// Voting delay. Initially 1 block.
-    uint256 private _votingDelay = 1;
+    uint256 private _votingDelay;
     /// Voting period. Initially 5 blocks.
-    uint256 private _votingPeriod = 5;
+    uint256 private _votingPeriod;
     bytes32[] private _rolesList;
     mapping(uint256 => bytes32) private _timelockIds;
     mapping(bytes32 => uint256) private _roles;
@@ -178,6 +178,8 @@ contract Governance is
             TREASURY_ROLE,
             DEFAULT_PROPOSAL_THRESHOLD
         );
+        _votingDelay = 1;
+        _votingPeriod = 5;
         _token = token_;
         _openVotingOracle = IOpenVoting(votesOracle_);
         _roleVotingOracle = IRoleVoting(votesOracle_);
@@ -188,9 +190,6 @@ contract Governance is
         _rolesList.push(TREASURY_ROLE);
         _rolesList.push(DEVELOPER_ROLE);
         _rolesList.push(LEGAL_ROLE);
-        _votersRoles[DEVELOPER_ROLE][_msgSender()] = true;
-        _votersRoles[TREASURY_ROLE][_msgSender()] = true;
-        _votersRoles[LEGAL_ROLE][_msgSender()] = true;
         _proposalThresholds[DEVELOPER_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
         _proposalThresholds[LEGAL_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
         _proposalThresholds[TREASURY_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
@@ -381,7 +380,7 @@ contract Governance is
         roleExists(role)
         onlyGovernance
     {
-        _rolesList[_roles[role]] = _rolesList[_rolesList.length - 1];
+        _rolesList[_roles[role] - 1] = _rolesList[_rolesList.length - 1];
         _roles[_rolesList[_rolesList.length - 1]] = _roles[role];
         _rolesList.pop();
         delete _roles[role];
