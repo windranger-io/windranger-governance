@@ -121,9 +121,14 @@ describe('Contracts Upgrades', function () {
     })
 
     it('Governance: Successful safe upgrade', async function () {
-        await expect(
-            upgrades.upgradeProxy(this.governance.address, this.Governance)
-        ).to.be.fulfilled
+        const contractAddress = this.governance.address
+        this.governance = <Governance>(
+            await upgrades.upgradeProxy(
+                this.governance.address,
+                this.Governance
+            )
+        )
+        expect(this.governance.address).to.be.equal(contractAddress)
         expect(await this.governance.votingDelay()).to.equal(1)
         expect(await this.governance.votingPeriod()).to.equal(5)
         expect(await this.governance.rolesList(0)).to.equal(TREASURY_ROLE)
@@ -138,9 +143,11 @@ describe('Contracts Upgrades', function () {
     })
 
     it('Treasury: Successful safe upgrade', async function () {
-        await expect(
-            upgrades.upgradeProxy(this.treasury.address, this.Treasury)
-        ).to.be.fulfilled
+        const contractAddress = this.treasury.address
+        this.treasury = <TreasuryInsurance>(
+            await upgrades.upgradeProxy(this.treasury.address, this.Treasury)
+        )
+        expect(this.treasury.address).to.be.equal(contractAddress)
         expect(await this.treasury.maxDebtThreshold()).to.equal(
             MAX_DEBT_THRESHOLD
         )
@@ -153,9 +160,14 @@ describe('Contracts Upgrades', function () {
     })
 
     it('VotesOracle: Successful safe upgrade', async function () {
-        await expect(
-            upgrades.upgradeProxy(this.votesOracle.address, this.VotesOracle)
-        ).to.be.fulfilled
+        const contractAddress = this.votesOracle.address
+        this.votesOracle = <VotesOracle>(
+            await upgrades.upgradeProxy(
+                this.votesOracle.address,
+                this.VotesOracle
+            )
+        )
+        expect(this.votesOracle.address).to.be.equal(contractAddress)
     })
 
     it('VotesOracle: Non-successful safe upgrade', async function () {
@@ -165,8 +177,11 @@ describe('Contracts Upgrades', function () {
     })
 
     it('Rewards: Successful safe upgrade', async function () {
-        await expect(upgrades.upgradeProxy(this.rewards.address, this.Rewards))
-            .to.be.fulfilled
+        const contractAddress = this.rewards.address
+        this.rewards = <Rewards>(
+            await upgrades.upgradeProxy(this.rewards.address, this.Rewards)
+        )
+        expect(this.rewards.address).to.be.equal(contractAddress)
         expect(await this.rewards.treasury()).to.equal(this.treasury.address)
     })
 
