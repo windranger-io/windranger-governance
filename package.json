@@ -55,7 +55,7 @@
     "prettier-plugin-solidity": "^1.0.0-beta.18"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.3.3",
+    "@openzeppelin/contracts": "^4.4.0",
     "bunyan": "^1.8.15",
     "dotenv": "^10.0.0"
   },
