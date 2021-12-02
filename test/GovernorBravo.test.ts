@@ -39,7 +39,7 @@ enum ProposalState {
     Executed
 }
 
-describe('GovernorBravoDelegate', function () {
+describe('GovernorBravo', function () {
     before(async function () {
         this.signers = await ethers.getSigners()
         this.admin = this.signers[0]
@@ -96,13 +96,13 @@ describe('GovernorBravoDelegate', function () {
                 this.governorDelegator.address
             )
         )
-        this.treasury = <Treasury>(
-            await this.Treasury.deploy(
-                this.governor.address,
-                this.timelock.address
-            )
-        )
+        this.treasury = <Treasury>await this.Treasury.deploy()
         await this.treasury.deployed()
+        await this.treasury.initialize(
+            this.governor.address,
+            this.timelock.address
+        )
+
         const timestamp = (
             await provider.getBlock(await provider.getBlockNumber())
         ).timestamp
