@@ -57,13 +57,12 @@ describe('GovernorAlpha', function () {
             )
         )
         await this.governor.deployed()
-        this.treasury = <Treasury>(
-            await this.Treasury.deploy(
-                this.governor.address,
-                this.timelock.address
-            )
-        )
+        this.treasury = <Treasury>await this.Treasury.deploy()
         await this.treasury.deployed()
+        await this.treasury.initialize(
+            this.governor.address,
+            this.timelock.address
+        )
 
         const timestamp = (
             await provider.getBlock(await provider.getBlockNumber())

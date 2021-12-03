@@ -2,10 +2,11 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./utils/GovernanceControl.sol";
 
 /**
@@ -13,11 +14,11 @@ import "./utils/GovernanceControl.sol";
  *
  * @dev Rewards contract allows to make and allocate rewards programs for voters.
  */
-contract Rewards is GovernanceControl {
-    using SafeERC20 for IERC20;
+contract Rewards is Initializable, GovernanceControl {
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /// Reward token, in which rewards are given.
-    IERC20 private _rewardToken;
+    IERC20Upgradeable private _rewardToken;
     /// Reward per vote made during successful governance proposal.
     uint256 private _rewardPerVote;
     /// Block number of voting start for proposals, which qualify for the rewards program.
@@ -45,13 +46,14 @@ contract Rewards is GovernanceControl {
         _;
     }
 
-    constructor(
+    function initialize(
         address governance_,
         address executor_,
         address treasury_,
-        IERC20 rewardToken_,
+        IERC20Upgradeable rewardToken_,
         uint256 rewardPerVote_
-    ) GovernanceControl(governance_, executor_) {
+    ) external initializer {
+        __GovernanceControl_init(governance_, executor_);
         _treasury = treasury_;
         _rewardToken = rewardToken_;
         _rewardPerVote = rewardPerVote_;
@@ -65,7 +67,7 @@ contract Rewards is GovernanceControl {
         _rewardPerVote = rewardPerVote_;
     }
 
-    function setRewardToken(IERC20 rewardToken_)
+    function setRewardToken(IERC20Upgradeable rewardToken_)
         external
         virtual
         onlyGovernance

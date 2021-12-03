@@ -2,10 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./interfaces/IRewards.sol";
 import "./utils/GovernanceControl.sol";
 
@@ -14,24 +13,35 @@ import "./utils/GovernanceControl.sol";
  *
  * @dev Treasury contract allows to hold, receive and use ERC20 funds.
  */
-contract Treasury is GovernanceControl {
-    using SafeERC20 for IERC20;
+contract Treasury is Initializable, GovernanceControl {
+    using SafeERC20Upgradeable for IERC20Upgradeable;
 
     event Received(address from, address asset, uint256 amount);
     event Sent(address to, address asset, uint256 amount);
     event IncreasedAllowance(address spender, address asset, uint256 amount);
     event DecreasedAllowance(address spender, address asset, uint256 amount);
 
-    constructor(address governance_, address executor_)
-        GovernanceControl(governance_, executor_)
-    {}
+    function __Treasury_init(address governance_, address executor_)
+        internal
+        initializer
+    {
+        __GovernanceControl_init(governance_, executor_);
+    }
+
+    function initialize(address governance_, address executor_)
+        external
+        virtual
+        initializer
+    {
+        __Treasury_init(governance_, executor_);
+    }
 
     function increaseAllowance(
         address spender,
         address asset,
         uint256 amount
     ) external virtual onlyGovernance {
-        IERC20(asset).safeIncreaseAllowance(spender, amount);
+        IERC20Upgradeable(asset).safeIncreaseAllowance(spender, amount);
         emit IncreasedAllowance(spender, asset, amount);
     }
 
@@ -40,7 +50,7 @@ contract Treasury is GovernanceControl {
         address asset,
         uint256 amount
     ) external virtual onlyGovernance {
-        IERC20(asset).safeDecreaseAllowance(spender, amount);
+        IERC20Upgradeable(asset).safeDecreaseAllowance(spender, amount);
         emit DecreasedAllowance(spender, asset, amount);
     }
 
@@ -52,7 +62,7 @@ contract Treasury is GovernanceControl {
         if (asset == address(0)) {
             payable(to).call{value: amount};
         } else {
-            IERC20(asset).safeTransfer(to, amount);
+            IERC20Upgradeable(asset).safeTransfer(to, amount);
         }
         emit Sent(to, asset, amount);
     }
@@ -68,7 +78,7 @@ contract Treasury is GovernanceControl {
         uint256 rewards,
         uint256 rewardsStart
     ) external virtual onlyGovernance {
-        IERC20 rewardToken = rewardsContract.rewardToken();
+        IERC20Upgradeable rewardToken = rewardsContract.rewardToken();
         require(
             rewardToken.balanceOf(address(this)) >= rewards,
             "Treasry::allocateRewards: not enough reward token balance"

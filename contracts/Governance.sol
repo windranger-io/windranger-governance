@@ -2,24 +2,23 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
-import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Timers.sol";
-import "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/governance/TimelockController.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/TimersUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./interfaces/IOpenVoting.sol";
 import "./interfaces/IRoleVoting.sol";
+import "./utils/TimelockController.sol";
 
 /**
  * @dev On-Chain snapshot voting
  */
-interface ISnapshotVoting is IERC20 {
+interface ISnapshotVoting is IERC20Upgradeable {
     function getCurrentVotes(address account) external view returns (uint256);
 }
 
@@ -28,10 +27,15 @@ interface ISnapshotVoting is IERC20 {
  *
  * @dev Governance contract allows to create, vote and execute on roles and protocol based proposals.
  */
-contract Governance is Context, Ownable, ERC165, EIP712 {
-    using SafeCast for uint256;
-    using Counters for Counters.Counter;
-    using Timers for Timers.BlockNumber;
+contract Governance is
+    Initializable,
+    OwnableUpgradeable,
+    ERC165Upgradeable,
+    EIP712Upgradeable
+{
+    using SafeCastUpgradeable for uint256;
+    using CountersUpgradeable for CountersUpgradeable.Counter;
+    using TimersUpgradeable for TimersUpgradeable.BlockNumber;
 
     bytes32 private constant BALLOT_TYPEHASH =
         keccak256("Ballot(uint256 proposalId,uint8 support)");
@@ -70,8 +74,8 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         uint256[] slashingVotes;
         bytes32[] roles;
         bytes32 descriptionHash;
-        Timers.BlockNumber voteStart;
-        Timers.BlockNumber voteEnd;
+        TimersUpgradeable.BlockNumber voteStart;
+        TimersUpgradeable.BlockNumber voteEnd;
         address[] targets;
         address proposer;
         bytes[] calldatas;
@@ -103,9 +107,9 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     TimelockController private _timelock;
     address private _treasury;
     /// Voting delay. Initially 1 block.
-    uint256 private _votingDelay = 1;
+    uint256 private _votingDelay;
     /// Voting period. Initially 5 blocks.
-    uint256 private _votingPeriod = 5;
+    uint256 private _votingPeriod;
     bytes32[] private _rolesList;
     mapping(uint256 => bytes32) private _timelockIds;
     mapping(bytes32 => uint256) private _roles;
@@ -152,18 +156,30 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     }
 
     modifier roleExists(bytes32 role) {
-        require(
-            _roles[role] > 0,
-            "Governance::roleExists: role does not exist"
-        );
+        require(_roles[role] > 0, "Governance::roleExists: role doesn't exist");
         _;
     }
 
-    constructor(
+    function initialize(
         ISnapshotVoting token_,
         TimelockController timelock_,
-        address votesOracle_
-    ) EIP712(name(), version()) {
+        address votesOracle_,
+        address treasury_
+    ) external initializer {
+        require(
+            _treasury == address(0) && treasury_ != address(0),
+            "Governance::setInitialTreasury: invalid treasury_"
+        );
+        __Ownable_init();
+        __ERC165_init();
+        __EIP712_init(name(), version());
+        _treasury = treasury_;
+        _protocols[treasury_] = VotingParams(
+            TREASURY_ROLE,
+            DEFAULT_PROPOSAL_THRESHOLD
+        );
+        _votingDelay = 1;
+        _votingPeriod = 5;
         _token = token_;
         _openVotingOracle = IOpenVoting(votesOracle_);
         _roleVotingOracle = IRoleVoting(votesOracle_);
@@ -174,9 +190,6 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         _rolesList.push(TREASURY_ROLE);
         _rolesList.push(DEVELOPER_ROLE);
         _rolesList.push(LEGAL_ROLE);
-        _votersRoles[DEVELOPER_ROLE][_msgSender()] = true;
-        _votersRoles[TREASURY_ROLE][_msgSender()] = true;
-        _votersRoles[LEGAL_ROLE][_msgSender()] = true;
         _proposalThresholds[DEVELOPER_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
         _proposalThresholds[LEGAL_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
         _proposalThresholds[TREASURY_ROLE] = DEFAULT_PROPOSAL_THRESHOLD;
@@ -298,28 +311,10 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         return _proposalThresholds[role];
     }
 
-    /**
-     * @dev Sets initial treasury.
-     *
-     * Requirements:
-     * - can be executed only by owner once.
-     */
-    function setInitialTreasury(address treasury_) external virtual onlyOwner {
-        require(
-            _treasury == address(0) && treasury_ != address(0),
-            "Governance::setInitialTreasury: treasury was set or new address is zero"
-        );
-        _treasury = treasury_;
-        _protocols[treasury_] = VotingParams(
-            TREASURY_ROLE,
-            DEFAULT_PROPOSAL_THRESHOLD
-        );
-    }
-
     function setTreasury(address treasury_) external virtual onlyGovernance {
         require(
             treasury_ != address(0) && _treasury != treasury_,
-            "Governance::setTreasury: treasury wasn't set or the same"
+            "Governance::setTreasury: invalid treasury_"
         );
         _treasury = treasury_;
         _protocols[treasury_] = VotingParams(
@@ -335,7 +330,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     {
         require(
             votesOracle_ != address(0),
-            "Governance::setVotesOracle: cannot be zero address"
+            "Governance::setVotesOracle: zero address"
         );
         _openVotingOracle = IOpenVoting(votesOracle_);
         _roleVotingOracle = IRoleVoting(votesOracle_);
@@ -385,7 +380,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         roleExists(role)
         onlyGovernance
     {
-        _rolesList[_roles[role]] = _rolesList[_rolesList.length - 1];
+        _rolesList[_roles[role] - 1] = _rolesList[_rolesList.length - 1];
         _roles[_rolesList[_rolesList.length - 1]] = _roles[role];
         _rolesList.pop();
         delete _roles[role];
@@ -437,7 +432,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     ) external virtual roleExists(role) onlyGovernance {
         require(
             _votersRoles[role][proposer],
-            "Governance::addRoleMember: proposer must have the same role"
+            "Governance::addRoleMember: different proposer role"
         );
         _votersRoles[role][member] = true;
     }
@@ -457,7 +452,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     ) external virtual roleExists(role) onlyGovernance {
         require(
             hasRole(role, proposer),
-            "Governance::removeRoleMember: proposer must have the same role"
+            "Governance::removeRoleMember: different proposer role"
         );
         _votersRoles[role][member] = false;
     }
@@ -477,7 +472,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     ) external virtual roleExists(role) onlyGovernance {
         require(
             hasRole(role, proposer),
-            "Governance::setProposalThreshold: proposer must have the same role"
+            "Governance::setProposalThreshold: different proposer role"
         );
         _proposalThresholds[role] = threshold;
     }
@@ -497,7 +492,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
             );
             require(
                 !hasRole(voterRoles[i], voter),
-                "Governance::setVoterRolesAdmin: already set voter roles"
+                "Governance::setVoterRolesAdmin: already set"
             );
             _votersRoles[voterRoles[i]][voter] = true;
         }
@@ -514,7 +509,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
     {
         require(
             address(timelock_) != address(0) && _timelock != timelock_,
-            "Governance::setTimelock: cannot be same or zero address"
+            "Governance::setTimelock: invalid timelock_"
         );
         _timelock = timelock_;
         emit TimelockChange(address(_timelock), address(timelock_));
@@ -559,7 +554,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         string memory description
     ) public virtual returns (uint256) {
         for (uint256 i = 0; i < roles.length; ++i) {
-            require(roles[i] > 0, "Governance::propose: role does not exist");
+            require(roles[i] > 0, "Governance::propose: role doesn't exist");
             require(
                 hasRole(roles[i], _msgSender()),
                 "Governance::propose: proposer must have proposal roles"
@@ -590,7 +585,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
                 }
                 require(
                     registeredAction,
-                    "Governance::propose: action is not registered"
+                    "Governance::propose: action isn't registered"
                 );
             }
         }
@@ -610,14 +605,14 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
             uint256 methodID = 0;
             require(
                 calldatas[i].length >= 4,
-                "Governance::propose: calldatas length must be at least 4"
+                "Governance::propose: calldatas length less than 4"
             );
             for (uint256 j = 0; j < 4; ++j) {
                 methodID = 256 * methodID + uint8(calldatas[i][j]);
             }
             require(
                 sigID == methodID,
-                "Governance::propose: signature does not matches calldata sig"
+                "Governance::propose: signatures don't match"
             );
         }
 
@@ -778,7 +773,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
 
         require(
             _msgSender() == proposal.proposer,
-            "Governance::cancel: sender must be the proposer"
+            "Governance::cancel: not a proposer"
         );
         for (uint256 i = 0; i < proposal.roles.length; ++i) {
             require(
@@ -1050,7 +1045,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
         bytes32 r,
         bytes32 s
     ) external virtual {
-        address voter = ECDSA.recover(
+        address voter = ECDSAUpgradeable.recover(
             _hashTypedDataV4(
                 keccak256(abi.encode(BALLOT_TYPEHASH, proposalId, support))
             ),
@@ -1106,7 +1101,7 @@ contract Governance is Context, Ownable, ERC165, EIP712 {
                 hasRole(proposal.roles[i], account)
             ) {
                 uint256 weight = getVotes(account, proposal.roles[i]);
-                receipt.votes[i] = SafeCast.toUint96(weight);
+                receipt.votes[i] = SafeCastUpgradeable.toUint96(weight);
                 if (support == uint8(VoteType.Against)) {
                     proposal.againstVotes[i] += weight;
                 } else if (support == uint8(VoteType.For)) {

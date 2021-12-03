@@ -80,45 +80,49 @@ describe('Governance', function () {
         )
         this.Treasury = await ethers.getContractFactory('TreasuryInsurance')
         this.Rewards = await ethers.getContractFactory('Rewards')
-        this.ERC20 = await ethers.getContractFactory('MockERC20')
+        this.MockERC20 = await ethers.getContractFactory('MockERC20')
         this.timelock = <TimelockController>(
-            await this.TimelockController.deploy(
-                1,
-                [this.admin.address],
-                [this.admin.address]
-            )
+            await this.TimelockController.deploy()
         )
         await this.timelock.deployed()
+        await this.timelock.initialize(
+            1,
+            [this.admin.address],
+            [this.admin.address]
+        )
         this.votesOracle = <VotesOracle>await this.VotesOracle.deploy()
         await this.votesOracle.deployed()
-        this.bit = <MockERC20>await this.ERC20.deploy('BIT', 'BIT', SUPPLY)
+        await this.votesOracle.initialize()
+        this.bit = <MockERC20>await this.MockERC20.deploy()
         await this.bit.deployed()
-        this.governance = <Governance>(
-            await this.Governance.deploy(
-                this.bit.address,
-                this.timelock.address,
-                this.votesOracle.address
-            )
+        await this.bit['initialize(string,string,uint256)'](
+            'BIT',
+            'BIT',
+            SUPPLY
         )
+        this.governance = <Governance>await this.Governance.deploy()
         await this.governance.deployed()
-        this.treasury = <TreasuryInsurance>(
-            await this.Treasury.deploy(
-                this.governance.address,
-                this.timelock.address
-            )
-        )
+        this.treasury = <TreasuryInsurance>await this.Treasury.deploy()
         await this.treasury.deployed()
-        this.rewards = <Rewards>(
-            await this.Rewards.deploy(
-                this.governance.address,
-                this.timelock.address,
-                this.treasury.address,
-                this.bit.address,
-                REWARD_PER_VOTE
-            )
+        await this.treasury.initialize(
+            this.governance.address,
+            this.timelock.address
         )
+        await this.governance.initialize(
+            this.bit.address,
+            this.timelock.address,
+            this.votesOracle.address,
+            this.treasury.address
+        )
+        this.rewards = <Rewards>await this.Rewards.deploy()
         await this.rewards.deployed()
-        await this.governance.setInitialTreasury(this.treasury.address)
+        await this.rewards.initialize(
+            this.governance.address,
+            this.timelock.address,
+            this.treasury.address,
+            this.bit.address,
+            REWARD_PER_VOTE
+        )
 
         await this.governance.setVoterRolesAdmin(this.delegatee1.address, [
             DEVELOPER_ROLE
