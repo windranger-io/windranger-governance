@@ -38,26 +38,21 @@ contract GovernorBravoDelegator is
     }
 
     /**
-     * @dev Delegates execution to an implementation contract.
+     * @dev Receive function, delegates execution to an implementation contract.
+     * It returns to the external caller whatever the implementation returns
+     * or forwards reverts.
+     */
+    receive() external payable {
+        _fallback();
+    }
+
+    /**
+     * @dev External function, delegates execution to an implementation contract.
      * It returns to the external caller whatever the implementation returns
      * or forwards reverts.
      */
     fallback() external payable {
-        // delegate all other functions to current implementation
-        (bool success, ) = implementation.delegatecall(msg.data);
-
-        assembly {
-            let free_mem_ptr := mload(0x40)
-            returndatacopy(free_mem_ptr, 0, returndatasize())
-
-            switch success
-            case 0 {
-                revert(free_mem_ptr, returndatasize())
-            }
-            default {
-                return(free_mem_ptr, returndatasize())
-            }
-        }
+        _fallback();
     }
 
     /**
@@ -88,6 +83,29 @@ contract GovernorBravoDelegator is
         assembly {
             if eq(success, 0) {
                 revert(add(returnData, 0x20), returndatasize())
+            }
+        }
+    }
+
+    /**
+     * @dev Internal function, delegates execution to an implementation contract.
+     * It returns to the external caller whatever the implementation returns
+     * or forwards reverts.
+     */
+    function _fallback() internal {
+        // delegate all other functions to current implementation
+        (bool success, ) = implementation.delegatecall(msg.data);
+
+        assembly {
+            let free_mem_ptr := mload(0x40)
+            returndatacopy(free_mem_ptr, 0, returndatasize())
+
+            switch success
+            case 0 {
+                revert(free_mem_ptr, returndatasize())
+            }
+            default {
+                return(free_mem_ptr, returndatasize())
             }
         }
     }

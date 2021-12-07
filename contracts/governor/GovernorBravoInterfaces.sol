@@ -56,6 +56,7 @@ contract GovernorBravoEvents {
         address[] targets,
         uint256[] values,
         string[] signatures,
+        string[] votesTypes,
         bytes[] calldatas,
         uint256 startBlock,
         uint256 endBlock,
@@ -138,17 +139,16 @@ contract GovernorBravoDelegatorStorage {
 contract GovernorBravoDelegateStorageV1 is GovernorBravoDelegatorStorage {
     struct Proposal {
         uint256 id;
-        address proposer;
         uint256 eta;
-        address[] targets;
         uint256[] values;
-        string[] signatures;
-        bytes[] calldatas;
         uint256 startBlock;
         uint256 endBlock;
-        uint256 forVotes;
-        uint256 againstVotes;
-        uint256 abstainVotes;
+        uint256[] votes;
+        address[] targets;
+        address proposer;
+        bytes[] calldatas;
+        string[] votesTypes;
+        string[] signatures;
         bool canceled;
         bool executed;
         mapping(address => Receipt) receipts;
@@ -181,9 +181,6 @@ contract GovernorBravoDelegateStorageV1 is GovernorBravoDelegatorStorage {
 
     /// The number of votes required in order for a voter to become a proposer
     uint256 public proposalThreshold;
-
-    /// Initial proposal id set at become
-    uint256 public initialProposalId;
 
     /// The total number of proposals
     uint256 public proposalCount;
