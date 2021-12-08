@@ -25,10 +25,10 @@ contract Rewards is Initializable, GovernanceControl {
     uint256 private _rewardsStart;
     /// Total rewards allocated for stimulating voting.
     uint256 private _allocated;
-    /// Returns true if claimed reward for an account by voting for a particular successful proposal.
-    mapping(address => mapping(uint256 => bool)) private _claimed;
     /// Treasury contract.
     address private _treasury;
+    /// Returns true if claimed reward for an account by voting for a particular successful proposal.
+    mapping(address => mapping(uint256 => bool)) private _claimed;
 
     event Deposited(address depositor, uint256 amount);
     event Withdrawn(address withdrawer, uint256 amount);
@@ -42,7 +42,7 @@ contract Rewards is Initializable, GovernanceControl {
      * - caller must be the treasury.
      */
     modifier onlyTreasury() {
-        require(_msgSender() == _treasury, "Rewards:: onlyTreasury");
+        require(_msgSender() == _treasury, "Rewards: only treasury");
         _;
     }
 
@@ -78,9 +78,58 @@ contract Rewards is Initializable, GovernanceControl {
     function setTreasury(address treasury_) external virtual onlyGovernance {
         require(
             _treasury != address(0) && _treasury != treasury_,
-            "Rewards::setTreasury: treasury wasn't set or the same"
+            "Rewards: invalid treasury"
         );
         _treasury = treasury_;
+    }
+
+    /**
+     * @dev Allocate `rewards` with `rewardsStart_` for rewards program
+     *
+     * Requirements:
+     * - can only be called from the treasury.
+     */
+    function allocate(uint256 rewards, uint256 rewardsStart_)
+        external
+        virtual
+        onlyTreasury
+    {
+        require(
+            rewards > 0 && rewardsStart_ > _rewardsStart,
+            "Rewards: params are invalid"
+        );
+        _allocated += rewards;
+        _rewardsStart = rewardsStart_;
+        _rewardToken.safeTransferFrom(_msgSender(), address(this), rewards);
+        emit Allocated(rewards);
+    }
+
+    /**
+     * @dev Claim voting reward for `proposalId`.
+     */
+    function claimVotingReward(uint256 proposalId) external virtual {
+        require(
+            !_claimed[_msgSender()][proposalId],
+            "Rewards: already claimed"
+        );
+        require(
+            _rewardsStart <= _governance.proposalSnapshot(proposalId),
+            "Rewards: not qualified"
+        );
+        (uint256 votes, uint8 support) = _governance.getReceipt(
+            proposalId,
+            _msgSender()
+        );
+        if (support == 1 && _governance.isProposalSuccessful(proposalId)) {
+            require(
+                _allocated >= votes * _rewardPerVote,
+                "Rewards: not enough allocation"
+            );
+            _claimed[_msgSender()][proposalId] = true;
+            _allocated -= votes * _rewardPerVote;
+            _rewardToken.safeTransfer(_msgSender(), votes * _rewardPerVote);
+        }
+        emit Claim(_msgSender(), proposalId, votes * _rewardPerVote);
     }
 
     function rewardPetVote() external view virtual returns (uint256) {
@@ -110,54 +159,5 @@ contract Rewards is Initializable, GovernanceControl {
         returns (bool)
     {
         return _claimed[account][proposalId];
-    }
-
-    /**
-     * @dev Allocate `rewards` with `rewardsStart_` for rewards program
-     *
-     * Requirements:
-     * - can only be called from the treasury.
-     */
-    function allocate(uint256 rewards, uint256 rewardsStart_)
-        external
-        virtual
-        onlyTreasury
-    {
-        require(
-            rewards > 0 && rewardsStart_ > _rewardsStart,
-            "Rewards::allocate: allocate params are invalid"
-        );
-        _allocated += rewards;
-        _rewardsStart = rewardsStart_;
-        _rewardToken.safeTransferFrom(_msgSender(), address(this), rewards);
-        emit Allocated(rewards);
-    }
-
-    /**
-     * @dev Claim voting reward for `proposalId`.
-     */
-    function claimVotingReward(uint256 proposalId) external virtual {
-        require(
-            !_claimed[_msgSender()][proposalId],
-            "Rewards::claimVotingReward: already claimed"
-        );
-        require(
-            _rewardsStart <= _governance.proposalSnapshot(proposalId),
-            "Rewards::claimVotingReward: proposal does not qualify for rewards"
-        );
-        (uint256 votes, uint8 support) = _governance.getReceipt(
-            proposalId,
-            _msgSender()
-        );
-        if (support == 1 && _governance.isProposalSuccessful(proposalId)) {
-            require(
-                _allocated >= votes * _rewardPerVote,
-                "Rewards::claimVotingReward: must have enough allocation to give rewards"
-            );
-            _claimed[_msgSender()][proposalId] = true;
-            _allocated -= votes * _rewardPerVote;
-            _rewardToken.safeTransfer(_msgSender(), votes * _rewardPerVote);
-        }
-        emit Claim(_msgSender(), proposalId, votes * _rewardPerVote);
     }
 }

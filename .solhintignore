@@ -1,0 +1,19 @@
+# Dependency directories
+node_modules
+jspm_packages
+
+# Hardhat
+artifacts
+cache
+
+# TypeChain
+typechain
+
+# Logs
+logs
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# JS file output directory
+dist

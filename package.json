@@ -14,15 +14,19 @@
   "author": "",
   "license": "Apache-2.0",
   "scripts": {
-    "compile": "npx hardhat compile",
     "build": "npx hardhat compile",
+    "compile": "npx hardhat compile",
     "clean": "npx hardhat clean",
-    "test": "mocha --timeout 10000 --exit --recursive --require ts-node/register 'test/**/*.test.ts'",
-    "format": "prettier ./**/*.ts --write && prettier --write 'contracts/**/*.sol'",
-    "lint": "eslint . --ext .ts",
+    "format": "npm run format-ts && npm run format-sol",
+    "format-ts": "prettier '**/*.ts' --write",
+    "format-sol": "prettier '**/*.sol' --write",
+    "lint": "npm run lint-ts && npm run lint-sol",
+    "lint-ts": "eslint . --ext .ts",
+    "lint-sol": "solhint ./contracts/**/*.sol",
     "plant": "npx node-plantuml ./docs/specs",
     "prepare": "husky install",
-    "size": "npx hardhat run scripts/contractBytecodeSize.js"
+    "size": "npx hardhat run scripts/contractBytecodeSize.js",
+    "test": "mocha --timeout 10000 --exit --recursive --require ts-node/register 'test/**/*.test.ts'"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
@@ -53,6 +57,7 @@
     "node-plantuml": "windranger-io/node-plantuml#fcfc730",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.18",
+    "solhint": "^3.3.6",
     "ts-node": "^10.2.1",
     "typechain": "^5.1.2",
     "typescript": "^4.4.2",

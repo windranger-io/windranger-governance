@@ -2,17 +2,6 @@
   "$schema": "http://json.schemastore.org/prettierrc",
   "overrides": [
     {
-      "files": "*.sol || *.mjs",
-      "options": {
-        "bracketSpacing": false,
-        "explicitTypes": "always",
-        "printWidth": 80,
-        "singleQuote": false,
-        "tabWidth": 4,
-        "useTabs": false
-      }
-    },
-    {
       "files": "*.ts",
       "options": {
         "arrowParens": "always",
@@ -23,6 +12,17 @@
         "singleQuote": true,
         "tabWidth": 4,
         "trailingComma": "none"
+      }
+    },
+    {
+      "files": "*.sol",
+      "options": {
+        "bracketSpacing": false,
+        "explicitTypes": "always",
+        "printWidth": 80,
+        "singleQuote": false,
+        "tabWidth": 4,
+        "useTabs": false
       }
     }
   ]

@@ -1,5 +1,4 @@
 {
-    "*.(md|js|json)": "npm run format",
-    "*.sol": "npm run format",
-    "*.ts":  "npm run lint -- --fix"
+    "*.(md|js|json|sol)": "npm run format",
+    "*.ts":  "npm run lint-ts -- --fix"
 }
