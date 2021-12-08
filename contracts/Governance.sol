@@ -320,7 +320,7 @@ contract Governance is
         address member,
         address proposer
     ) external virtual roleExists(role) onlyGovernance {
-        require(_votersRoles[role][proposer], "Governance: hasn't the role");
+        require(_votersRoles[role][proposer], "Governance: no role");
         _votersRoles[role][member] = true;
     }
 
@@ -337,7 +337,7 @@ contract Governance is
         address member,
         address proposer
     ) external virtual roleExists(role) onlyGovernance {
-        require(hasRole(role, proposer), "Governance: hasn't the role");
+        require(hasRole(role, proposer), "Governance: no role");
         _votersRoles[role][member] = false;
     }
 
@@ -354,7 +354,7 @@ contract Governance is
         uint256 threshold,
         address proposer
     ) external virtual roleExists(role) onlyGovernance {
-        require(hasRole(role, proposer), "Governance: hasn't the role");
+        require(hasRole(role, proposer), "Governance: no role");
         _proposalThresholds[role] = threshold;
     }
 
@@ -696,10 +696,7 @@ contract Governance is
     ) public virtual returns (uint256) {
         for (uint256 i = 0; i < roles.length; ++i) {
             require(roles[i] > 0, "Governance: role doesn't exist");
-            require(
-                hasRole(roles[i], _msgSender()),
-                "Governance: no proposal role"
-            );
+            require(hasRole(roles[i], _msgSender()), "Governance: no role");
         }
         require(
             targets.length == values.length,
@@ -981,7 +978,7 @@ contract Governance is
     ) internal virtual {
         require(
             state(proposalId) == ProposalState.Active,
-            "Governance: not currently active"
+            "Governance: not active"
         );
 
         _countVote(proposalId, account, support);

@@ -60,7 +60,7 @@ contract TimelockV8 {
     }
 
     function acceptAdmin() external {
-        require(msg.sender == admin, "Timelock: pending admin only");
+        require(msg.sender == pendingAdmin, "Timelock: pending admin only");
         admin = msg.sender;
         pendingAdmin = address(0);
 
@@ -142,7 +142,7 @@ contract TimelockV8 {
         (bool success, bytes memory returnData) = target.call{value: value}(
             callData
         );
-        require(success, "execution reverted");
+        require(success, "Timelock: execution reverted");
 
         emit ExecuteTransaction(txHash, target, value, signature, data, eta);
 
@@ -150,7 +150,7 @@ contract TimelockV8 {
     }
 
     function setPendingAdmin(address pendingAdmin_) public {
-        require(msg.sender == admin, "Timelock: timelock only");
+        require(msg.sender == address(this), "Timelock: timelock only");
         pendingAdmin = pendingAdmin_;
 
         emit NewPendingAdmin(pendingAdmin);

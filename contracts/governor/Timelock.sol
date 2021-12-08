@@ -60,7 +60,7 @@ contract Timelock {
     }
 
     function acceptAdmin() external {
-        require(msg.sender == admin, "Timelock: pending admin only");
+        require(msg.sender == pendingAdmin, "Timelock: pending admin only");
         admin = msg.sender;
         pendingAdmin = address(0);
 
@@ -150,7 +150,7 @@ contract Timelock {
     }
 
     function setPendingAdmin(address pendingAdmin_) public {
-        require(msg.sender == admin, "Timelock: timelock only");
+        require(msg.sender == address(this), "Timelock: timelock only");
         pendingAdmin = pendingAdmin_;
 
         emit NewPendingAdmin(pendingAdmin);
