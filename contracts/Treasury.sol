@@ -21,12 +21,10 @@ contract Treasury is Initializable, GovernanceControl {
     event IncreasedAllowance(address spender, address asset, uint256 amount);
     event DecreasedAllowance(address spender, address asset, uint256 amount);
 
-    function __Treasury_init(address governance_, address executor_)
-        internal
-        initializer
-    {
-        __GovernanceControl_init(governance_, executor_);
-    }
+    /**
+     * @dev Receive ETH fallback payable function.
+     */
+    receive() external payable virtual {}
 
     function initialize(address governance_, address executor_)
         external
@@ -81,14 +79,16 @@ contract Treasury is Initializable, GovernanceControl {
         IERC20Upgradeable rewardToken = rewardsContract.rewardToken();
         require(
             rewardToken.balanceOf(address(this)) >= rewards,
-            "Treasry::allocateRewards: not enough reward token balance"
+            "Treasry: not enough balance"
         );
         rewardToken.safeIncreaseAllowance(address(rewardsContract), rewards);
         rewardsContract.allocate(rewards, rewardsStart);
     }
 
-    /**
-     * @dev Receive ETH fallback payable function.
-     */
-    receive() external payable virtual {}
+    function __Treasury_init(address governance_, address executor_)
+        internal
+        initializer
+    {
+        __GovernanceControl_init(governance_, executor_);
+    }
 }

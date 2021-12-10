@@ -18,13 +18,52 @@ abstract contract GovernanceControl is Initializable, ContextUpgradeable {
     /// Governance executor.
     address private _executor;
 
+    /**
+     * @dev Throws if called by any address other than the governance executor.
+     *
+     * Requirements:
+     * - caller must be governance executor.
+     */
+    modifier onlyGovernance() {
+        require(_executor == _msgSender(), "GovernanceControl: only executor");
+        _;
+    }
+
+    function setGovernance(address governance_)
+        external
+        virtual
+        onlyGovernance
+    {
+        require(
+            governance_ != address(0) && address(_governance) != governance_,
+            "invalid address"
+        );
+        _governance = IGovernance(governance_);
+    }
+
+    function setExecutor(address executor_) external virtual onlyGovernance {
+        require(
+            executor_ != address(0) && _executor != executor_,
+            "invalid address"
+        );
+        _executor = executor_;
+    }
+
+    function governance() external view virtual returns (address) {
+        return address(_governance);
+    }
+
+    function executor() external view virtual returns (address) {
+        return _executor;
+    }
+
     function __GovernanceControl_init_unchained(
         address governance_,
         address executor_
     ) internal initializer {
         require(
             governance_ != address(0) && executor_ != address(0),
-            "GovernanceControl: cannot init with zero addresses"
+            "invalid addresses"
         );
         _governance = IGovernance(governance_);
         _executor = executor_;
@@ -36,47 +75,5 @@ abstract contract GovernanceControl is Initializable, ContextUpgradeable {
     {
         __Context_init();
         __GovernanceControl_init_unchained(governance_, executor_);
-    }
-
-    /**
-     * @dev Throws if called by any address other than the governance executor.
-     *
-     * Requirements:
-     * - caller must be governance executor.
-     */
-    modifier onlyGovernance() {
-        require(
-            _executor == _msgSender(),
-            "GovernanceControl: caller is not the governance executor"
-        );
-        _;
-    }
-
-    function governance() external view virtual returns (address) {
-        return address(_governance);
-    }
-
-    function executor() external view virtual returns (address) {
-        return _executor;
-    }
-
-    function setGovernance(address governance_)
-        external
-        virtual
-        onlyGovernance
-    {
-        require(
-            governance_ != address(0) && address(_governance) != governance_,
-            "GovernanceControl: same or zero governance address"
-        );
-        _governance = IGovernance(governance_);
-    }
-
-    function setExecutor(address executor_) external virtual onlyGovernance {
-        require(
-            executor_ != address(0) && _executor != executor_,
-            "GovernanceControl: same or zero executor address"
-        );
-        _executor = executor_;
     }
 }

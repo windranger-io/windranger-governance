@@ -2,6 +2,52 @@
 // Compound https://github.com/compound-finance/compound-protocol/blob/master/contracts/Governance/GovernorBravoInterfaces.sol
 pragma solidity ^0.8.0;
 
+interface TimelockInterface {
+    function acceptAdmin() external;
+
+    function queueTransaction(
+        address target,
+        uint256 value,
+        string calldata signature,
+        bytes calldata data,
+        uint256 eta
+    ) external returns (bytes32);
+
+    function cancelTransaction(
+        address target,
+        uint256 value,
+        string calldata signature,
+        bytes calldata data,
+        uint256 eta
+    ) external;
+
+    function executeTransaction(
+        address target,
+        uint256 value,
+        string calldata signature,
+        bytes calldata data,
+        uint256 eta
+    ) external payable returns (bytes memory);
+
+    function delay() external view returns (uint256);
+
+    function GRACE_PERIOD() external view returns (uint256);
+
+    function queuedTransactions(bytes32 hash) external view returns (bool);
+}
+
+interface BitInterface {
+    function getPriorVotes(address account, uint256 blockNumber)
+        external
+        view
+        returns (uint256);
+}
+
+interface GovernorAlphaInterface {
+    /// The total number of proposals
+    function proposalCount() external returns (uint256);
+}
+
 contract GovernorBravoEvents {
     /// An event emitted when a new proposal is created
     event ProposalCreated(
@@ -90,33 +136,6 @@ contract GovernorBravoDelegatorStorage {
  * GovernorBravoDelegateStorageVX.
  */
 contract GovernorBravoDelegateStorageV1 is GovernorBravoDelegatorStorage {
-    /// The delay before voting on a proposal may take place, once proposed, in blocks
-    uint256 public votingDelay;
-
-    /// The duration of voting on a proposal, in blocks
-    uint256 public votingPeriod;
-
-    /// The number of votes required in order for a voter to become a proposer
-    uint256 public proposalThreshold;
-
-    /// Initial proposal id set at become
-    uint256 public initialProposalId;
-
-    /// The total number of proposals
-    uint256 public proposalCount;
-
-    /// The address of the BitDAO Protocol Timelock
-    TimelockInterface public timelock;
-
-    /// The address of the BitDAO governance token
-    BitInterface public bit;
-
-    /// The official record of all proposals ever proposed
-    mapping(uint256 => Proposal) public proposals;
-
-    /// The latest proposal for each proposer
-    mapping(address => uint256) public latestProposalIds;
-
     struct Proposal {
         uint256 id;
         address proposer;
@@ -153,6 +172,33 @@ contract GovernorBravoDelegateStorageV1 is GovernorBravoDelegatorStorage {
         Expired,
         Executed
     }
+
+    /// The delay before voting on a proposal may take place, once proposed, in blocks
+    uint256 public votingDelay;
+
+    /// The duration of voting on a proposal, in blocks
+    uint256 public votingPeriod;
+
+    /// The number of votes required in order for a voter to become a proposer
+    uint256 public proposalThreshold;
+
+    /// Initial proposal id set at become
+    uint256 public initialProposalId;
+
+    /// The total number of proposals
+    uint256 public proposalCount;
+
+    /// The address of the BitDAO Protocol Timelock
+    TimelockInterface public timelock;
+
+    /// The address of the BitDAO governance token
+    BitInterface public bit;
+
+    /// The official record of all proposals ever proposed
+    mapping(uint256 => Proposal) public proposals;
+
+    /// The latest proposal for each proposer
+    mapping(address => uint256) public latestProposalIds;
 }
 
 contract GovernorBravoDelegateStorageV2 is GovernorBravoDelegateStorageV1 {
@@ -161,50 +207,4 @@ contract GovernorBravoDelegateStorageV2 is GovernorBravoDelegateStorageV1 {
 
     /// Address which manages whitelisted proposals and whitelist accounts
     address public whitelistGuardian;
-}
-
-interface TimelockInterface {
-    function delay() external view returns (uint256);
-
-    function GRACE_PERIOD() external view returns (uint256);
-
-    function acceptAdmin() external;
-
-    function queuedTransactions(bytes32 hash) external view returns (bool);
-
-    function queueTransaction(
-        address target,
-        uint256 value,
-        string calldata signature,
-        bytes calldata data,
-        uint256 eta
-    ) external returns (bytes32);
-
-    function cancelTransaction(
-        address target,
-        uint256 value,
-        string calldata signature,
-        bytes calldata data,
-        uint256 eta
-    ) external;
-
-    function executeTransaction(
-        address target,
-        uint256 value,
-        string calldata signature,
-        bytes calldata data,
-        uint256 eta
-    ) external payable returns (bytes memory);
-}
-
-interface BitInterface {
-    function getPriorVotes(address account, uint256 blockNumber)
-        external
-        view
-        returns (uint256);
-}
-
-interface GovernorAlphaInterface {
-    /// The total number of proposals
-    function proposalCount() external returns (uint256);
 }

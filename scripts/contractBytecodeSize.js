@@ -9,7 +9,17 @@ const EIP170 = 24576;
 const CONTRACTS = `${__dirname}/../artifacts/contracts`;
 const READDIR = promisify(fs.readdir);
 const STAT = promisify(fs.stat);
-const LIST = ['Governance.sol'];
+const LIST = [
+  'governor/GovernorAlpha.sol',
+  'governor/GovernorBravoDelegator.sol',
+  'governor/GovernorBravoDelegate.sol',
+  'governor/GovernorBravoInterfaces.sol',
+  'Governance.sol',
+  'Treasury.sol',
+  'TreasuryInsurance.sol',
+  'Rewards.sol',
+  'VotesOracle.sol'
+];
 
 async function generateReport() {
   let bytecodeSize;
