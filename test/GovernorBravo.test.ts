@@ -10,7 +10,6 @@ import {solidity} from 'ethereum-waffle'
 import {SignerWithAddress} from '@nomiclabs/hardhat-ethers/signers'
 import {advanceBlockTo} from './utils/index'
 import {
-    GovernorAlpha,
     GovernorBravoDelegate,
     GovernorBravoDelegator,
     BitDAO,
@@ -46,8 +45,9 @@ describe('GovernorBravo', function () {
         this.delegatee1 = this.signers[1]
         this.delegatee2 = this.signers[2]
         this.delegatee3 = this.signers[3]
-        this.receiver = this.signers[4]
-        this.GovernorAlpha = await ethers.getContractFactory('GovernorAlphaV8')
+        this.delegatee4 = this.signers[4]
+        this.delegatee5 = this.signers[5]
+        this.receiver = this.signers[6]
         this.GovernorBravoDelegate = await ethers.getContractFactory(
             'GovernorBravoDelegate'
         )
@@ -57,24 +57,12 @@ describe('GovernorBravo', function () {
         this.Timelock = await ethers.getContractFactory('TimelockV8')
         this.BitDAO = await ethers.getContractFactory('BitDAO')
         this.Treasury = await ethers.getContractFactory('Treasury')
-        this.timelockAlpha = <Timelock>(
-            await this.Timelock.deploy(this.admin.address, 1)
-        )
-        await this.timelockAlpha.deployed()
         this.timelock = <Timelock>(
             await this.Timelock.deploy(this.admin.address, 1)
         )
         await this.timelock.deployed()
         this.bit = <BitDAO>await this.BitDAO.deploy(this.admin.address)
         await this.bit.deployed()
-        this.governorAlpha = <GovernorAlpha>(
-            await this.GovernorAlpha.deploy(
-                this.timelockAlpha.address,
-                this.bit.address,
-                this.admin.address
-            )
-        )
-        await this.governorAlpha.deployed()
         this.governorDelegate = <GovernorBravoDelegate>(
             await this.GovernorBravoDelegate.deploy()
         )
@@ -96,6 +84,7 @@ describe('GovernorBravo', function () {
                 this.governorDelegator.address
             )
         )
+
         this.treasury = <Treasury>await this.Treasury.deploy()
         await this.treasury.deployed()
         await this.treasury.initialize(
@@ -120,6 +109,7 @@ describe('GovernorBravo', function () {
             abiCoder.encode(['address'], [this.governor.address]),
             timestamp + 2
         )
+        await this.governor.initiate()
 
         await this.bit.transfer(this.delegatee1.address, VOTING_POWER)
         await this.bit
@@ -133,18 +123,14 @@ describe('GovernorBravo', function () {
         await this.bit
             .connect(this.delegatee3)
             .delegate(this.delegatee3.address)
-
-        // To initiate GovernorBravo, GovernorAlpha must have at least 1 proposal.
-        await this.governorAlpha
-            .connect(this.delegatee1)
-            .propose(
-                ['0x0000000000000000000000000000000000000000'],
-                [0],
-                [''],
-                ['0x'],
-                ''
-            )
-        await this.governor.initiate(this.governorAlpha.address)
+        await this.bit.transfer(this.delegatee4.address, VOTING_POWER)
+        await this.bit
+            .connect(this.delegatee4)
+            .delegate(this.delegatee4.address)
+        await this.bit.transfer(this.delegatee5.address, VOTING_POWER)
+        await this.bit
+            .connect(this.delegatee5)
+            .delegate(this.delegatee5.address)
 
         this.runProposal = async function (
             proposer: SignerWithAddress,
@@ -152,7 +138,9 @@ describe('GovernorBravo', function () {
             proposalValues: string[],
             proposalSignatures: string[],
             proposalCalldatas: string[],
-            description: string
+            description: string,
+            proposalVotesTypes: string[],
+            proposalVotes: number[]
         ): Promise<string> {
             await this.governor
                 .connect(proposer)
@@ -161,7 +149,8 @@ describe('GovernorBravo', function () {
                     proposalValues,
                     proposalSignatures,
                     proposalCalldatas,
-                    description
+                    description,
+                    proposalVotesTypes
                 )
             const proposalId = await this.governor.proposalCount()
             let state = await this.governor.state(proposalId)
@@ -169,20 +158,43 @@ describe('GovernorBravo', function () {
 
             this.castVoteAndCheck = async function (
                 proposalId: string,
-                voter: SignerWithAddress
+                voter: SignerWithAddress,
+                support: number
             ): Promise<void> {
-                await this.governor.connect(voter).castVote(proposalId, 1)
+                await this.governor.connect(voter).castVote(proposalId, support)
                 const receipt = await this.governor.getReceipt(
                     proposalId,
                     voter.address
                 )
                 expect(receipt.votes).to.equal(VOTING_POWER)
-                expect(receipt.support).to.equal(1)
+                expect(receipt.support).to.equal(support)
             }
 
-            await this.castVoteAndCheck(proposalId, this.delegatee1)
-            await this.castVoteAndCheck(proposalId, this.delegatee2)
-            await this.castVoteAndCheck(proposalId, this.delegatee3)
+            await this.castVoteAndCheck(
+                proposalId,
+                this.delegatee1,
+                proposalVotes[0]
+            )
+            await this.castVoteAndCheck(
+                proposalId,
+                this.delegatee2,
+                proposalVotes[1]
+            )
+            await this.castVoteAndCheck(
+                proposalId,
+                this.delegatee3,
+                proposalVotes[2]
+            )
+            await this.castVoteAndCheck(
+                proposalId,
+                this.delegatee4,
+                proposalVotes[3]
+            )
+            await this.castVoteAndCheck(
+                proposalId,
+                this.delegatee5,
+                proposalVotes[4]
+            )
 
             await advanceBlockTo(
                 (await provider.getBlockNumber()) + PROPOSAL_SPAN
@@ -224,6 +236,8 @@ describe('GovernorBravo', function () {
         ]
         const proposalValues: string[] = ['0']
         const proposalTargets: string[] = [this.treasury.address]
+        const proposalVotesTypes: string[] = ['against', 'for']
+        const proposalVotes: number[] = [1, 1, 1, 0, 0]
         const description = 'Transfer some bit'
         const proposalCalldatas: string[] = [
             abiCoder.encode(
@@ -242,7 +256,57 @@ describe('GovernorBravo', function () {
             proposalValues,
             proposalSignatures,
             proposalCalldatas,
-            description
+            description,
+            proposalVotesTypes,
+            proposalVotes
+        )
+        expect(await this.bit.balanceOf(this.receiver.address)).to.equal(
+            TREASURY_FUNDS
+        )
+        expect(await this.bit.balanceOf(this.treasury.address)).to.equal(0)
+    })
+
+    it('Run TREASURY proposal to transfer funds with 4 votes types', async function () {
+        await this.bit
+            .connect(this.receiver)
+            .transfer(this.treasury.address, TREASURY_FUNDS)
+        expect(await this.bit.balanceOf(this.treasury.address)).to.equal(
+            TREASURY_FUNDS
+        )
+
+        const proposalSignatures: string[] = [
+            'transfer(address,address,uint256)'
+        ]
+        const proposalValues: string[] = ['0']
+        const proposalTargets: string[] = [this.treasury.address]
+        const proposalVotesTypes: string[] = [
+            'against',
+            'for',
+            'abstain',
+            'slash'
+        ]
+        const proposalVotes: number[] = [1, 1, 1, 2, 3]
+        const description = 'Transfer some bit'
+        const proposalCalldatas: string[] = [
+            abiCoder.encode(
+                ['address', 'address', 'uint256'],
+                [this.receiver.address, this.bit.address, TREASURY_FUNDS]
+            )
+        ]
+
+        expect(await this.bit.balanceOf(this.receiver.address)).to.equal(0)
+        expect(await this.bit.balanceOf(this.treasury.address)).to.equal(
+            TREASURY_FUNDS
+        )
+        await this.runProposal(
+            this.delegatee1,
+            proposalTargets,
+            proposalValues,
+            proposalSignatures,
+            proposalCalldatas,
+            description,
+            proposalVotesTypes,
+            proposalVotes
         )
         expect(await this.bit.balanceOf(this.receiver.address)).to.equal(
             TREASURY_FUNDS

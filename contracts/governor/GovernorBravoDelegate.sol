@@ -26,6 +26,12 @@ contract GovernorBravoDelegate is
     /// The min setable voting delay
     uint256 public constant MIN_VOTING_DELAY = 0;
 
+    /// The min votes types for a proposal.
+    uint256 public constant MIN_VOTES_TYPES = 2;
+
+    /// The max votes types for a proposal.
+    uint256 public constant MAX_VOTES_TYPES = 10;
+
     /// The max setable voting delay
     uint256 public constant MAX_VOTING_DELAY = 40320; // About 1 week
 
@@ -335,14 +341,10 @@ contract GovernorBravoDelegate is
 
     /**
      * @notice Initiate the GovernorBravo contract
-     * @dev Admin only. Sets initial proposal id which initiates the contract, ensuring a continuous proposal id count
-     * @param governorAlpha The address for the Governor to continue the proposal id count from
+     * @dev Admin only. Sets timelock as an admin, can be called only once.
      */
-    function initiate(address governorAlpha) external {
+    function initiate() external {
         require(msg.sender == admin, "GovernorBravo: admin only");
-        require(initialProposalId == 0, "GovernorBravo: was initiated");
-        proposalCount = GovernorAlphaInterface(governorAlpha).proposalCount();
-        initialProposalId = proposalCount;
         timelock.acceptAdmin();
     }
 
@@ -437,10 +439,9 @@ contract GovernorBravoDelegate is
         uint256[] memory values,
         string[] memory signatures,
         bytes[] memory calldatas,
-        string memory description
+        string memory description,
+        string[] memory votesTypes
     ) public returns (uint256) {
-        // Reject proposals before initiating as Governor
-        require(initialProposalId != 0, "GovernorBravo: not active");
         // Allow addresses above proposal threshold and whitelisted addresses to propose
         require(
             bit.getPriorVotes(msg.sender, block.number - 1) >=
@@ -458,6 +459,19 @@ contract GovernorBravoDelegate is
         require(
             targets.length <= PROPOSAL_MAX_OPERATIONS,
             "GovernorBravo: too many actions"
+        );
+        require(
+            votesTypes.length >= MIN_VOTES_TYPES &&
+                votesTypes.length <= MAX_VOTES_TYPES,
+            "GovernorBravo: lengths bad range"
+        );
+        require(
+            _compareStrings(bytes("against"), bytes(votesTypes[0])),
+            "GovernorBravo: must be 'against'"
+        );
+        require(
+            _compareStrings(bytes("for"), bytes(votesTypes[1])),
+            "GovernorBravo: must be 'for'"
         );
 
         uint256 latestProposalId = latestProposalIds[msg.sender];
@@ -484,6 +498,8 @@ contract GovernorBravoDelegate is
         newProposal.values = values;
         newProposal.signatures = signatures;
         newProposal.calldatas = calldatas;
+        newProposal.votesTypes = votesTypes;
+        newProposal.votes = new uint256[](votesTypes.length);
         newProposal.startBlock = block.number + votingDelay;
         newProposal.endBlock = block.number + votingDelay + votingPeriod;
         latestProposalIds[newProposal.proposer] = newProposal.id;
@@ -494,6 +510,7 @@ contract GovernorBravoDelegate is
             targets,
             values,
             signatures,
+            votesTypes,
             calldatas,
             newProposal.startBlock,
             newProposal.endBlock,
@@ -508,10 +525,7 @@ contract GovernorBravoDelegate is
      * @return Proposal state
      */
     function state(uint256 proposalId) public view returns (ProposalState) {
-        require(
-            proposalCount >= proposalId && proposalId > initialProposalId,
-            "GovernorBravo: invalid id"
-        );
+        require(proposalCount >= proposalId, "GovernorBravo: invalid id");
         Proposal storage proposal = proposals[proposalId];
         if (proposal.canceled) {
             return ProposalState.Canceled;
@@ -520,8 +534,8 @@ contract GovernorBravoDelegate is
         } else if (block.number <= proposal.endBlock) {
             return ProposalState.Active;
         } else if (
-            proposal.forVotes <= proposal.againstVotes ||
-            proposal.forVotes < QUORUM_VOTES
+            proposal.votes[1] <= proposal.votes[0] ||
+            proposal.votes[1] < QUORUM_VOTES
         ) {
             return ProposalState.Defeated;
         } else if (proposal.eta == 0) {
@@ -576,20 +590,16 @@ contract GovernorBravoDelegate is
             state(proposalId) == ProposalState.Active,
             "GovernorBravo: voting is closed"
         );
-        require(support <= 2, "GovernorBravo: invalid vote type");
         Proposal storage proposal = proposals[proposalId];
+        require(
+            support < proposal.votes.length,
+            "GovernorBravo: invalid vote type"
+        );
         Receipt storage receipt = proposal.receipts[voter];
         require(receipt.hasVoted == false, "GovernorBravo: already voted");
         uint256 votes = bit.getPriorVotes(voter, proposal.startBlock);
 
-        if (support == 0) {
-            proposal.againstVotes += votes;
-        } else if (support == 1) {
-            proposal.forVotes += votes;
-        } else if (support == 2) {
-            proposal.abstainVotes += votes;
-        }
-
+        proposal.votes[support] += votes;
         receipt.hasVoted = true;
         receipt.support = support;
         receipt.votes = votes;
@@ -603,5 +613,21 @@ contract GovernorBravoDelegate is
             chainId := chainid()
         }
         return chainId;
+    }
+
+    function _compareStrings(bytes memory a, bytes memory b)
+        internal
+        pure
+        returns (bool)
+    {
+        if (a.length != b.length) {
+            return false;
+        }
+        for (uint256 i = 0; i < a.length; ++i) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 }

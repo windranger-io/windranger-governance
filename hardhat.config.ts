@@ -66,6 +66,11 @@ const config: HardhatUserConfig = {
                     privateKey:
                         '0x76e84d048ab2f7e50865817dda3eef706aaeeeb592c1e0a2d677e914bda4e9d6',
                     balance: '100000000000000000000000000000000'
+                },
+                {
+                    privateKey:
+                        '0x11382902ecfbd88082b97693bd0ca5e1d9b273b50ae9626f6fa1f643be175d0b',
+                    balance: '100000000000000000000000000000000'
                 }
             ],
             allowUnlimitedContractSize: false,
