@@ -106,7 +106,7 @@ jobs:
 
       - name: Lint
         run: npm run lint-sol
-  
+
   Solidity-Static-Analysis-Slither:
     runs-on: ubuntu-latest
     name: Solidity static analysis (Slither)
@@ -125,4 +125,4 @@ jobs:
       - name: Slither Static Analysis
         uses: luisfontes19/slither-static-analysis-action@v0.3.4
         with:
-          slither-params: '--filter-paths "contracts/test|contracts/treasury|node_modules" --exclude solc-version'
+          slither-params: '--exclude-dependencies --exclude solc-version,arbitrary-send,shadowing-state,unchecked-send,unused-return,controlled-delegatecall --exclude-informational --exclude-low'
