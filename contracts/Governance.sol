@@ -686,6 +686,19 @@ contract Governance is
         return _proposals[proposalId].receipts[account].hasVoted;
     }
 
+    function isProposalSuccessful(uint256 proposalId)
+        external
+        view
+        virtual
+        returns (bool)
+    {
+        ProposalState proposalState = state(proposalId);
+        return
+            proposalState == ProposalState.Executed ||
+            proposalState == ProposalState.Succeeded ||
+            proposalState == ProposalState.Queued;
+    }
+
     function propose(
         address[] memory targets,
         uint256[] memory values,
@@ -851,19 +864,6 @@ contract Governance is
         }
     }
 
-    function isProposalSuccessful(uint256 proposalId)
-        public
-        view
-        virtual
-        returns (bool)
-    {
-        ProposalState proposalState = state(proposalId);
-        return
-            proposalState == ProposalState.Executed ||
-            proposalState == ProposalState.Succeeded ||
-            proposalState == ProposalState.Queued;
-    }
-
     function proposalSnapshot(uint256 proposalId)
         public
         view
@@ -957,8 +957,8 @@ contract Governance is
         emit ProposalCanceled(proposalId);
 
         if (_timelockIds[proposalId] != 0) {
-            _timelock.cancel(_timelockIds[proposalId]);
             delete _timelockIds[proposalId];
+            _timelock.cancel(_timelockIds[proposalId]);
         }
 
         return proposalId;

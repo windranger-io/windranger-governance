@@ -136,13 +136,13 @@ contract TreasuryInsurance is Initializable, ERC721Upgradeable, Treasury {
         );
         _compensationLimits[id] -= compensation;
         _requestedCompensations[id] = 0;
+        if (_compensationLimits[id] == 0) {
+            _burn(id);
+        }
         IERC20Upgradeable(_insuranceAssets[id]).safeTransfer(
             ownerOf(id),
             compensation
         );
-        if (_compensationLimits[id] == 0) {
-            _burn(id);
-        }
         emit Compensated(id, compensation);
     }
 
