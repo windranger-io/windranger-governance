@@ -1,5 +1,5 @@
 {
-   "detectors_to_exclude": "solc-version,naming-convention,unused-return,arbitraty-send,unchecked-send,controlled-delegatecall,shadowing-state",
+   "detectors_to_exclude": "solc-version,naming-convention,unused-return,arbitrary-send,unchecked-send,controlled-delegatecall,shadowing-state,external-function",
    "exclude_informational": true,
    "exclude_low": true,
    "exclude_medium": false,
@@ -8,4 +8,3 @@
    "filter_paths": "node_modules",
    "legacy_ast": false
  }
- 
