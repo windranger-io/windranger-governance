@@ -1,0 +1,10 @@
+{
+   "detectors_to_exclude": "solc-version,naming-convention,unused-return,arbitraty-send,unchecked-send,controlled-delegatecall,shadowing-state",
+   "exclude_informational": true,
+   "exclude_low": true,
+   "exclude_medium": false,
+   "exclude_high": false,
+   "disable_color": false,
+   "filter_paths": "node_modules",
+   "legacy_ast": false
+ }
