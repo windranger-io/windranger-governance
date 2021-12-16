@@ -107,37 +107,40 @@ jobs:
       - name: Lint
         run: npm run lint-sol
 
-   Solidity-Static-Analysis-Slither:
-     runs-on: ubuntu-latest
-     name: Solidity static analysis (Slither)
-     needs: Unit-Tests
-     steps:
-       - name: Checkout
-         uses: actions/checkout@v2
+  Solidity-Static-Analysis-Slither:
+    runs-on: ubuntu-latest
+    name: Solidity static analysis (Slither)
+    needs: Unit-Tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-       - uses: actions/cache@v2
-         name: Set up cache
-         with:
-           path: ~/.npm
-           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-           restore-keys: |
-             ${{ runner.os }}-node-
+      - uses: actions/cache@v2
+        name: Set up cache
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-       - name: Set up node
-         uses: actions/setup-node@v2.5.0
-         with:
-           node-version: '16'
+      - name: Set up node
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version: '16'
 
-       - name: Install dependencies
-         run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-       - uses: actions/setup-python@v2
-         with:
-           python-version: '3.x'
-           architecture: 'x64'
+      - name: Set ENV
+        run: mv .env.ci .env
 
-       - name: Install Slither
-         run: pip3 install slither-analyzer
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
 
-       - name: Slither Static Analysis
-         run: slither . --config-file slither.json
+      - name: Install Slither
+        run: pip3 install slither-analyzer
+
+      - name: Slither Static Analysis
+        run: slither . --config-file slither.json
