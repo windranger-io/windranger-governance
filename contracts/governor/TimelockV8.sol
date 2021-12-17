@@ -149,7 +149,7 @@ contract TimelockV8 {
         return returnData;
     }
 
-    function setPendingAdmin(address pendingAdmin_) public {
+    function setPendingAdmin(address pendingAdmin_) external {
         require(msg.sender == address(this), "Timelock: timelock only");
         pendingAdmin = pendingAdmin_;
 
