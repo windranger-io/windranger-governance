@@ -54,7 +54,7 @@
     "hardhat": "^2.8.3",
     "husky": "^7.0.2",
     "lint-staged": "^12.3.2",
-    "node-plantuml": "windranger-io/node-plantuml#fcfc730",
+    "node-plantuml": "windranger-io/node-plantuml#b9df63e",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.18",
     "solhint": "^3.3.6",
